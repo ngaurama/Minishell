@@ -3,27 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 11:36:46 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:35:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(const char *s)
 {
 	char	*dup;
+	size_t	slen;
 	int		i;
 
-	dup = (char *)malloc(sizeof(char) * (strlen(s1) + 1));
-	i = 0;
+	slen = 0;
+	if (!s)
+		return (NULL);
+	while (s[slen])
+		slen++;
+	dup = malloc(sizeof(char) * (slen + 1));
 	if (!dup)
 		return (NULL);
-	while (s1[i])
+	i = 0;
+	while (s[i])
 	{
-		dup[i] = s1[i];
+		dup[i] = s[i];
 		i++;
 	}
 	dup[i] = '\0';
@@ -32,6 +38,8 @@ char	*ft_strdup(const char *s1)
 
 char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+		return (NULL);
 	c = (unsigned char)c;
 	while (*s != '\0')
 	{

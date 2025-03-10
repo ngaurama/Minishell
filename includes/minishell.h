@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 11:34:33 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/10 12:14:13 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,10 @@ int check_built_in(t_shell *shell);
 int execute_command(t_shell *shell);
 int find_full_path(t_shell *shell);
 char	*ft_strtok(char *str, const char *delim);
+char	*ft_strdup(const char *s1);
+
+// init.c
+void	init_shell(t_shell *shell, char **envp);
+void	free_shell(t_shell *shell);
 
 #endif

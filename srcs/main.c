@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 11:34:53 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:30:23 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 void handle_sigint(int sig)
 {
@@ -24,11 +24,14 @@ void handle_sigint(int sig)
 void handle_input(t_shell *shell)
 {
     char *token;
+
     shell->input = readline("minishell$ ");
     if (!shell->input)
     {
         printf("exit\n");
-        return;
+        clear_history();
+        free_shell(shell);
+        exit(0);
     }
     if (*shell->input != '\0')
         add_history(shell->input);
@@ -52,8 +55,8 @@ void process_command(t_shell *shell)
         free(shell->input);
         return;
     }
-    // if (check_built_in(shell) == 1)
-    //     execute_built_in(shell);
+    //if (check_built_in(shell) == 1)
+    //     execute_command(shell);
     else
     {
         if (find_full_path(shell) == 0)
@@ -63,15 +66,14 @@ void process_command(t_shell *shell)
     free(shell->input);
 }
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
 
     (void)argc;
     (void)argv;
     memset(&shell, 0, sizeof(shell));
-    shell.env = env;
-
+    init_shell(&shell, envp);
     signal(SIGINT, handle_sigint);
     using_history();
     while (1)
@@ -80,5 +82,6 @@ int main(int argc, char **argv, char **env)
         process_command(&shell);
     }
     clear_history();
+    free_shell(&shell);
     return 0;
 }

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   add_arg.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:14 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 11:36:28 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/10 12:06:30 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 t_arg *add_argument(t_arg *head, char *value)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 11:35:09 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:28:00 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int find_full_path(t_shell *shell)
 {
@@ -18,6 +18,11 @@ int find_full_path(t_shell *shell)
     if (!path_var)
         return 1;
     char *path = ft_strtok(path_var, ":");
+    if (shell->full_path)
+    {
+        free(shell->full_path);
+        shell->full_path = NULL;
+    }
     while (path)
     {
         shell->full_path = malloc(strlen(path) + strlen(shell->command) + 2);
@@ -67,7 +72,8 @@ int execute_command(t_shell *shell)
     if (pid == 0)
     {
         char **args = malloc(sizeof(char *) * (count_arguments(shell) + 1));
-
+        if (!args)
+            exit(1);
         t_arg *temp = shell->arguments;
         int i = 0;
         while (temp)
@@ -76,7 +82,6 @@ int execute_command(t_shell *shell)
             temp = temp->next;
         }
         args[i] = NULL;
-
         if (execve(shell->full_path, args, shell->env) == -1)
         {
             perror("execve failed");
