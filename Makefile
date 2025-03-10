@@ -8,7 +8,8 @@ SRC = srcs/main.c \
 		srcs/execute.c \
 		srcs/utils.c \
 		srcs/add_arg.c \
-		srcs/init.c
+		srcs/init.c \
+		srcs/get_tokens.c
 
 OBJ = $(SRC:.c=.o)
 
