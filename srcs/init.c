@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/10 13:28:36 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/11 14:04:30 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	init_shell(t_shell *shell, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		shell->env[i] = strdup(envp[i]);
+		shell->env[i] = ft_strdup(envp[i]);
 		i++;
 	}
 	shell->env[i] = NULL;

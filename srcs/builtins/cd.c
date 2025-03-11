@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 23:16:05 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:20:11 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void ft_cd(t_shell *shell)
 
     if (!dir)
     {
-        fprintf(stderr, "cd: HOME not set\n");
+        write (2, "cd: HOME not set\n", 17);
         return;
     }
     char old_pwd[1024];
@@ -44,15 +44,17 @@ void ft_cd(t_shell *shell)
 
 void execute_export_single(t_shell *shell, const char *key, const char *value)
 {
-    char *key_value = malloc(strlen(key) + strlen(value) + 2);
+    char *key_value = malloc(ft_strlen(key) + ft_strlen(value) + 2);
     if (!key_value)
         return;
-    sprintf(key_value, "%s=%s", key, value);
+    ft_strcpy(key_value, key);
+    ft_strlcat(key_value, "=", ft_strlen(key) + 2);
+    ft_strlcat(key_value, value, ft_strlen(key) + ft_strlen(value) + 2);
     int found = 0;
     int i = 0;
     while (shell->env[i])
     {
-        if (strncmp(shell->env[i], key, strlen(key)) == 0 && shell->env[i][strlen(key)] == '=')
+        if (ft_strncmp(shell->env[i], key, ft_strlen(key)) == 0 && shell->env[i][ft_strlen(key)] == '=')
         {
             free(shell->env[i]);
             shell->env[i] = key_value;

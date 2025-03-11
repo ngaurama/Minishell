@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 22:07:43 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:24:44 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void handle_input(t_shell *shell)
     {
         printf("exit\n");
         clear_history();
-        //free_shell(shell);
+        free_shell(shell);
         exit(0);
     }
     if (*shell->input != '\0')
@@ -71,7 +71,11 @@ void process_command(t_shell *shell)
         if (find_full_path(shell) == 0)
             execute_command(shell);
         else
-            fprintf(stderr, "minishell: command not found: %s\n", shell->command);
+        {
+            write(2, "minishell: command not found: ", 30);
+            write(2, shell->command, ft_strlen(shell->command));
+            write(2, "\n", 1);
+        }
     }
     //print_path();
     free_arguments(shell->arguments);
@@ -82,7 +86,7 @@ void process_command(t_shell *shell)
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
-
+    
     (void)argc;
     (void)argv;
     memset(&shell, 0, sizeof(shell));

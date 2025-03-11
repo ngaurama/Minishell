@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 23:21:00 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:22:47 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int find_full_path(t_shell *shell)
     
     if (!path_var)
         return (1);
-    path_var_copy = strdup(path_var);
+    path_var_copy = ft_strdup(path_var);
     if (!path_var_copy)
         return (1);
     char *path = ft_strtok(path_var_copy, ":");
@@ -30,12 +30,12 @@ int find_full_path(t_shell *shell)
     }
     while (path)
     {
-        shell->full_path = malloc(strlen(path) + strlen(shell->command) + 2);
+        shell->full_path = malloc(ft_strlen(path) + ft_strlen(shell->command) + 2);
         if (!shell->full_path)
             return 1;
-        strcpy(shell->full_path, path);
-        strcat(shell->full_path, "/");
-        strcat(shell->full_path, shell->command);
+        ft_strcpy(shell->full_path, path);
+        ft_strlcat(shell->full_path, "/", sizeof(shell->full_path));
+        ft_strlcat(shell->full_path, shell->command, sizeof(shell->full_path));
         if (access(shell->full_path, F_OK) == 0)
             return (free(path_var_copy), 0);
         free(shell->full_path);
@@ -49,10 +49,10 @@ int check_built_in(t_shell *shell)
 {
     if (!shell->command)
         return (0);
-    if (!strcmp(shell->command, "echo") || !strcmp(shell->command, "exit") ||
-        !strcmp(shell->command, "cd") || !strcmp(shell->command, "pwd") ||
-        !strcmp(shell->command, "export") || !strcmp(shell->command, "unset") ||
-        !strcmp(shell->command, "env"))
+    if (!ft_strcmp(shell->command, "echo") || !ft_strcmp(shell->command, "exit") ||
+        !ft_strcmp(shell->command, "cd") || !ft_strcmp(shell->command, "pwd") ||
+        !ft_strcmp(shell->command, "export") || !ft_strcmp(shell->command, "unset") ||
+        !ft_strcmp(shell->command, "env"))
         return (1);
     return (0);
 }

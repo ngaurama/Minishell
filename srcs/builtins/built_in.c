@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 23:21:15 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:06:53 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,18 @@ void ft_exit(t_shell *shell)
 
 void execute_built_in(t_shell *shell)
 {
-    if (!strcmp(shell->command, "echo"))
+    if (!ft_strcmp(shell->command, "echo"))
         ft_echo(shell);
-    else if (!strcmp(shell->command, "exit"))
+    else if (!ft_strcmp(shell->command, "exit"))
         ft_exit(shell);
-    else if (!strcmp(shell->command, "cd"))
+    else if (!ft_strcmp(shell->command, "cd"))
         ft_cd(shell);
-    else if (!strcmp(shell->command, "pwd"))
+    else if (!ft_strcmp(shell->command, "pwd"))
         ft_pwd(shell);
-    else if (!strcmp(shell->command, "export"))
+    else if (!ft_strcmp(shell->command, "export"))
         ft_export(shell);
-    else if (!strcmp(shell->command, "unset"))
+    else if (!ft_strcmp(shell->command, "unset"))
         ft_unset(shell);
-    else if (!strcmp(shell->command, "env"))
+    else if (!ft_strcmp(shell->command, "env"))
         ft_env(shell);
 }

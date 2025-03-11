@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/10 23:22:43 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:29:23 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "../libft/libft.h"
 
 # define TOKEN_SIZE 256
 
@@ -68,7 +69,9 @@ int     find_full_path(t_shell *shell);
 
 // utils.c
 char	*ft_strtok(char *str, const char *delim);
-char	*ft_strdup(const char *s1);
+int ft_strcmp(const char *s1, const char *s2);
+char *ft_strcpy(char *dest, const char *src);
+char *ft_strncpy(char *dest, const char *src, size_t n);
 
 // BUILTINS
 // built_in.c
@@ -79,6 +82,7 @@ void execute_export_single(t_shell *shell, const char *key, const char *value);
 //echo.c
 void ft_echo(t_shell *shell);
 //env.c
+char *ft_getenv(t_shell *shell, const char *name);
 void ft_env(t_shell *shell);
 //export.c
 char *expand_variables(t_shell *shell, const char *input);
