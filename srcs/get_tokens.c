@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/10 18:40:43 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/11 17:31:30 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int		handle_quotes(char *input, int i, char *token, int *j)
+int	handle_quotes(char *input, int i, char *token, int *j)
 {
-	char quote;
-	
+	char	quote;
+
 	quote = input[i++];
 	while (input[i] && input[i] != quote)
 		token[(*j)++] = input[i++];
@@ -24,10 +24,11 @@ int		handle_quotes(char *input, int i, char *token, int *j)
 	return (i);
 }
 
-int		handle_special(char *input, int i, char *token, int *j, int *type)
+int	handle_special(char *input, int i, char *token, int *j, int *type)
 {
 	token[(*j)++] = input[i++];
-	if ((token[0] == '<' && input[i] == '<') || (token[0] == '>' && input[i] == '>'))
+	if ((token[0] == '<' && input[i] == '<') || (token[0] == '>'
+			&& input[i] == '>'))
 		token[(*j)++] = input[i++];
 	if (token[0] == '|')
 		*type = T_PIPE;
@@ -42,10 +43,10 @@ int		handle_special(char *input, int i, char *token, int *j, int *type)
 	return (i);
 }
 
-int		handle_word(char *input, int i, char *token, int *j)
+int	handle_word(char *input, int i, char *token, int *j)
 {
-	while (input[i] && input[i] != ' ' && input[i] != '|' &&
-		input[i] != '<' && input[i] != '>' && input[i] != '\'' && input[i] != '"')
+	while (input[i] && input[i] != ' ' && input[i] != '|' && input[i] != '<'
+		&& input[i] != '>' && input[i] != '\'' && input[i] != '"')
 		token[(*j)++] = input[i++];
 	return (i);
 }
@@ -86,4 +87,3 @@ t_arg	*tokenize_input(char *input)
 	}
 	return (head);
 }
-

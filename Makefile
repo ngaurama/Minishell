@@ -1,15 +1,15 @@
-OS := $(shell uname)
+# OS := $(shell uname)
   
-ifeq ($(OS), Darwin)  # For me to work on my macOS
-    RLFLAGS = -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline -g -fsanitize=address
-else
-	RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
-endif
+# ifeq ($(OS), Darwin)  # For me to work on my macOS
+#     RLFLAGS = -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
+# else
+# 	RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses -ggdb3
+# endif
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-# RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
+RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses -ggdb3
 LIBFT = libft/libft.a
 
 SRC = srcs/main.c \
@@ -24,7 +24,8 @@ SRC = srcs/main.c \
 		srcs/builtins/env.c \
 		srcs/builtins/export.c \
 		srcs/builtins/pwd.c \
-		srcs/builtins/unset.c
+		srcs/builtins/unset.c \
+		srcs/builtins/expand_variable.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_DIR = obj
