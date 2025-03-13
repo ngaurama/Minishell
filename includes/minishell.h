@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/13 18:53:18 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/13 19:51:44 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
+# include <ctype.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
@@ -92,5 +93,26 @@ int         find_full_path(t_shell *shell);
 // utils.c
 char	    *ft_strtok(char *str, const char *delim);
 char	    *ft_strdup(const char *s1);
+
+// BUILTINS
+// built_in.c
+void execute_built_in(t_shell *shell);
+// cd.c
+void ft_cd(t_shell *shell);
+void execute_export_single(t_shell *shell, const char *key, const char *value);
+//echo.c
+void ft_echo(t_shell *shell);
+//env.c
+void ft_env(t_shell *shell);
+//export.c
+char *expand_variables(t_shell *shell, const char *input);
+void ft_export(t_shell *shell);
+//pwd.c
+void ft_pwd(t_shell *shell);
+//unset.c
+void ft_unset(t_shell *shell);
+
+// For debugging
+void print_path(void);
 
 #endif
