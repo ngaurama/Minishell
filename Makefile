@@ -1,5 +1,5 @@
 OS := $(shell uname)
-  
+ 
 ifeq ($(OS), Darwin)  # For me to work on my macOS
     RLFLAGS = -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 else
@@ -19,7 +19,7 @@ SRC = srcs/main.c \
 		srcs/init.c \
 		srcs/get_tokens.c \
 		srcs/get_cmd.c \
-		srcs/parse_init.c
+		srcs/parse_init.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/echo.c \
@@ -44,4 +44,3 @@ fclean : clean
 re : fclean all
 
 .PHONY: all clean fclean re
-
