@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/11 17:31:30 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/14 23:04:25 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,16 @@ int	handle_special(char *input, int i, char *token, int *j, int *type)
 		token[(*j)++] = input[i++];
 	if (token[0] == '|')
 		*type = T_PIPE;
-	else if (token[0] == '<' && token[1] == '\0')
-		*type = T_REDIRECT_IN;
-	else if (token[0] == '>' && token[1] == '\0')
-		*type = T_REDIRECT_OUT;
-	else if (token[0] == '>' && token[1] == '>')
-		*type = T_APPEND;
 	else if (token[0] == '<' && token[1] == '<')
 		*type = T_HEREDOC;
-	return (i);
+	else if (token[0] == '>' && token[1] == '>')
+		*type = T_APPEND;
+	else if (token[0] == '<')
+		*type = T_REDIRECT_IN;
+	else if (token[0] == '>')
+		*type = T_REDIRECT_OUT;
+
+	return (i + 1);
 }
 
 int	handle_word(char *input, int i, char *token, int *j)
@@ -83,6 +84,7 @@ t_arg	*tokenize_input(char *input)
 		parse_next_token(input, &i, token, &j, &type);
 		if (!token[0])
 			continue ;
+		//printf("TOKEN: [%s] (Type: %d)\n", token, type); // DEBUG
 		head = add_token(head, token, type);
 	}
 	return (head);

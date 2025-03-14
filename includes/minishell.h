@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/11 19:26:05 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/14 23:04:03 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,21 @@
 # include <unistd.h>
 
 # define TOKEN_SIZE 256
+# define MAX_ARGS 256
 
-# define T_WORD 1         // Regular arguments
-# define T_PIPE 2         // "|"
-# define T_REDIRECT_IN 3  // "<"
-# define T_REDIRECT_OUT 4 // ">"
-# define T_APPEND 5       // ">>"
-# define T_HEREDOC 6      // "<<"
+# define T_WORD          1  // Regular arguments
+# define T_PIPE          2  // "|"
+# define T_REDIRECT_IN   3  // "<"
+# define T_REDIRECT_OUT  4  // ">"
+# define T_HEREDOC       5  // "<<"
+# define T_APPEND        6  // ">>"
+
+typedef struct s_redir
+{
+    char *filename;
+    int   type;
+    struct s_redir *next;
+} t_redir;
 
 typedef struct s_arg
 {
@@ -40,39 +48,52 @@ typedef struct s_arg
 	struct s_arg	*next;
 }					t_arg;
 
-typedef struct s_shell
+typedef struct s_command
 {
-	t_arg			*arguments;
-	char			*input;
-	char			*command;
-	char			*full_path;
-	pid_t			pid;
-	char			**env;
-}					t_shell;
+    char    *args[MAX_ARGS];   // Arguments for execve()
+    t_redir *infiles;          // Files for "<"
+    t_redir *outfiles;         // Files for ">" or ">>"
+    int     append;            // 1 if ">>", 0 if ">"
+    int     pipe;              // 1 if there's a pipe "|"
+    struct s_command *next;    // Next command in the pipeline
+}   t_command;
+
+typedef struct s_shell {
+    t_arg *arguments;
+    t_command *cmds;
+    char *input;
+    char *command;
+    char *full_path;
+    pid_t pid;
+    char **env;
+} t_shell;
 
 // add_arg.c
-t_arg				*add_argument(t_arg *head, char *value);
-t_arg				*add_token(t_arg *head, char *token, int type);
-void				free_arguments(t_arg *head);
+t_arg       *add_argument(t_arg *head, char *value);
+void        free_arguments(t_arg *head);
 
 // init.c
-void				init_shell(t_shell *shell, char **envp);
-void				free_shell(t_shell *shell);
+void	    init_shell(t_shell *shell, char **envp);
+void	    free_shell(t_shell *shell);
 
-// get_tokens.c
-t_arg				*tokenize_input(char *input);
+// get_tokens.c // get_cmd.c
+t_arg	    *tokenize_input(char *input);
+t_command	*parse_tokens(t_arg *tokens);
+
+// parse_init.c
+t_arg	    *add_token(t_arg *head, char *token, int type);
+void        free_tokens(t_arg *tokens);
+t_command	*init_command(void);
+void        free_commands(t_command *cmds);
 
 // execute.c
-int					check_built_in(t_shell *shell);
-int					execute_command(t_shell *shell);
-int					find_full_path(t_shell *shell);
+int         check_built_in(t_shell *shell);
+int         execute_command(t_shell *shell);
+int         find_full_path(t_shell *shell);
 
 // utils.c
-char				*ft_strtok(char *str, const char *delim);
-int					ft_strcmp(const char *s1, const char *s2);
-char				*ft_strcpy(char *dest, const char *src);
-char				*ft_strncpy(char *dest, const char *src, size_t n);
-char				*ft_strcat(char *dest, const char *src);
+char	    *ft_strtok(char *str, const char *delim);
+char	    *ft_strdup(const char *s1);
 
 // BUILTINS
 // built_in.c

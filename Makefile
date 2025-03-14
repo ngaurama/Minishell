@@ -18,6 +18,8 @@ SRC = srcs/main.c \
 		srcs/add_arg.c \
 		srcs/init.c \
 		srcs/get_tokens.c \
+		srcs/get_cmd.c \
+		srcs/parse_init.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/echo.c \
