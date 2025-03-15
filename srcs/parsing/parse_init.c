@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/15 18:13:09 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/15 19:31:56 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_command	*init_command(void)
 	return (cmd);
 }
 
-void free_redirections(t_redir *redirs)
+static void free_redirections(t_redir *redirs)
 {
     t_redir *tmp;
 
