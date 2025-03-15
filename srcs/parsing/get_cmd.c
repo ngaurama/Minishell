@@ -6,11 +6,11 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/13 17:26:06 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/15 18:54:06 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
 {
@@ -99,5 +99,3 @@ t_command	*parse_tokens(t_arg *tokens)
 	}
 	return (head);
 }
-
-
