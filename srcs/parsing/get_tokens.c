@@ -6,11 +6,15 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
+<<<<<<< HEAD:srcs/get_tokens.c
 /*   Updated: 2025/03/14 23:04:25 by ngaurama         ###   ########.fr       */
+=======
+/*   Updated: 2025/03/15 19:18:55 by npbk             ###   ########.fr       */
+>>>>>>> main:srcs/parsing/get_tokens.c
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	handle_quotes(char *input, int i, char *token, int *j)
 {
@@ -67,25 +71,30 @@ void	parse_next_token(char *input, int *i, char *token, int *j, int *type)
 	token[*j] = '\0';
 }
 
-t_arg	*tokenize_input(char *input)
+t_arg	*tokenize_input(char *input, t_shell *shell)
 {
-	t_arg	*head;
-	char	token[TOKEN_SIZE];
-	int		i;
-	int		j;
-	int		type;
+	t_arg			*head;
+	t_tokenizer		tok;
+	char			*expanded_tilde;
+	char			*expanded_var;
 
-	i = 0;
+	tok.i = 0;
 	head = NULL;
-	while (input[i])
+	while (input[tok.i])
 	{
-		j = 0;
-		type = T_WORD;
-		parse_next_token(input, &i, token, &j, &type);
-		if (!token[0])
-			continue ;
-		//printf("TOKEN: [%s] (Type: %d)\n", token, type); // DEBUG
-		head = add_token(head, token, type);
+		tok.j = 0;
+		tok.type = T_WORD;
+		parse_next_token(input, &tok.i, tok.token, &tok.j, &tok.type);
+		if (!tok.token[0])
+			continue;
+		expand_token(tok.token, shell, &expanded_tilde, &expanded_var);
+		if (!expanded_var)
+			return (NULL);
+		head = add_token(head, expanded_var, tok.type);
+		if (expanded_var != expanded_tilde)
+			free(expanded_var);
+		if (expanded_tilde != tok.token)
+			free(expanded_tilde);
 	}
 	return (head);
 }

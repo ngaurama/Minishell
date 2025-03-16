@@ -17,9 +17,11 @@ SRC = srcs/main.c \
 		srcs/utils.c \
 		srcs/add_arg.c \
 		srcs/init.c \
-		srcs/get_tokens.c \
-		srcs/get_cmd.c \
-		srcs/parse_init.c \
+		srcs/parsing/get_tokens.c \
+		srcs/parsing/get_cmd.c \
+		srcs/parsing/env_var.c \
+		srcs/parsing/env_var_utils.c \
+		srcs/parsing/parse_init.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/echo.c \
@@ -62,4 +64,3 @@ fclean: clean
 re : fclean all
 
 .PHONY: all clean fclean re
-

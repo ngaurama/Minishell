@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/14 23:04:03 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/16 14:33:14 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,14 @@
 # define T_REDIRECT_OUT  4  // ">"
 # define T_HEREDOC       5  // "<<"
 # define T_APPEND        6  // ">>"
+
+typedef struct s_tokenizer
+{
+	int		i;
+	int		j;
+	int		type;
+	char	token[TOKEN_SIZE];
+}	t_tokenizer;
 
 typedef struct s_redir
 {
@@ -76,9 +84,22 @@ void        free_arguments(t_arg *head);
 void	    init_shell(t_shell *shell, char **envp);
 void	    free_shell(t_shell *shell);
 
-// get_tokens.c // get_cmd.c
-t_arg	    *tokenize_input(char *input);
+// get_tokens.c
+t_arg	    *tokenize_input(char *input, t_shell *shell);
+
+// get_cmd.c
 t_command	*parse_tokens(t_arg *tokens);
+
+// env_var.c
+char	    *expand_variable_token(char *token, t_shell *shell);
+char	    *expand_tilde(char *token, t_shell *shell);
+void	    expand_token(char *token, t_shell *shell, char **expanded_tilde,
+	char **expanded_var);
+
+// env_var_utils.c
+char	    *get_env_value(char **env, char *var_name);
+char	    *extract_var_name(char *start);
+char	    *create_expanded_token(char *token, char *var_start, char *var_value, char *var_name);
 
 // parse_init.c
 t_arg	    *add_token(t_arg *head, char *token, int type);
@@ -94,6 +115,7 @@ int         find_full_path(t_shell *shell);
 // utils.c
 char	    *ft_strtok(char *str, const char *delim);
 char	    *ft_strdup(const char *s1);
+char	    *ft_strchr(const char *s, int c);
 
 // BUILTINS
 // built_in.c
