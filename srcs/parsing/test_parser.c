@@ -40,45 +40,43 @@ void print_token_list(t_arg *tokens)
 cc -Wall -Wextra -Werror get_tokens.c get_cmd.c env_var.c env_var_utils.c test_parser.c ../utils.c parse_init.c tmp_libft.c -o test_parser
 */
 
-int main(int argc, char **argv, char **env)
-{
-    t_shell shell;
+// int main(int argc, char **argv, char **env)
+// {
+//     t_shell shell;
+//     if (argc != 2)
+//     {
+//         printf("Usage: %s \"command to test\"\n", argv[0]);
+//         return (1);
+//     }
+//     shell.input = argv[1];
+//     shell.env = env;
+//     shell.arguments = NULL;
+//     shell.cmds = NULL;
 
-    if (argc != 2)
-    {
-        printf("Usage : %s \"command to test\"\n", argv[0]);
-        return (1);
-    }
+//     printf("\nRaw Input: %s\n", shell.input);
 
-    shell.input = argv[1];
-    shell.env = env;
-    shell.arguments = NULL;
-    shell.cmds = NULL;
+//     shell.arguments = tokenize_input(shell.input, &shell);
+//     if (!shell.arguments)
+//     {
+//         printf("Tokenization failed.\n");
+//         return (1);
+//     }
 
-    printf("\nRaw Input: %s\n", shell.input);
+//     printf("\nExpanded Tokens:\n");
+//     print_token_list(shell.arguments);
 
-    shell.arguments = tokenize_input(shell.input, &shell);
-    if (!shell.arguments)
-    {
-        printf("Tokenization failed.\n");
-        return (1);
-    }
+//     shell.cmds = parse_tokens(shell.arguments);
+//     if (!shell.cmds)
+//     {
+//         printf("Parsing failed.\n");
+//         free_tokens(shell.arguments);
+//         return (1);
+//     }
 
-    printf("\nExpanded Tokens:\n");
-    print_token_list(shell.arguments);
+//     printf("\nParsed Commands:\n");
+//     print_command_list(shell.cmds);
 
-    shell.cmds = parse_tokens(shell.arguments);
-    if (!shell.cmds)
-    {
-        printf("Parsing failed.\n");
-        free_tokens(shell.arguments);
-        return (1);
-    }
-
-    printf("\nParsed Commands:\n");
-    print_command_list(shell.cmds);
-
-    free_tokens(shell.arguments);
-    free_commands(shell.cmds);
-    return (0);
-}
+//     free_tokens(shell.arguments);
+//     free_commands(shell.cmds);
+//     return (0);
+// }

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
 /*   Updated: 2025/03/17 19:39:48 by npbk             ###   ########.fr       */
@@ -27,7 +27,6 @@ int	handle_quotes(char *input, t_tokenizer *tok)
 		tok->i++;
 	return tok->i;
 }
-
 
 int	handle_special(char *input, t_tokenizer *tok)
 {
