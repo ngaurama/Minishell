@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/16 14:33:14 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:02:27 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <fcntl.h>
 
 # define TOKEN_SIZE 256
 # define MAX_ARGS 256
@@ -110,12 +111,19 @@ void        free_commands(t_command *cmds);
 // execute.c
 int         check_built_in(t_shell *shell);
 int         execute_command(t_shell *shell);
-int         find_full_path(t_shell *shell);
-
+int find_full_path(t_shell *shell, const char *command);
 // utils.c
 char	    *ft_strtok(char *str, const char *delim);
-char	    *ft_strdup(const char *s1);
-char	    *ft_strchr(const char *s, int c);
+int	ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcat(char *dest, const char *src);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
+char	*ft_strcpy(char *dest, const char *src);
+
+//redirection.c
+void redirection(t_shell *shell);
+
+//pipe.c
+void pipeline(t_shell *shell);
 
 // BUILTINS
 // built_in.c
@@ -146,5 +154,8 @@ char				*handle_normal_text(char *result, const char **ptr);
 
 // For debugging
 void				print_path(void);
+void print_token_list(t_arg *tokens);
+void print_command_list(t_command *cmd);
+void print_redirections(t_redir *redirs, char *type);
 
 #endif

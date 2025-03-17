@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/11 19:30:07 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:33:28 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,30 @@ void	ft_exit(t_shell *shell)
 	exit(0);
 }
 
-void ft_dollar(t_shell *shell)
+void execute_built_in(t_shell *shell)
 {
-    
-}
+    int saved_stdin = dup(STDIN_FILENO);
+    int saved_stdout = dup(STDOUT_FILENO);
 
-void	execute_built_in(t_shell *shell)
-{
-	if (!ft_strcmp(shell->command, "echo"))
-		ft_echo(shell);
-	else if (!ft_strcmp(shell->command, "exit"))
-		ft_exit(shell);
-	else if (!ft_strcmp(shell->command, "cd"))
-		ft_cd(shell);
-	else if (!ft_strcmp(shell->command, "pwd"))
-		ft_pwd(shell);
-	else if (!ft_strcmp(shell->command, "export"))
-		ft_export(shell);
-	else if (!ft_strcmp(shell->command, "unset"))
-		ft_unset(shell);
-	else if (!ft_strcmp(shell->command, "env"))
-		ft_env(shell);
-    else if (!ft_strcmp(shell->command, "$"))
-		ft_dollar(shell);
+    redirection(shell);
+
+    if (ft_strcmp(shell->cmds->args[0], "echo") == 0)
+        ft_echo(shell);
+    else if (ft_strcmp(shell->cmds->args[0], "cd") == 0)
+        ft_cd(shell);
+    else if (ft_strcmp(shell->cmds->args[0], "pwd") == 0)
+        ft_pwd(shell);
+    else if (ft_strcmp(shell->cmds->args[0], "export") == 0)
+        ft_export(shell);
+    else if (ft_strcmp(shell->cmds->args[0], "unset") == 0)
+        ft_unset(shell);
+    else if (ft_strcmp(shell->cmds->args[0], "env") == 0)
+        ft_env(shell);
+    else if (ft_strcmp(shell->cmds->args[0], "exit") == 0)
+        ft_exit(shell);
+
+    dup2(saved_stdin, STDIN_FILENO);
+    dup2(saved_stdout, STDOUT_FILENO);
+    close(saved_stdin);
+    close(saved_stdout);
 }

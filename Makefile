@@ -3,13 +3,13 @@
 # ifeq ($(OS), Darwin)  # For me to work on my macOS
 #     RLFLAGS = -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 # else
-# 	RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses -ggdb3
+# 	RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
 # endif
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses -ggdb3
+RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
 LIBFT = libft/libft.a
 
 SRC = srcs/main.c \
@@ -17,11 +17,14 @@ SRC = srcs/main.c \
 		srcs/utils.c \
 		srcs/add_arg.c \
 		srcs/init.c \
+		srcs/redirection.c \
+		srcs/pipe.c \
 		srcs/parsing/get_tokens.c \
 		srcs/parsing/get_cmd.c \
 		srcs/parsing/env_var.c \
 		srcs/parsing/env_var_utils.c \
 		srcs/parsing/parse_init.c \
+		srcs/parsing/test_parser.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/echo.c \

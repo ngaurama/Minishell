@@ -6,82 +6,58 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/13 20:01:47 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:42:23 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	handle_sigint(int sig)
+void handle_input(t_shell *shell)
 {
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+    shell->input = readline("minishell$ ");
+    if (!shell->input)
+    {
+        printf("exit\n");
+        clear_history();
+        free_shell(shell);
+        exit(0);
+    }
+    if (*shell->input != '\0')
+        add_history(shell->input);
+    shell->arguments = tokenize_input(shell->input, shell);
+	//print_token_list(shell->arguments);
+    if (shell->arguments)
+        shell->command = shell->arguments->value;
+    else
+        shell->command = NULL;
 }
 
-void	print_path(void)
+void process_command(t_shell *shell)
 {
-	char	*path;
-
-	path = getenv("PATH");
-	if (path)
-		printf("PATH: %s\n", path);
-	else
-		printf("PATH not set\n");
-}
-
-void	handle_input(t_shell *shell)
-{
-	char	*token;
-
-	shell->input = readline("minishell$ ");
-	if (!shell->input)
-	{
-		printf("exit\n");
-		clear_history();
-		free_shell(shell);
-		exit(0);
-	}
-	if (*shell->input != '\0')
-		add_history(shell->input);
-	token = ft_strtok(shell->input, " ");
-	shell->arguments = NULL;
-	while (token)
-	{
-		shell->arguments = add_argument(shell->arguments, token);
-		token = ft_strtok(NULL, " ");
-	}
-	if (shell->arguments)
-		shell->command = shell->arguments->value;
-	else
-		shell->command = NULL;
-}
-
-void	process_command(t_shell *shell)
-{
-	if (!shell->command)
-	{
-		free(shell->input);
-		return ;
-	}
-	if (check_built_in(shell) == 1)
-		execute_built_in(shell);
-	else
-	{
-		if (find_full_path(shell) == 0)
-			execute_command(shell);
-		else
-		{
-			write(2, "minishell: command not found: ", 30);
-			write(2, shell->command, ft_strlen(shell->command));
-			write(2, "\n", 1);
-		}
-	}
-	free_arguments(shell->arguments);
-	free(shell->input);
-	shell->arguments = NULL;
+    t_command *cmds_head = shell->cmds;
+    shell->cmds = parse_tokens(shell->arguments);
+    if (!shell->cmds)
+    {
+        free(shell->input);
+        return;
+    }
+    if (shell->cmds->pipe)
+        pipeline(shell);
+    else
+    {
+        if (find_full_path(shell, shell->cmds->args[0]) == 0)
+            execute_command(shell);
+        else
+        {
+            write(2, "minishell: command not found: ", 30);
+            write(2, shell->cmds->args[0], ft_strlen(shell->cmds->args[0]));
+            write(2, "\n", 1);
+        }
+    }
+    free_commands(cmds_head);
+    free_arguments(shell->arguments);
+    free(shell->input);
+    shell->arguments = NULL;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -90,9 +66,9 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	memset(&shell, 0, sizeof(shell));
+	ft_memset(&shell, 0, sizeof(shell));
 	init_shell(&shell, envp);
-	signal(SIGINT, handle_sigint);
+	//signal(SIGINT, handle_sigint);
 	using_history();
 	while (1)
 	{

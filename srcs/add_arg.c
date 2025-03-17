@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:14 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/14 23:04:18 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/16 14:42:25 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ void	free_arguments(t_arg *head)
 	}
 }
 
-t_arg	*add_token(t_arg *head, char *token, int type)
-{
-	t_arg	*new;
+// t_arg	*add_token(t_arg *head, char *token, int type)
+// {
+// 	t_arg	*new;
 
-	if (!token || *token == '\0')
-		return (head);
-	new = add_argument(head, token);
-	new->type = type;
-	return (new);
-}
+// 	if (!token || *token == '\0')
+// 		return (head);
+// 	new = add_argument(head, token);
+// 	new->type = type;
+// 	return (new);
+// }

@@ -6,11 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-<<<<<<< HEAD:srcs/get_tokens.c
-/*   Updated: 2025/03/14 23:04:25 by ngaurama         ###   ########.fr       */
-=======
-/*   Updated: 2025/03/15 19:18:55 by npbk             ###   ########.fr       */
->>>>>>> main:srcs/parsing/get_tokens.c
+/*   Updated: 2025/03/16 14:34:31 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

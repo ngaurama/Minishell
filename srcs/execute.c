@@ -6,46 +6,54 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/11 19:29:09 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:35:37 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	find_full_path(t_shell *shell)
+int find_full_path(t_shell *shell, const char *command)
 {
-	char	*path_var;
-	char	*path_var_copy;
-	char	*path;
+    char *path_var;
+    char *path_var_copy;
+    char *path;
 
-	path_var = getenv("PATH");
-	if (!path_var)
-		return (1);
-	path_var_copy = ft_strdup(path_var);
-	if (!path_var_copy)
-		return (1);
-	path = ft_strtok(path_var_copy, ":");
-	if (shell->full_path)
-	{
-		free(shell->full_path);
-		shell->full_path = NULL;
-	}
-	while (path)
-	{
-		shell->full_path = malloc(ft_strlen(path) + ft_strlen(shell->command)
-				+ 2);
-		if (!shell->full_path)
-			return (1);
-		ft_strcpy(shell->full_path, path);
-		ft_strcat(shell->full_path, "/");
-		ft_strcat(shell->full_path, shell->command);
-		if (access(shell->full_path, F_OK) == 0)
-			return (free(path_var_copy), 0);
-		free(shell->full_path);
-		shell->full_path = NULL;
-		path = ft_strtok(NULL, ":");
-	}
-	return (free(path_var_copy), 1);
+    if (!command)
+        return (1);
+    path_var = getenv("PATH");
+    if (!path_var)
+        return (1);
+    path_var_copy = ft_strdup(path_var);
+    if (!path_var_copy)
+        return (1);
+    path = ft_strtok(path_var_copy, ":");
+    if (shell->full_path)
+    {
+        free(shell->full_path);
+        shell->full_path = NULL;
+    }
+    while (path)
+    {
+        shell->full_path = malloc(ft_strlen(path) + ft_strlen(command) + 2);
+        if (!shell->full_path)
+        {
+            free(path_var_copy);
+            return (1);
+        }
+        ft_strcpy(shell->full_path, path);
+        ft_strcat(shell->full_path, "/");
+        ft_strcat(shell->full_path, command);
+        if (access(shell->full_path, F_OK | X_OK) == 0)
+        {
+            free(path_var_copy); 
+            return (0); 
+        }
+        free(shell->full_path);
+        shell->full_path = NULL;
+        path = ft_strtok(NULL, ":");
+    }
+    free(path_var_copy);
+    return (1);
 }
 
 int	check_built_in(t_shell *shell)
@@ -60,53 +68,34 @@ int	check_built_in(t_shell *shell)
 	return (0);
 }
 
-int	count_arguments(t_shell *shell)
+int execute_command(t_shell *shell)
 {
-	int		count;
-	t_arg	*temp;
-
-	count = 0;
-	temp = shell->arguments;
-	while (temp)
-	{
-		count++;
-		temp = temp->next;
-	}
-	return (count);
-}
-
-int	execute_command(t_shell *shell)
-{
-	pid_t	pid;
-	char	**args;
-	t_arg	*temp;
-	int		i;
-
-	args = malloc(sizeof(char *) * (count_arguments(shell) + 1));
-	if (!args)
-		exit(1);
-	temp = shell->arguments;
-	i = 0;
-	while (temp)
-	{
-		args[i++] = temp->value;
-		temp = temp->next;
-	}
-	args[i] = NULL;
-	pid = fork();
-	if (pid == 0)
-	{
-		if (execve(shell->full_path, args, shell->env) == -1)
-		{
-			perror("execve failed");
-			free(args);
-			exit(1);
-		}
-	}
-	else if (pid > 0)
-		waitpid(pid, NULL, 0);
-	else
-		perror("fork failed");
-	free(args);
-	return (0);
+    if (!shell || !shell->cmds)
+    {
+        write(2, "minishell: invalid shell or command\n", 36);
+        return (1);
+    }
+    if (check_built_in(shell))
+    {
+        execute_built_in(shell);
+        return (0);
+    }
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        redirection(shell);
+        if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
+        {
+            perror("execve failed");
+            exit(1);
+        }
+    }
+    else if (pid > 0)
+        waitpid(pid, NULL, 0);
+    else
+    {
+        perror("fork failed");
+        return (1);
+    }
+    return (0);
 }
