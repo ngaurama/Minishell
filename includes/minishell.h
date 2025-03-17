@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/15 19:32:46 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/17 19:39:25 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ typedef struct s_tokenizer
 	int		i;
 	int		j;
 	int		type;
+	int		should_expand;
 	char	token[TOKEN_SIZE];
 }	t_tokenizer;
+
 
 typedef struct s_redir
 {
@@ -75,6 +77,15 @@ typedef struct s_shell {
     char **env;
 } t_shell;
 
+// tmp_libft.c
+size_t	    ft_strlen(char const *s);
+size_t	    ft_strlcpy(char *dst, const char *src, size_t dstsize);
+size_t	    ft_strlcat(char *dst, const char *src, size_t dstsize);
+int	        ft_strncmp(const char *s1, const char *s2, size_t n);
+int     	ft_isalpha(int c);
+int	        ft_isdigit(int c);
+int	        ft_isalnum(int c);
+
 // add_arg.c
 t_arg       *add_argument(t_arg *head, char *value);
 void        free_arguments(t_arg *head);
@@ -92,8 +103,8 @@ t_command	*parse_tokens(t_arg *tokens);
 // env_var.c
 char	    *expand_variable_token(char *token, t_shell *shell);
 char	    *expand_tilde(char *token, t_shell *shell);
-void	    expand_token(char *token, t_shell *shell, char **expanded_tilde,
-	char **expanded_var);
+void expand_token(t_tokenizer *tok, t_shell *shell, char **expanded_tilde,
+    char **expanded_var);
 
 // env_var_utils.c
 char	    *get_env_value(char **env, char *var_name);

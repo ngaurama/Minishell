@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/15 19:18:42 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/17 19:39:18 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,13 @@ char	*expand_tilde(char *token, t_shell *shell)
 	return (expanded);
 }
 
-void	expand_token(char *token, t_shell *shell, char **expanded_tilde,
-	char **expanded_var)
+void expand_token(t_tokenizer *tok, t_shell *shell, char **expanded_tilde,
+	 char **expanded_var)
 {
-	*expanded_tilde = expand_tilde(token, shell);
-	*expanded_var = expand_variable_token(*expanded_tilde, shell);
+	*expanded_tilde = expand_tilde(tok->token, shell);
+	if (tok->should_expand)
+		*expanded_var = expand_variable_token(*expanded_tilde, shell);
+	else
+		*expanded_var = ft_strdup(*expanded_tilde);
 }
+
