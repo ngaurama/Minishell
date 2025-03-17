@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/17 19:39:48 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/17 20:14:22 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	handle_quotes(char *input, t_tokenizer *tok)
 		tok->token[tok->j++] = input[tok->i++];
 	if (input[tok->i] == quote)
 		tok->i++;
-	return tok->i;
+	return (tok->i);
 }
 
 int	handle_special(char *input, t_tokenizer *tok)
@@ -97,7 +97,7 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 			continue;
 		expand_token(&tok, shell, &expanded_tilde, &expanded_var);
 		if (!expanded_var)
-			return NULL;
+			return (NULL);
 		head = add_token(head, expanded_var, tok.type);
 		if (expanded_var != expanded_tilde)
 			free(expanded_var);
