@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/17 16:02:27 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/17 20:04:18 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,10 @@ typedef struct s_tokenizer
 	int		i;
 	int		j;
 	int		type;
+	int		should_expand;
 	char	token[TOKEN_SIZE];
 }	t_tokenizer;
+
 
 typedef struct s_redir
 {
@@ -94,8 +96,8 @@ t_command	*parse_tokens(t_arg *tokens);
 // env_var.c
 char	    *expand_variable_token(char *token, t_shell *shell);
 char	    *expand_tilde(char *token, t_shell *shell);
-void	    expand_token(char *token, t_shell *shell, char **expanded_tilde,
-	char **expanded_var);
+void expand_token(t_tokenizer *tok, t_shell *shell, char **expanded_tilde,
+    char **expanded_var);
 
 // env_var_utils.c
 char	    *get_env_value(char **env, char *var_name);
