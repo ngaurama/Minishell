@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/17 19:39:18 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/17 20:26:37 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,3 @@ void expand_token(t_tokenizer *tok, t_shell *shell, char **expanded_tilde,
 	else
 		*expanded_var = ft_strdup(*expanded_tilde);
 }
-
