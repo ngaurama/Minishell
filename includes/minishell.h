@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/17 19:39:25 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/17 20:04:18 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,6 @@ typedef struct s_shell {
     pid_t pid;
     char **env;
 } t_shell;
-
-// tmp_libft.c
-size_t	    ft_strlen(char const *s);
-size_t	    ft_strlcpy(char *dst, const char *src, size_t dstsize);
-size_t	    ft_strlcat(char *dst, const char *src, size_t dstsize);
-int	        ft_strncmp(const char *s1, const char *s2, size_t n);
-int     	ft_isalpha(int c);
-int	        ft_isdigit(int c);
-int	        ft_isalnum(int c);
 
 // add_arg.c
 t_arg       *add_argument(t_arg *head, char *value);
