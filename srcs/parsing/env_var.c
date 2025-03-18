@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/17 20:26:37 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/18 17:54:33 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,13 @@ char	*expand_variable_token(char *token, t_shell *shell)
 	if (!var_name)
 		return (NULL);
 	var_value = get_env_value(shell->env, var_name);
-	free(var_name);
 	if (!var_value)
+	{
+		free(var_name);
 		return (NULL);
+	}
 	expanded = create_expanded_token(token, var_start, var_value, var_name);
+	free(var_name);
 	free(var_value);
 	return (expanded);
 }
@@ -63,10 +66,12 @@ char	*expand_tilde(char *token, t_shell *shell)
 	return (expanded);
 }
 
-void expand_token(t_tokenizer *tok, t_shell *shell, char **expanded_tilde,
-	 char **expanded_var)
+void expand_token(t_tokenizer *tok, t_shell *shell, char **expanded_tilde, char **expanded_var)
 {
-	*expanded_tilde = expand_tilde(tok->token, shell);
+	if (tok->quoted)
+		*expanded_tilde = ft_strdup(tok->token);
+	else
+		*expanded_tilde = expand_tilde(tok->token, shell);
 	if (tok->should_expand)
 		*expanded_var = expand_variable_token(*expanded_tilde, shell);
 	else
