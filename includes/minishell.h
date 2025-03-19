@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/19 19:28:26 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/20 00:48:30 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,8 @@ void        free_commands(t_command *cmds);
 void        free_tokens(t_arg *tokens);
     
 // execute.c
-int         check_built_in(t_shell *shell);
+//int         check_built_in(t_shell *shell);
+int check_built_in(t_command *cmds);
 int         execute_command(t_shell *shell);
 int         find_full_path(t_shell *shell, const char *command);
 // utils.c
@@ -128,7 +129,7 @@ char	    *ft_strncpy(char *dest, const char *src, size_t n);
 char	    *ft_strcpy(char *dest, const char *src);
 
 //redirection.c
-void redirection(t_shell *shell);
+int redirection(t_shell *shell);
 
 //pipe.c
 void pipeline(t_shell *shell);
@@ -138,12 +139,10 @@ void pipeline(t_shell *shell);
 void				execute_built_in(t_shell *shell);
 // cd.c
 void				ft_cd(t_shell *shell);
-void				execute_export_single(t_shell *shell, const char *key,
-						const char *value);
+
 // echo.c
 void				ft_echo(t_shell *shell);
 // env.c
-char				*ft_getenv(t_shell *shell, const char *name);
 void				ft_env(t_shell *shell);
 // export.c
 void				ft_export(t_shell *shell);
@@ -151,17 +150,12 @@ void				ft_export(t_shell *shell);
 void				ft_pwd(t_shell *shell);
 // unset.c
 void				ft_unset(t_shell *shell);
-// expand_variable.c
-char				*expand_variables(t_shell *shell, const char *input);
-char				*ft_getenv(t_shell *shell, const char *var_name);
-char				*append_to_result(char *result, const char *str);
-char				*extract_variable_name(const char **ptr);
-char				*handle_variable_expansion(t_shell *shell, char *result,
-						const char **ptr);
-char				*handle_normal_text(char *result, const char **ptr);
+
+//set_get_unset.c
+void set_env_var(t_shell *shell, const char *key, const char *value);
+void unset_env_var(t_shell *shell, const char *key);
 
 // For debugging
-void				print_path(void);
 void print_token_list(t_arg *tokens);
 void print_command_list(t_command *cmd);
 void print_redirections(t_redir *redirs, char *type);

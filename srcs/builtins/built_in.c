@@ -6,25 +6,38 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/17 17:33:28 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 00:18:39 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_exit(t_shell *shell)
+void ft_exit(t_shell *shell)
 {
-	free_shell(shell);
-	exit(0);
+    int status = 0;
+
+    if (shell->cmds->args[1])
+        status = ft_atoi(shell->cmds->args[1]);
+
+    free_shell(shell);
+    exit(status);
 }
 
 void execute_built_in(t_shell *shell)
 {
     int saved_stdin = dup(STDIN_FILENO);
     int saved_stdout = dup(STDOUT_FILENO);
-
-    redirection(shell);
-
+    if (saved_stdin == -1 || saved_stdout == -1)
+    {
+        perror("dup failed");
+        return;
+    }
+    if (redirection(shell) != 0)
+    {
+        close(saved_stdin);
+        close(saved_stdout);
+        return;
+    }
     if (ft_strcmp(shell->cmds->args[0], "echo") == 0)
         ft_echo(shell);
     else if (ft_strcmp(shell->cmds->args[0], "cd") == 0)
@@ -39,7 +52,6 @@ void execute_built_in(t_shell *shell)
         ft_env(shell);
     else if (ft_strcmp(shell->cmds->args[0], "exit") == 0)
         ft_exit(shell);
-
     dup2(saved_stdin, STDIN_FILENO);
     dup2(saved_stdout, STDOUT_FILENO);
     close(saved_stdin);
