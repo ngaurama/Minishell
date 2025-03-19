@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:10 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/20 00:40:42 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 00:43:22 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,5 @@ void ft_echo(t_shell *shell)
     }
     if (newline)
         printf("\n");
+
 }

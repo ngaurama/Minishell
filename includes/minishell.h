@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/20 00:40:48 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 00:43:27 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,41 +40,45 @@ typedef struct s_tokenizer
 	int		i;
 	int		j;
 	int		type;
+	int		should_expand;
+	int		in_quotes;
+	int		quoted;
 	char	token[TOKEN_SIZE];
 }	t_tokenizer;
 
 typedef struct s_redir
 {
-    char *filename;
-    int   type;
-    struct s_redir *next;
+    char            *filename;
+    int             type;
+    struct s_redir  *next;
 } t_redir;
 
 typedef struct s_arg
 {
-	char			*value;
-	int				type;
-	struct s_arg	*next;
-}					t_arg;
+    char            *value;
+    int             type;
+    int             quoted;
+    struct s_arg    *next;
+}   t_arg;
 
 typedef struct s_command
 {
-    char    *args[MAX_ARGS];   // Arguments for execve()
-    t_redir *infiles;          // Files for "<"
-    t_redir *outfiles;         // Files for ">" or ">>"
-    int     append;            // 1 if ">>", 0 if ">"
-    int     pipe;              // 1 if there's a pipe "|"
-    struct s_command *next;    // Next command in the pipeline
+    char                *args[MAX_ARGS];   // Arguments for execve()
+    t_redir             *infiles;          // Files for "<"
+    t_redir             *outfiles;         // Files for ">" or ">>"
+    int                 append;            // 1 if ">>", 0 if ">"
+    int                 pipe;              // 1 if there's a pipe "|"
+    struct s_command    *next;    // Next command in the pipeline
 }   t_command;
 
 typedef struct s_shell {
-    t_arg *arguments;
-    t_command *cmds;
-    char *input;
-    char *command;
-    char *full_path;
-    pid_t pid;
-    char **env;
+    t_arg       *arguments;
+    t_command   *cmds;
+    char        *input;
+    char        *command;
+    char        *full_path;
+    pid_t       pid;
+    char        **env;
 } t_shell;
 
 // add_arg.c
@@ -94,13 +98,14 @@ t_command	*parse_tokens(t_arg *tokens);
 // env_var.c
 char	    *expand_variable_token(char *token, t_shell *shell);
 char	    *expand_tilde(char *token, t_shell *shell);
-void	    expand_token(char *token, t_shell *shell, char **expanded_tilde,
-	char **expanded_var);
+void        expand_token(t_tokenizer *tok, t_shell *shell,
+     char **expanded_tilde, char **expanded_var);
 
 // env_var_utils.c
 char	    *get_env_value(char **env, char *var_name);
 char	    *extract_var_name(char *start);
-char	    *create_expanded_token(char *token, char *var_start, char *var_value, char *var_name);
+char	    *create_expanded_token(char *token, char *var_start,
+     char *var_value, char *var_name);
 
 // parse_init.c
 t_arg	    *add_token(t_arg *head, char *token, int type);
@@ -112,13 +117,13 @@ void        free_commands(t_command *cmds);
 //int         check_built_in(t_shell *shell);
 int check_built_in(t_command *cmds);
 int         execute_command(t_shell *shell);
-int find_full_path(t_shell *shell, const char *command);
+int         find_full_path(t_shell *shell, const char *command);
 // utils.c
 char	    *ft_strtok(char *str, const char *delim);
-int	ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcat(char *dest, const char *src);
-char	*ft_strncpy(char *dest, const char *src, size_t n);
-char	*ft_strcpy(char *dest, const char *src);
+int	        ft_strcmp(const char *s1, const char *s2);
+char	    *ft_strcat(char *dest, const char *src);
+char	    *ft_strncpy(char *dest, const char *src, size_t n);
+char	    *ft_strcpy(char *dest, const char *src);
 
 //redirection.c
 int redirection(t_shell *shell);

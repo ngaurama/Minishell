@@ -37,19 +37,17 @@ void print_token_list(t_arg *tokens)
 }
 
 /*
-cc -Wall -Wextra -Werror get_tokens.c get_cmd.c env_var.c env_var_utils.c test_parser.c ../utils.c ../add_arg.c ../init.c parse_init.c -o test_parser
+cc -Wall -Wextra -Werror get_tokens.c get_cmd.c env_var.c env_var_utils.c test_parser.c ../utils.c parse_init.c tmp_libft.c -o test_parser
 */
 
 // int main(int argc, char **argv, char **env)
 // {
 //     t_shell shell;
-
 //     if (argc != 2)
 //     {
 //         printf("Usage: %s \"command to test\"\n", argv[0]);
 //         return (1);
 //     }
-
 //     shell.input = argv[1];
 //     shell.env = env;
 //     shell.arguments = NULL;

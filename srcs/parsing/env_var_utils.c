@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:03:53 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/15 19:11:18 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/18 18:45:04 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,28 @@ char	*get_env_value(char **env, char *var_name)
 		}
 		i++;
 	}
-	return (ft_strdup(""));
+	return (NULL);
 }
 
-char	*extract_var_name(char *start)
+char	*extract_var_name(char *str)
 {
 	int		len;
 	char	*var_name;
 
 	len = 0;
-	while (start[len] && (ft_isalnum(start[len]) || start[len] == '_'))
+	if (str[len] == '?')
 		len++;
+	else
+	{
+		while (ft_isalnum(str[len]) || str[len] == '_')
+			len++;
+	}
+	if (len == 0)
+		return (NULL);
 	var_name = malloc(len + 1);
 	if (!var_name)
 		return (NULL);
-	len = 0;
-	while (start[len] && (ft_isalnum(start[len]) || start[len] == '_'))
-	{
-		var_name[len] = start[len];
-		len++;
-	}
+	ft_strncpy(var_name, str, len);
 	var_name[len] = '\0';
 	return (var_name);
 }
