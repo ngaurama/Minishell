@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/14 23:04:33 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:47:16 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ void	free_shell(t_shell *shell)
 		free(shell->full_path);
 	if (shell->command)
 		shell->command = NULL;
-	free_arguments(shell->arguments);
+	if (shell->arguments)
+		free_arguments(shell->arguments);
+	if (shell->cmds)
+		free_commands(shell->cmds);
 	if (shell->env)
 	{
 		i = 0;
@@ -50,4 +53,6 @@ void	free_shell(t_shell *shell)
 			free(shell->env[i++]);
 		free(shell->env);
 	}
+	rl_clear_history();
+	exit(0);
 }

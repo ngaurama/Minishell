@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/18 17:56:58 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/19 19:28:26 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <unistd.h>
 #include <fcntl.h>
 
-# define TOKEN_SIZE 256
 # define MAX_ARGS 256
 
 # define T_WORD          1  // Regular arguments
@@ -43,7 +42,7 @@ typedef struct s_tokenizer
 	int		should_expand;
 	int		in_quotes;
 	int		quoted;
-	char	token[TOKEN_SIZE];
+	char	*token;
 }	t_tokenizer;
 
 typedef struct s_redir
@@ -109,10 +108,14 @@ char	    *create_expanded_token(char *token, char *var_start,
 
 // parse_init.c
 t_arg	    *add_token(t_arg *head, char *token, int type);
-void        free_tokens(t_arg *tokens);
 t_command	*init_command(void);
-void        free_commands(t_command *cmds);
 
+// free_parse.c
+void	    free_expanded_tokens(char *expanded_tilde, char *expanded_var,
+    t_tokenizer *tok);
+void        free_commands(t_command *cmds);
+void        free_tokens(t_arg *tokens);
+    
 // execute.c
 int         check_built_in(t_shell *shell);
 int         execute_command(t_shell *shell);

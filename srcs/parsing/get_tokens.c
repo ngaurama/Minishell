@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/18 17:54:54 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/19 19:26:39 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	handle_quotes(char *input, t_tokenizer *tok)
 		tok->i++;
 		tok->in_quotes = 0;
 	}
+	tok->token[tok->j] = '\0';
 	return (tok->i);
 }
 
@@ -61,6 +62,7 @@ int	handle_word(char *input, t_tokenizer *tok)
 	{
 		tok->token[tok->j++] = input[tok->i++];
 	}
+	tok->token[tok->j] = '\0';
 	return (tok->i);
 }
 
@@ -89,6 +91,9 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 
 	tok.i = 0;
 	head = NULL;
+	tok.token = malloc(strlen(input) + 1);
+	if (!tok.token)
+		return (NULL);
 	while (input[tok.i])
 	{
 		tok.j = 0;
@@ -100,10 +105,10 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 			continue;
 		expand_token(&tok, shell, &expanded_tilde, &expanded_var);
 		head = add_token(head, expanded_var, tok.type);
-		if (expanded_var != expanded_tilde)
-			free(expanded_var);
-		if (expanded_tilde != tok.token)
-			free(expanded_tilde);
+		free_expanded_tokens(expanded_tilde, expanded_var, &tok);
 	}
+	free(tok.token);
 	return (head);
 }
+
+

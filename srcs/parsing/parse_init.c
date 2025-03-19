@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/18 17:53:09 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/19 19:25:55 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,6 @@ t_arg	*add_token(t_arg *head, char *token, int type)
 	return (head);
 }
 
-void free_tokens(t_arg *tokens)
-{
-    t_arg *tmp;
-
-    while (tokens)
-    {
-        tmp = tokens;
-        tokens = tokens->next;
-        free(tmp->value);
-        free(tmp);
-    }
-}
-
 t_command	*init_command(void)
 {
 	t_command	*cmd;
@@ -61,34 +48,4 @@ t_command	*init_command(void)
 	cmd->pipe = 0;
 	cmd->next = NULL;
 	return (cmd);
-}
-
-static void free_redirections(t_redir *redirs)
-{
-    t_redir *tmp;
-
-    while (redirs)
-    {
-        tmp = redirs;
-        redirs = redirs->next;
-        free(tmp->filename);
-        free(tmp);
-    }
-}
-
-void free_commands(t_command *cmds)
-{
-    t_command *tmp;
-    int i;
-
-    while (cmds)
-    {
-        tmp = cmds;
-        for (i = 0; cmds->args[i]; i++)
-            free(cmds->args[i]);
-        free_redirections(cmds->infiles);
-        free_redirections(cmds->outfiles);
-        cmds = cmds->next;
-        free(tmp);
-    }
 }
