@@ -27,12 +27,12 @@ SRC = srcs/main.c \
 		srcs/parsing/test_parser.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
+		srcs/builtins/set_unset.c \
 		srcs/builtins/echo.c \
 		srcs/builtins/env.c \
 		srcs/builtins/export.c \
 		srcs/builtins/pwd.c \
-		srcs/builtins/unset.c \
-		srcs/builtins/expand_variable.c
+		srcs/builtins/unset.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_DIR = obj

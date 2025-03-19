@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/17 17:35:37 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 00:18:30 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,34 +56,62 @@ int find_full_path(t_shell *shell, const char *command)
     return (1);
 }
 
-int	check_built_in(t_shell *shell)
+int check_built_in(t_command *cmd)
 {
-	if (!shell->command)
-		return (0);
-	if (!ft_strcmp(shell->command, "echo") || !ft_strcmp(shell->command, "exit")
-		|| !ft_strcmp(shell->command, "cd") || !ft_strcmp(shell->command, "pwd")
-		|| !ft_strcmp(shell->command, "export") || !ft_strcmp(shell->command,
-			"unset") || !ft_strcmp(shell->command, "env") || !ft_strcmp(shell->command, "$"))
-		return (1);
-	return (0);
+    int i = 0;
+    if (!cmd || !cmd->args[0])
+        return (0);
+    const char *command = cmd->args[0];
+    const char *builtins[] = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
+    while(builtins[i])
+    {
+        if (ft_strcmp(command, builtins[i]) == 0)
+            return (1);
+        i++;
+    }
+    return (0);
 }
 
 int execute_command(t_shell *shell)
 {
-    if (!shell || !shell->cmds)
+    if (!shell || !shell->cmds || !shell->cmds->args[0])
+        return (1);
+    int saved_stdin = dup(STDIN_FILENO);
+    int saved_stdout = dup(STDOUT_FILENO);
+    if (saved_stdin == -1 || saved_stdout == -1)
     {
-        write(2, "minishell: invalid shell or command\n", 36);
+        perror("dup failed");
         return (1);
     }
-    if (check_built_in(shell))
+    if (redirection(shell) != 0)
+    {
+        close(saved_stdin);
+        close(saved_stdout);
+        return (1);
+    }
+    if (check_built_in(shell->cmds))
     {
         execute_built_in(shell);
+        dup2(saved_stdin, STDIN_FILENO);
+        dup2(saved_stdout, STDOUT_FILENO);
+        close(saved_stdin);
+        close(saved_stdout);
         return (0);
+    }
+    if (find_full_path(shell, shell->cmds->args[0]) != 0)
+    {
+        write(2, "minishell: command not found: ", 30);
+        write(2, shell->cmds->args[0], ft_strlen(shell->cmds->args[0]));
+        write(2, "\n", 1);
+        dup2(saved_stdin, STDIN_FILENO);
+        dup2(saved_stdout, STDOUT_FILENO);
+        close(saved_stdin);
+        close(saved_stdout);
+        return (1);
     }
     pid_t pid = fork();
     if (pid == 0)
     {
-        redirection(shell);
         if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
         {
             perror("execve failed");
@@ -91,10 +119,21 @@ int execute_command(t_shell *shell)
         }
     }
     else if (pid > 0)
-        waitpid(pid, NULL, 0);
+    {
+        int status;
+        waitpid(pid, &status, 0);
+        dup2(saved_stdin, STDIN_FILENO);
+        dup2(saved_stdout, STDOUT_FILENO);
+        close(saved_stdin);
+        close(saved_stdout);
+    }
     else
     {
         perror("fork failed");
+        dup2(saved_stdin, STDIN_FILENO);
+        dup2(saved_stdout, STDOUT_FILENO);
+        close(saved_stdin);
+        close(saved_stdout);
         return (1);
     }
     return (0);

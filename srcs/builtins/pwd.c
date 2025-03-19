@@ -6,19 +6,23 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:40 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/11 17:35:00 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/19 23:55:05 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_pwd(t_shell *shell)
+void ft_pwd(t_shell *shell)
 {
-	char	cwd[1024];
+    char cwd[1024];
 
-	(void)shell;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd failed");
+    (void)shell;
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    {
+        printf("%s\n", cwd);
+    }
+    else
+    {
+        perror("pwd failed");
+    }
 }

@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/17 17:42:23 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 00:32:10 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,50 +32,34 @@ void handle_input(t_shell *shell)
         shell->command = NULL;
 }
 
-void process_command(t_shell *shell)
+int main(int argc, char **argv, char **envp)
 {
-    t_command *cmds_head = shell->cmds;
-    shell->cmds = parse_tokens(shell->arguments);
-    if (!shell->cmds)
+    t_shell shell;
+
+    (void)argc;
+    (void)argv;
+    ft_memset(&shell, 0, sizeof(shell));
+    init_shell(&shell, envp);
+    //using_history();
+    while (1)
     {
-        free(shell->input);
-        return;
-    }
-    if (shell->cmds->pipe)
-        pipeline(shell);
-    else
-    {
-        if (find_full_path(shell, shell->cmds->args[0]) == 0)
-            execute_command(shell);
-        else
+        handle_input(&shell);
+        if (shell.arguments)
         {
-            write(2, "minishell: command not found: ", 30);
-            write(2, shell->cmds->args[0], ft_strlen(shell->cmds->args[0]));
-            write(2, "\n", 1);
+            shell.cmds = parse_tokens(shell.arguments);
+            if (shell.cmds)
+            {
+                if (shell.cmds->pipe)
+                    pipeline(&shell);
+                else
+                    execute_command(&shell);
+                free_commands(shell.cmds);
+            }
+            free_arguments(shell.arguments);
         }
+        free(shell.input);
     }
-    free_commands(cmds_head);
-    free_arguments(shell->arguments);
-    free(shell->input);
-    shell->arguments = NULL;
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell	shell;
-
-	(void)argc;
-	(void)argv;
-	ft_memset(&shell, 0, sizeof(shell));
-	init_shell(&shell, envp);
-	//signal(SIGINT, handle_sigint);
-	using_history();
-	while (1)
-	{
-		handle_input(&shell);
-		process_command(&shell);
-	}
-	clear_history();
-	free_shell(&shell);
-	return (0);
+    clear_history();
+    free_shell(&shell);
+    return (0);
 }
