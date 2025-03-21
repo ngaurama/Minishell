@@ -6,11 +6,21 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/20 00:18:30 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/21 17:07:52 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
+
+void update_exit_status(t_shell *shell, int status)
+{
+    if (WIFEXITED(status))
+        shell->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        shell->exit_status = 128 + WTERMSIG(status);
+    else
+        shell->exit_status = 1;
+}
 
 int find_full_path(t_shell *shell, const char *command)
 {
@@ -56,85 +66,66 @@ int find_full_path(t_shell *shell, const char *command)
     return (1);
 }
 
-int check_built_in(t_command *cmd)
+
+int save_fds(int *saved_stdin, int *saved_stdout)
 {
-    int i = 0;
-    if (!cmd || !cmd->args[0])
-        return (0);
-    const char *command = cmd->args[0];
-    const char *builtins[] = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
-    while(builtins[i])
+    *saved_stdin = dup(STDIN_FILENO);
+    *saved_stdout = dup(STDOUT_FILENO);
+    if (*saved_stdin == -1 || *saved_stdout == -1)
     {
-        if (ft_strcmp(command, builtins[i]) == 0)
-            return (1);
-        i++;
+        perror("dup failed");
+        return (0);
     }
-    return (0);
+    return (1);
+}
+
+void restore_fds(int saved_stdin, int saved_stdout)
+{
+    dup2(saved_stdin, STDIN_FILENO);
+    dup2(saved_stdout, STDOUT_FILENO);
+    close(saved_stdin);
+    close(saved_stdout);
+}
+
+void handle_command_not_found(t_shell *shell)
+{
+    write(2, "minishell: command not found: ", 30);
+    write(2, shell->cmds->args[0], ft_strlen(shell->cmds->args[0]));
+    write(2, "\n", 1);
+}
+
+void execute_child_process(t_shell *shell)
+{
+    if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
+    {
+        perror("execve failed");
+        exit(1);
+    }
 }
 
 int execute_command(t_shell *shell)
 {
     if (!shell || !shell->cmds || !shell->cmds->args[0])
         return (1);
-    int saved_stdin = dup(STDIN_FILENO);
-    int saved_stdout = dup(STDOUT_FILENO);
-    if (saved_stdin == -1 || saved_stdout == -1)
-    {
-        perror("dup failed");
+
+    int saved_stdin, saved_stdout;
+    if (!save_fds(&saved_stdin, &saved_stdout))
         return (1);
-    }
     if (redirection(shell) != 0)
-    {
-        close(saved_stdin);
-        close(saved_stdout);
-        return (1);
-    }
-    if (check_built_in(shell->cmds))
-    {
-        execute_built_in(shell);
-        dup2(saved_stdin, STDIN_FILENO);
-        dup2(saved_stdout, STDOUT_FILENO);
-        close(saved_stdin);
-        close(saved_stdout);
-        return (0);
-    }
+        return (restore_fds(saved_stdin, saved_stdout), 1);
     if (find_full_path(shell, shell->cmds->args[0]) != 0)
-    {
-        write(2, "minishell: command not found: ", 30);
-        write(2, shell->cmds->args[0], ft_strlen(shell->cmds->args[0]));
-        write(2, "\n", 1);
-        dup2(saved_stdin, STDIN_FILENO);
-        dup2(saved_stdout, STDOUT_FILENO);
-        close(saved_stdin);
-        close(saved_stdout);
-        return (1);
-    }
+        return (handle_command_not_found(shell), restore_fds(saved_stdin, saved_stdout), 1);
     pid_t pid = fork();
     if (pid == 0)
-    {
-        if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
-        {
-            perror("execve failed");
-            exit(1);
-        }
-    }
+        execute_child_process(shell);
     else if (pid > 0)
-    {
-        int status;
-        waitpid(pid, &status, 0);
-        dup2(saved_stdin, STDIN_FILENO);
-        dup2(saved_stdout, STDOUT_FILENO);
-        close(saved_stdin);
-        close(saved_stdout);
-    }
+        shell->pid = pid;
     else
     {
         perror("fork failed");
-        dup2(saved_stdin, STDIN_FILENO);
-        dup2(saved_stdout, STDOUT_FILENO);
-        close(saved_stdin);
-        close(saved_stdout);
+        restore_fds(saved_stdin, saved_stdout);
         return (1);
     }
+    restore_fds(saved_stdin, saved_stdout);
     return (0);
 }

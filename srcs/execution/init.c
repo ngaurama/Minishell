@@ -6,30 +6,38 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/14 23:04:33 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/21 17:07:57 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-void	init_shell(t_shell *shell, char **envp)
+void init_shell(t_shell *shell, char **envp)
 {
-	int	i;
-
-	shell->env = NULL;
-	i = 0;
-	while (envp[i])
-		i++;
-	shell->env = malloc(sizeof(char *) * (i + 1));
-	if (!shell->env)
-		exit(1);
-	i = 0;
-	while (envp[i])
-	{
-		shell->env[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	shell->env[i] = NULL;
+    ft_memset(shell, 0, sizeof(t_shell));
+    if (!envp)
+    {
+        shell->env = NULL;
+        shell->exit_status = 0;
+        return;
+    }
+    int i = 0;
+    while (envp[i])
+        i++;
+    shell->env = malloc(sizeof(char *) * (i + 1));
+    if (!shell->env)
+    {
+        perror("malloc failed");
+        exit(1);
+    }
+    i = 0;
+    while (envp[i])
+    {
+        shell->env[i] = ft_strdup(envp[i]);
+        i++;
+    }
+    shell->env[i] = NULL;
+    shell->exit_status = 0;
 }
 
 void	free_shell(t_shell *shell)
@@ -42,7 +50,8 @@ void	free_shell(t_shell *shell)
 		free(shell->full_path);
 	if (shell->command)
 		shell->command = NULL;
-	free_arguments(shell->arguments);
+	if (shell->arguments)
+		free_arguments(shell->arguments);
 	if (shell->env)
 	{
 		i = 0;
@@ -51,3 +60,4 @@ void	free_shell(t_shell *shell)
 		free(shell->env);
 	}
 }
+

@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/20 00:43:27 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:38:48 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,15 @@
 # include <sys/wait.h>
 # include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>
 
 # define TOKEN_SIZE 256
 # define MAX_ARGS 256
+
+#include <signal.h>
+
+extern volatile sig_atomic_t g_signal_num;
+
 
 # define T_WORD          1  // Regular arguments
 # define T_PIPE          2  // "|"
@@ -79,11 +85,8 @@ typedef struct s_shell {
     char        *full_path;
     pid_t       pid;
     char        **env;
+    int         exit_status;
 } t_shell;
-
-// add_arg.c
-t_arg       *add_argument(t_arg *head, char *value);
-void        free_arguments(t_arg *head);
 
 // init.c
 void	    init_shell(t_shell *shell, char **envp);
@@ -114,16 +117,18 @@ t_command	*init_command(void);
 void        free_commands(t_command *cmds);
 
 // execute.c
-//int         check_built_in(t_shell *shell);
+void update_exit_status(t_shell *shell, int status);
 int check_built_in(t_command *cmds);
 int         execute_command(t_shell *shell);
 int         find_full_path(t_shell *shell, const char *command);
+void restore_fds(int saved_stdin, int saved_stdout);
 // utils.c
 char	    *ft_strtok(char *str, const char *delim);
 int	        ft_strcmp(const char *s1, const char *s2);
 char	    *ft_strcat(char *dest, const char *src);
 char	    *ft_strncpy(char *dest, const char *src, size_t n);
 char	    *ft_strcpy(char *dest, const char *src);
+void        free_arguments(t_arg *head);
 
 //redirection.c
 int redirection(t_shell *shell);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/18 18:46:28 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/20 19:09:02 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*expand_variable_token(char *token, t_shell *shell)
 	if (!var_name)
 		return (NULL);
 	if (ft_strncmp(var_name, "?", 2) == 0)
-		return (free(var_name), ft_strdup("EXIT_STATUS"));
+		return (free(var_name), ft_itoa(shell->exit_status));
 	var_value = get_env_value(shell->env, var_name);
 	if (!var_value)
 	{
