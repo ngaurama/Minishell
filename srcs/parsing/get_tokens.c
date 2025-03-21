@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/19 19:26:39 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/21 17:32:11 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 
 	tok.i = 0;
 	head = NULL;
-	tok.token = malloc(strlen(input) + 1);
+	tok.token = malloc(ft_strlen(input) + 1);
 	if (!tok.token)
 		return (NULL);
 	while (input[tok.i])
