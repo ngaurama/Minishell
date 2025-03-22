@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/19 19:25:55 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 03:39:48 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_arg	*add_token(t_arg *head, char *token, int type)
 
 	if (!token || *token == '\0')
 		return (head);
+	printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
 	new = malloc(sizeof(t_arg));
 	if (!new)
 		return (NULL);
