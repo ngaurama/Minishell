@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/20 00:32:10 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 16:15:52 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ int main(int argc, char **argv, char **envp)
                     pipeline(&shell);
                 else
                     execute_command(&shell);
-                free_commands(shell.cmds);
+//                free_commands(shell.cmds);
             }
-            free_arguments(shell.arguments);
+//            free_arguments(shell.arguments);
         }
-        free(shell.input);
+//        free(shell.input);
     }
     clear_history();
     free_shell(&shell);

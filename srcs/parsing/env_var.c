@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/18 18:46:28 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 03:17:54 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*expand_variable_token(char *token, t_shell *shell)
 		return (ft_strdup(token));
 	var_name = extract_var_name(var_start + 1);
 	if (!var_name)
-		return (NULL);
+		return (ft_strdup(""));
 	if (ft_strncmp(var_name, "?", 2) == 0)
 		return (free(var_name), ft_strdup("EXIT_STATUS"));
 	var_value = get_env_value(shell->env, var_name);

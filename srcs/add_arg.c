@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_arg.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:14 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/20 00:33:05 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:59:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,19 @@ t_arg	*add_argument(t_arg *head, char *value)
 	return (head);
 }
 
-void	free_arguments(t_arg *head)
+void free_arguments(t_arg *args)
 {
-	t_arg	*temp;
+    t_arg *tmp;
 
-	while (head)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->value);
-		free(temp);
-	}
+    while (args)
+    {
+        tmp = args->next;
+        if (args->value)
+        {
+            free(args->value);
+            args->value = NULL;
+        }
+        free(args);
+        args = tmp;
+    }
 }

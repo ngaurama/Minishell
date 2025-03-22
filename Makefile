@@ -25,6 +25,7 @@ SRC = srcs/main.c \
 		srcs/parsing/env_var_utils.c \
 		srcs/parsing/parse_init.c \
 		srcs/parsing/free_parse.c \
+		srcs/parsing/parse_utils.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/set_unset.c \
