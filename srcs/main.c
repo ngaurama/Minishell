@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/22 03:38:49 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 03:52:29 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int main(int argc, char **argv, char **envp)
                 free_commands(shell.cmds);
             }
         }
-        free(shell.input);
+//        free(shell.input);
     }
     clear_history();
     free_shell(&shell);

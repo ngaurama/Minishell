@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/21 17:24:24 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/22 03:25:18 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,12 @@ void	    free_expanded_tokens(char *expanded_tilde, char *expanded_var,
     t_tokenizer *tok);
 void        free_commands(t_command *cmds);
 void        free_tokens(t_arg *tokens);
+
+// parse_utils.c
+void	    append_str_to_token(t_tokenizer *tok, char *str);
+int	        is_space_or_meta(char c);
+void	    tok_reset(t_tokenizer *tok);
+int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
     
 // execute.c
 void update_exit_status(t_shell *shell, int status);

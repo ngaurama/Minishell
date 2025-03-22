@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/19 19:26:03 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/21 12:32:51 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static void free_redirections(t_redir *redirs)
     {
         tmp = redirs;
         redirs = redirs->next;
-        free(tmp->filename);
+        if (tmp->filename)
+            free(tmp->filename);
         free(tmp);
     }
 }
@@ -42,10 +43,20 @@ void free_commands(t_command *cmds)
     while (cmds)
     {
         tmp = cmds;
-        for (i = 0; cmds->args[i]; i++)
-            free(cmds->args[i]);
-        free_redirections(cmds->infiles);
-        free_redirections(cmds->outfiles);
+        i = 0;
+        if (cmds->args)
+        {
+            while (cmds->args[i])
+            {
+                free(cmds->args[i]);
+                i++;
+            }
+            free(cmds->args);
+        }
+        if (cmds->infiles)
+            free_redirections(cmds->infiles);
+        if (cmds->outfiles)
+            free_redirections(cmds->outfiles);
         cmds = cmds->next;
         free(tmp);
     }
