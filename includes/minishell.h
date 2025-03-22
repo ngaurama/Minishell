@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/22 04:04:05 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 04:53:31 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_command	*init_command(void);
 void	    free_expanded_tokens(char *expanded_tilde, char *expanded_var,
     t_tokenizer *tok);
 void        free_commands(t_command *cmds);
-void        free_tokens(t_arg *tokens);
+void        free_arguments(t_arg *args);
 
 // parse_utils.c
 void	    append_str_to_token(t_tokenizer *tok, char *str);
@@ -138,7 +138,6 @@ int	        ft_strcmp(const char *s1, const char *s2);
 char	    *ft_strcat(char *dest, const char *src);
 char	    *ft_strncpy(char *dest, const char *src, size_t n);
 char	    *ft_strcpy(char *dest, const char *src);
-void        free_arguments(t_arg *head);
 
 //redirection.c
 int redirection(t_shell *shell);
