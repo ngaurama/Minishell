@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/22 03:25:18 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 04:04:05 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ void        free_tokens(t_arg *tokens);
 void	    append_str_to_token(t_tokenizer *tok, char *str);
 int	        is_space_or_meta(char c);
 void	    tok_reset(t_tokenizer *tok);
-int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
+int	        handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
+char        *expand_var(char *var, t_shell *shell);
     
 // execute.c
 void update_exit_status(t_shell *shell, int status);

@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 02:59:39 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 04:08:56 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 		return (0);
 	}
 	tok->i += ft_strlen(var);
-	val = get_env_value(shell->env, var);
+	val = expand_var(var, shell);
 	if (val)
 		append_str_to_token(tok, val);
 	free(var);
@@ -59,3 +59,9 @@ int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 	return (1);
 }
 
+char *expand_var(char *var, t_shell *shell)
+{
+	if (ft_strncmp(var, "?", 2) == 0)
+		return ft_itoa(shell->exit_status);
+	return (get_env_value(shell->env, var));
+}

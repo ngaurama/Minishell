@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 03:26:06 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 04:04:30 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 			if (!var)
 				continue;
 			tok->i += ft_strlen(var);
-			val = get_env_value(shell->env, var);
+			val = expand_var(var, shell);
 			if (val)
 				append_str_to_token(tok, val);
 			free(var);
