@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 03:25:35 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 05:00:47 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ void	free_shell(t_shell *shell)
 		free(shell->full_path);
 	if (shell->command)
 		shell->command = NULL;
-	if (shell->arguments)
-		free_arguments(shell->arguments);
+	//if (shell->arguments)
+	//	free_arguments(shell->arguments);
 	if (shell->env)
 	{
 		i = 0;

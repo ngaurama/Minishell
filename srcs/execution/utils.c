@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/21 17:08:08 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/22 04:52:41 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	free_arguments(t_arg *head)
-{
-	t_arg	*temp;
-
-	while (head)
-	{
-		temp = head;
-		head = head->next;
-		if (temp->value)
-			free(temp->value);
-		free(temp);
-	}
-}
 
 char	*ft_strcat(char *dest, const char *src)
 {

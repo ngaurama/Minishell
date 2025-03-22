@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/21 12:32:51 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/22 04:54:40 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,39 +37,35 @@ static void free_redirections(t_redir *redirs)
 
 void free_commands(t_command *cmds)
 {
-    t_command *tmp;
-    int i;
+	t_command *tmp;
+	t_command *next;
+	int i;
 
-    while (cmds)
-    {
-        tmp = cmds;
-        i = 0;
-        if (cmds->args)
-        {
-            while (cmds->args[i])
-            {
-                free(cmds->args[i]);
-                i++;
-            }
-            free(cmds->args);
-        }
-        if (cmds->infiles)
-            free_redirections(cmds->infiles);
-        if (cmds->outfiles)
-            free_redirections(cmds->outfiles);
-        cmds = cmds->next;
-        free(tmp);
-    }
+	while (cmds)
+	{
+		tmp = cmds;
+		next = cmds->next;
+		i = 0;
+		if (tmp->args)
+		{
+			while (tmp->args[i])
+				free(tmp->args[i++]);
+		}
+		free_redirections(tmp->infiles);
+		free_redirections(tmp->outfiles);
+		free(tmp);
+		cmds = next;
+	}
 }
 
-void free_tokens(t_arg *tokens)
+void free_arguments(t_arg *args)
 {
     t_arg *tmp;
 
-    while (tokens)
+    while (args)
     {
-        tmp = tokens;
-        tokens = tokens->next;
+        tmp = args;
+        args = args->next;
         free(tmp->value);
         free(tmp);
     }
