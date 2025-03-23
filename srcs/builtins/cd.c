@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/23 17:52:01 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/23 17:57:19 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	*get_target_dir(t_shell *shell)
 		if (!dir)
 			return (perror("cd: HOME not set"), NULL);
 	}
-	else if (ft_strcmp(dir, "-") == 0)
+	else if (ft_strncmp(dir, "-", 2) == 0)
 	{
 		dir = get_env_value(shell->env, "OLDPWD");
 		if (!dir)
