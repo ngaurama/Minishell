@@ -6,56 +6,55 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 03:51:32 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/24 01:37:16 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
+void		add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
 {
-    if (*arg_count < MAX_ARGS - 1)
-    {
-        cmd->args[*arg_count] = ft_strdup(arg);
-        (*arg_count)++;
-        cmd->args[*arg_count] = NULL;
-    }
+	if (*arg_count < MAX_ARGS - 1)
+	{
+		cmd->args[*arg_count] = ft_strdup(arg);
+		(*arg_count)++;
+		cmd->args[*arg_count] = NULL;
+	}
 }
 
-void add_redirection(t_redir **redir_list, char *filename, int type)
+void		add_redirection(t_redir **redir_list, char *filename, int type)
 {
-    t_redir *new;
-    t_redir *tmp;
+	t_redir *new;
+	t_redir *tmp;
 
-    new = malloc(sizeof(t_redir));
-    if (!new)
-        return;
-    new->filename = ft_strdup(filename);
-    new->type = type;
-    new->next = NULL;
-
+	new = malloc(sizeof(t_redir));
+	if (!new)
+		return;
+	new->filename = ft_strdup(filename);
+	new->type = type;
+	new->next = NULL;
     if (!*redir_list)
-        *redir_list = new;
-    else
-    {
-        tmp = *redir_list;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new;
-    }
+		*redir_list = new;
+	else
+	{
+		tmp = *redir_list;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
 }
 
-void handle_redirection(t_command *cmd, t_arg *tokens)
+void		handle_redirection(t_command *cmd, t_arg *tokens)
 {
-    if (!tokens->next || tokens->next->type != T_WORD)
-    {
-        printf("Syntax error: missing filename after `%s`\n", tokens->value);
-        return;
-    }
-    if (tokens->type == T_REDIRECT_IN)
-        add_redirection(&cmd->infiles, tokens->next->value, tokens->type);
-    else
-        add_redirection(&cmd->outfiles, tokens->next->value, tokens->type);
+	if (!tokens->next || tokens->next->type != T_WORD)
+	{
+		printf("Syntax error: missing filename after `%s`\n", tokens->value);
+		return;
+	}
+	if (tokens->type == T_REDIRECT_IN)
+		add_redirection(&cmd->infiles, tokens->next->value, tokens->type);
+	else
+		add_redirection(&cmd->outfiles, tokens->next->value, tokens->type);
 }
 
 t_command	*handle_pipe(t_command *cmd, int *arg_count, t_arg *prev_token)

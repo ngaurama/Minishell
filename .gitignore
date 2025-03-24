@@ -2,3 +2,8 @@
 .vscode/
 for_me.txt
 scratch.c
+test_parser
+tmp_libft.c
+test.txt
+valgrind.log
+test_parser.c

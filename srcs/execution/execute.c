@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/21 17:21:02 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/23 20:39:50 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void handle_command_not_found(t_shell *shell)
     write(2, "minishell: command not found: ", 30);
     write(2, shell->cmds->args[0], ft_strlen(shell->cmds->args[0]));
     write(2, "\n", 1);
+	shell->exit_status = 127;
 }
 
 void execute_child_process(t_shell *shell)

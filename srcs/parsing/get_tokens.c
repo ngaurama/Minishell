@@ -6,13 +6,13 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 04:04:30 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/24 01:37:15 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	handle_quotes(char *input, t_tokenizer *tok, int in_word, t_shell *shell)
+int		handle_quotes(char *input, t_tokenizer *tok, int in_word, t_shell *shell)
 {
 	char	quote;
 
@@ -40,7 +40,7 @@ int	handle_quotes(char *input, t_tokenizer *tok, int in_word, t_shell *shell)
 	return (tok->i);
 }
 
-int	handle_special(char *input, t_tokenizer *tok)
+int		handle_special(char *input, t_tokenizer *tok)
 {
 	if (!input[tok->i])
 		return (tok->i);
@@ -63,7 +63,7 @@ int	handle_special(char *input, t_tokenizer *tok)
 	return (tok->i + 1);
 }
 
-int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
+int		handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 {
 	char	*var;
 	char	*val;
