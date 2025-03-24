@@ -6,13 +6,13 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 07:09:31 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/24 01:37:15 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_arg	*add_token(t_arg *head, char *token, int type)
+t_arg		*add_token(t_arg *head, char *token, int type)
 {
 	t_arg *new;
 	t_arg *tmp;

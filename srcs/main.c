@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/22 04:56:33 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/23 22:10:35 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void handle_input(t_shell *shell)
     if (!shell->input)
     {
         printf("exit\n");
-        clear_history();
         free_shell(shell);
         exit(0);
     }
@@ -79,10 +78,7 @@ void execution(t_shell *shell)
     else
     {
         if (check_built_in(shell->cmds))
-        {
             execute_built_in(shell);
-            shell->exit_status = 0;
-        }
         else
         {
             if (execute_command(shell) == 0)
@@ -106,7 +102,6 @@ int main(int argc, char **argv, char **envp)
     (void)argv;
     init_shell(&shell, envp);
     setup_signals();
-
     while (1)
     {
         handle_input(&shell);
@@ -117,10 +112,11 @@ int main(int argc, char **argv, char **envp)
             {
                 execution(&shell);
                 free_commands(shell.cmds);
+				shell.cmds = NULL;
             }
             free_arguments(shell.arguments);
+			shell.arguments = NULL;
         }
-//        free(shell.input);
     }
     clear_history();
     free_shell(&shell);

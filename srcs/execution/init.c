@@ -6,38 +6,37 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 05:00:47 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/24 01:38:41 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void init_shell(t_shell *shell, char **envp)
+void	init_shell(t_shell *shell, char **envp)
 {
-    ft_memset(shell, 0, sizeof(t_shell));
-    if (!envp)
-    {
-        shell->env = NULL;
-        shell->exit_status = 0;
-        return;
-    }
-    int i = 0;
-    while (envp[i])
-        i++;
-    shell->env = malloc(sizeof(char *) * (i + 1));
-    if (!shell->env)
-    {
-        perror("malloc failed");
-        exit(1);
-    }
-    i = 0;
-    while (envp[i])
-    {
-        shell->env[i] = ft_strdup(envp[i]);
-        i++;
-    }
-    shell->env[i] = NULL;
-    shell->exit_status = 0;
+	int i;
+    
+	ft_memset(shell, 0, sizeof(t_shell));
+	if (!envp)
+	{
+		shell->env = NULL;
+		shell->exit_status = 0;
+		return;
+	}
+	shell->env = malloc(sizeof(char *) * MAX_ARGS);
+	if (!shell->env)
+	{
+		perror("malloc failed");
+		exit(1);
+	}
+	i = 0;
+	while (envp[i])
+	{
+		shell->env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	shell->env[i] = NULL;
+	shell->exit_status = 0;
 }
 
 void	free_shell(t_shell *shell)
@@ -50,8 +49,14 @@ void	free_shell(t_shell *shell)
 		free(shell->full_path);
 	if (shell->command)
 		shell->command = NULL;
-	//if (shell->arguments)
-	//	free_arguments(shell->arguments);
+	if (shell->arguments)
+	{
+		free_arguments(shell->arguments);
+	}
+	if (shell->cmds)
+	{
+		free_commands(shell->cmds);
+	}
 	if (shell->env)
 	{
 		i = 0;
@@ -61,6 +66,4 @@ void	free_shell(t_shell *shell)
 	}
     clear_history(); //mac
 	//rl_clear_history();
-	exit(0);
 }
-

@@ -6,11 +6,22 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/22 04:52:41 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/24 01:38:52 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	print_error(const char *msg)
+{
+	size_t	len;
+
+	len = 0;
+	while (msg[len])
+		len++;
+	write(2, msg, len);
+	write(2, "\n", 1);
+}
 
 char	*ft_strcat(char *dest, const char *src)
 {

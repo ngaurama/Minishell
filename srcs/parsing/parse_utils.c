@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/22 04:08:56 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/24 01:37:14 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	append_str_to_token(t_tokenizer *tok, char *str)
 		tok->token[tok->j++] = str[i++];
 }
 
-int	is_space_or_meta(char c)
+int		is_space_or_meta(char c)
 {
 	return (
 		c == ' ' ||
@@ -38,7 +38,7 @@ void	tok_reset(t_tokenizer *tok)
 	tok->quoted = 0;
 }
 
-int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
+int		handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 {
 	char	*var;
 	char	*val;
@@ -59,7 +59,7 @@ int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 	return (1);
 }
 
-char *expand_var(char *var, t_shell *shell)
+char 	*expand_var(char *var, t_shell *shell)
 {
 	if (ft_strncmp(var, "?", 2) == 0)
 		return ft_itoa(shell->exit_status);
