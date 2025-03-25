@@ -6,20 +6,11 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:16 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/25 17:43:32 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void		free_expanded_tokens(char *expanded_tilde, char *expanded_var,
-	t_tokenizer *tok)
-{
-	if (expanded_var != expanded_tilde)
-		free(expanded_var);
-	if (expanded_tilde != tok->token)
-		free(expanded_tilde);
-}
 
 static void free_redirections(t_redir *redirs)
 {

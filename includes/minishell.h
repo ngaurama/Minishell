@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:42 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/25 17:43:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@
 extern volatile sig_atomic_t g_signal_num;
 
 
-# define T_WORD          1  // Regular arguments
-# define T_PIPE          2  // "|"
-# define T_REDIRECT_IN   3  // "<"
-# define T_REDIRECT_OUT  4  // ">"
-# define T_HEREDOC       5  // "<<"
-# define T_APPEND        6  // ">>"
+# define T_WORD			1	// Regular arguments
+# define T_PIPE			2	// "|"
+# define T_REDIRECT_IN	3	// "<"
+# define T_REDIRECT_OUT	4	// ">"
+# define T_HEREDOC		5	// "<<"
+# define T_APPEND		6	// ">>"
 
 typedef struct s_tokenizer
 {
@@ -48,83 +48,94 @@ typedef struct s_tokenizer
 	int		should_expand;
 	int		in_quotes;
 	int		quoted;
+	int		token_capacity;
 	char	*token;
 }	t_tokenizer;
 
 typedef struct s_redir
 {
-    char            *filename;
-    int             type;
-    struct s_redir  *next;
-} t_redir;
+	char			*filename;
+	int				type;
+	struct s_redir	*next;
+}	t_redir;
 
 typedef struct s_arg
 {
-    char            *value;
-    int             type;
-    int             quoted;
-    struct s_arg    *next;
-}   t_arg;
+	char			*value;
+	int				type;
+	int				quoted;
+	struct s_arg	*next;
+}	t_arg;
 
 typedef struct s_command
 {
-    char                *args[MAX_ARGS];   // Arguments for execve()
-    t_redir             *infiles;          // Files for "<"
-    t_redir             *outfiles;         // Files for ">" or ">>"
-    int                 append;            // 1 if ">>", 0 if ">"
-    int                 pipe;              // 1 if there's a pipe "|"
-    struct s_command    *next;    // Next command in the pipeline
-}   t_command;
+	char				*args[MAX_ARGS];	// Arguments for execve()
+	t_redir				*infiles;			// Files for "<"
+	t_redir				*outfiles;			// Files for ">" or ">>"
+	t_redir				*heredocs;
+	int					append;				// 1 if ">>", 0 if ">"
+	int					pipe;				// 1 if there's a pipe "|"
+	struct s_command	*next;				// Next command in the pipeline
+}	t_command;
 
 typedef struct s_shell {
-    t_arg       *arguments;
-    t_command   *cmds;
-    char        *input;
-    char        *command;
-    char        *full_path;
-    pid_t       pid;
-    char        **env;
-    int         exit_status;
-} t_shell;
+	t_arg		*arguments;
+	t_command	*cmds;
+	char		*input;
+	char		*command;
+	char		*full_path;
+	pid_t		pid;
+	char		**env;
+	int			exit_status;
+}	t_shell;
 
 // init.c
 void		init_shell(t_shell *shell, char **envp);
 void		free_shell(t_shell *shell);
 
-// get_tokens.c
+// get_tokens.c / get_tokens_2.c
 t_arg		*tokenize_input(char *input, t_shell *shell);
 
-// get_cmd.c
-t_command	*parse_tokens(t_arg *tokens);
-
 // env_var.c
-char		*expand_variable_token(char *token, t_shell *shell);
-char		*expand_tilde(char *token, t_shell *shell);
-void		expand_token(t_tokenizer *tok, t_shell *shell,
-     char **expanded_tilde, char **expanded_var);
+int			handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
+int			handle_tilde(char *input, t_tokenizer *tok, t_shell *shell);
+int			should_expand_dollar(char next, int in_quotes, char quote_char);
+void		expand_variable(char *input, t_tokenizer *tok,
+				t_shell *shell);
+int			handle_quote_state(char *input, t_tokenizer *tok,
+				int *in_quotes, char *quote_char);
 
 // env_var_utils.c
 char		*get_env_value(char **env, char *var_name);
 char		*extract_var_name(char *start);
-char		*create_expanded_token(char *token, char *var_start,
-     char *var_value, char *var_name);
+int			is_valid_var_start(char c);
+char		*expand_var(char *var, t_shell *shell);
+int			handle_dollar(char *input, t_tokenizer *tok, t_shell *shell,
+				int *in_quotes, char quote_char);
+
+// get_cmd.c / get_cmd_utils.c
+t_command	*parse_tokens(t_arg *tokens);
+int			handle_redirection(t_command *cmd, t_arg *tokens);
+int			is_standalone(t_arg *token, t_arg *prev);
+int			is_redir_token(int type);
+int			handle_redir_or_free(t_command *cmd, t_arg **tokens,
+				t_command *head);
 
 // parse_init.c
 t_arg		*add_token(t_arg *head, char *token, int type);
 t_command	*init_command(void);
+int 		ensure_token_capacity(t_tokenizer *tok, int extra);
 
 // free_parse.c
-void		free_expanded_tokens(char *expanded_tilde, char *expanded_var,
-    t_tokenizer *tok);
 void		free_commands(t_command *cmds);
 void		free_arguments(t_arg *args);
 
 // parse_utils.c
+void		append_char_to_token(t_tokenizer *tok, char c);
 void		append_str_to_token(t_tokenizer *tok, char *str);
 int			is_space_or_meta(char c);
 void		tok_reset(t_tokenizer *tok);
-int			handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
-char		*expand_var(char *var, t_shell *shell);
+void		print_parse_error(const char *token);
     
 // execute.c
 void		update_exit_status(t_shell *shell, int status);

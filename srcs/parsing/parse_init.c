@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:15 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/25 17:43:35 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_arg		*add_token(t_arg *head, char *token, int type)
 
 	if (!token || *token == '\0')
 		return (head);
-	//printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
+	printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
 	new = malloc(sizeof(t_arg));
 	if (!new)
 		return (NULL);
@@ -45,8 +45,27 @@ t_command	*init_command(void)
 	cmd->args[0] = NULL;
 	cmd->infiles = NULL;
 	cmd->outfiles = NULL;
+	cmd->heredocs = NULL;
 	cmd->append = 0;
 	cmd->pipe = 0;
 	cmd->next = NULL;
 	return (cmd);
+}
+
+int 		ensure_token_capacity(t_tokenizer *tok, int extra)
+{
+	char	*new_token;
+	int		new_capacity;
+
+	if (tok->j + extra < tok->token_capacity)
+		return (1);
+	new_capacity = tok->token_capacity * 2 + extra;
+	new_token = malloc(new_capacity);
+	if (!new_token)
+		return (0);
+	ft_strncpy(new_token, tok->token, tok->j);
+	free(tok->token);
+	tok->token = new_token;
+	tok->token_capacity = new_capacity;
+	return (1);
 }
