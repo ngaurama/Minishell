@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:16 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/25 17:48:08 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,35 @@ void		add_redirection(t_redir **redir_list, char *filename, int type)
 	}
 }
 
-void		handle_redirection(t_command *cmd, t_arg *tokens)
+int			handle_redirection(t_command *cmd, t_arg *tokens)
 {
-	if (!tokens->next || tokens->next->type != T_WORD)
+	t_arg	*next;
+
+	next = tokens->next;
+	if (!next)
 	{
-		printf("Syntax error: missing filename after `%s`\n", tokens->value);
-		return;
+		print_parse_error("\\n");
+		return (0);
+	}
+	if (next->type != T_WORD)
+	{
+		print_parse_error(next->value);
+		return (0);
 	}
 	if (tokens->type == T_REDIRECT_IN)
-		add_redirection(&cmd->infiles, tokens->next->value, tokens->type);
+		add_redirection(&cmd->infiles, next->value, tokens->type);
+	else if (tokens->type == T_HEREDOC)
+		add_redirection(&cmd->heredocs, next->value, tokens->type);
 	else
-		add_redirection(&cmd->outfiles, tokens->next->value, tokens->type);
+		add_redirection(&cmd->outfiles, next->value, tokens->type);
+	return (1);
 }
 
 t_command	*handle_pipe(t_command *cmd, int *arg_count, t_arg *prev_token)
 {
 	if (!prev_token || prev_token->type == T_PIPE)
 	{
-		printf("Syntax error: unexpected token `|`\n");
+		print_parse_error("|");
 		return (NULL);
 	}
 	cmd->pipe = 1;
@@ -83,16 +94,16 @@ t_command	*parse_tokens(t_arg *tokens)
 	prev_token = NULL;
 	while (tokens)
 	{
-		if (tokens->type == T_WORD && (!prev_token || (prev_token->type !=
-			 T_REDIRECT_IN && prev_token->type != T_REDIRECT_OUT &&
-			 prev_token->type != T_APPEND)))
+		if (is_standalone(tokens, prev_token))
 			add_argument_to_cmd(cmd, tokens->value, &arg_count);
-		else if (tokens->type == T_REDIRECT_IN || 
-			tokens->type == T_REDIRECT_OUT || tokens->type == T_APPEND)
-			handle_redirection(cmd, tokens);
-		else if (tokens->type == T_PIPE && 
+		else if (is_redir_token(tokens->type))
+		{
+			if (!handle_redir_or_free(cmd, &tokens, head))
+				return (NULL);
+		}
+		else if (tokens->type == T_PIPE &&
 			(cmd = handle_pipe(cmd, &arg_count, prev_token)) == NULL)
-			return (NULL);
+			return (free_commands(head), NULL);
 		prev_token = tokens;
 		tokens = tokens->next;
 	}

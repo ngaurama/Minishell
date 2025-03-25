@@ -6,16 +6,26 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:14 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/25 17:49:51 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+void	append_char_to_token(t_tokenizer *tok, char c)
+{
+	if (!ensure_token_capacity(tok, 1))
+		return ;
+	tok->token[tok->j++] = c;
+}
+
 void	append_str_to_token(t_tokenizer *tok, char *str)
 {
-	int i = 0;
+	int	i;
 
+	if (!ensure_token_capacity(tok, ft_strlen(str)))
+		return ;
+	i = 0;
 	while (str[i])
 		tok->token[tok->j++] = str[i++];
 }
@@ -38,30 +48,16 @@ void	tok_reset(t_tokenizer *tok)
 	tok->quoted = 0;
 }
 
-int		handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
+void	print_parse_error(const char *token)
 {
-	char	*var;
-	char	*val;
-
-	tok->i++;
-	var = extract_var_name(&input[tok->i]);
-	if (!var || var[0] == '\0')
+	if (token)
 	{
-		free(var);
-		return (0);
+		write(2, "minishell: parse error near unexpected token `", 46);
+		write(2, token, ft_strlen(token));
+		write(2, "`\n", 2);
 	}
-	tok->i += ft_strlen(var);
-	val = expand_var(var, shell);
-	if (val)
-		append_str_to_token(tok, val);
-	free(var);
-	free(val);
-	return (1);
-}
-
-char 	*expand_var(char *var, t_shell *shell)
-{
-	if (ft_strncmp(var, "?", 2) == 0)
-		return ft_itoa(shell->exit_status);
-	return (get_env_value(shell->env, var));
+	else
+	{
+		write(2, "minishell: parse error near unexpected token `\\n`\n", 51);
+	}
 }

@@ -20,6 +20,7 @@ SRC = srcs/main.c \
 		srcs/execution/pipe.c \
 		srcs/parsing/get_tokens.c \
 		srcs/parsing/get_cmd.c \
+		srcs/parsing/get_cmd_utils.c \
 		srcs/parsing/env_var.c \
 		srcs/parsing/env_var_utils.c \
 		srcs/parsing/parse_init.c \

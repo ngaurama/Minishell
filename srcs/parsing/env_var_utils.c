@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:03:53 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:34 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/25 17:43:33 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,34 @@ char	*extract_var_name(char *str)
 	return (var_name);
 }
 
-char	*create_expanded_token(char *token, char *var_start,
-	char *var_value, char *var_name)
+char 	*expand_var(char *var, t_shell *shell)
 {
-	char	*expanded;
-	int		prefix_len;
-	int		total_size;
+	if (ft_strncmp(var, "?", 2) == 0)
+		return ft_itoa(shell->exit_status);
+	return (get_env_value(shell->env, var));
+}
 
-	prefix_len = var_start - token;
-	total_size = prefix_len + ft_strlen(var_value) + ft_strlen(var_start) + 1;
-	expanded = malloc(total_size);
-	if (!expanded)
-		return (NULL);
-	ft_strlcpy(expanded, token, prefix_len + 1);
-	ft_strlcat(expanded, var_value, total_size);
-	ft_strlcat(expanded, var_start + ft_strlen(var_name) + 1, total_size);
-	return (expanded);
+int		is_valid_var_start(char c)
+{
+	if (ft_isalpha(c) || c == '_' || c == '?')
+		return (1);
+	return (0);
+}
+
+int		handle_dollar(char *input, t_tokenizer *tok, t_shell *shell,
+			int *in_quotes, char quote_char)
+{
+	char	next;
+
+	if (input[tok->i] != '$')
+		return (0);
+	next = input[tok->i + 1];
+	if (!should_expand_dollar(next, *in_quotes, quote_char))
+	{
+		append_char_to_token(tok, '$');
+		tok->i++;
+	}
+	else
+		expand_variable(input, tok, shell);
+	return (1);
 }
