@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/26 02:56:42 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:55:28 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_tokenizer
 	int		should_expand;
 	int		in_quotes;
 	int		quoted;
+	char	quote_char;
 	int		token_capacity;
 	char	*token;
 }	t_tokenizer;
@@ -111,8 +112,7 @@ char		*get_env_value(char **env, char *var_name);
 char		*extract_var_name(char *start);
 int			is_valid_var_start(char c);
 char		*expand_var(char *var, t_shell *shell);
-int			handle_dollar(char *input, t_tokenizer *tok, t_shell *shell,
-				int *in_quotes, char quote_char);
+int 		handle_dollar(char *input, t_tokenizer *tok, t_shell *shell);
 
 // get_cmd.c / get_cmd_utils.c
 t_command	*parse_tokens(t_arg *tokens);
