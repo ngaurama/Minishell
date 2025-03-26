@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/25 17:43:34 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/26 17:03:20 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,24 @@ int		handle_special(char *input, t_tokenizer *tok)
 
 int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 {
-	int		in_quotes;
-	char	quote_char;
+	char	current;
 
-	in_quotes = 0;
-	quote_char = 0;
-	while (input[tok->i] && !is_space_or_meta(input[tok->i]))
+	tok->in_quotes = 0;
+	tok->quote_char = 0;
+
+	while (input[tok->i]
+		&& (tok->in_quotes || !is_space_or_meta(input[tok->i])))
 	{
-		if (!in_quotes && handle_tilde(input, tok, shell))
+		current = input[tok->i];
+		if (handle_quote_state(input, tok, &tok->in_quotes, &tok->quote_char))
 			continue;
-		if (handle_quote_state(input, tok, &in_quotes, &quote_char))
+		if (!tok->in_quotes && tok->j == 0 && current == '~' &&
+			handle_tilde(input, tok, shell))
 			continue;
-		if (handle_dollar(input, tok, shell, &in_quotes, quote_char))
+		if (current == '$' && (!tok->in_quotes || tok->quote_char == '"') &&
+			handle_dollar(input, tok, shell))
 			continue;
-		append_char_to_token(tok, input[tok->i]);
+		append_char_to_token(tok, current);
 		tok->i++;
 	}
 	tok->token[tok->j] = '\0';

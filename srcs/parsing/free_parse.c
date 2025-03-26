@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/25 18:27:52 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:50:57 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,20 @@ static void free_redirections(t_redir *redirs)
 
 void 		free_commands(t_command *cmds)
 {
-	t_command *tmp;
-	t_command *next;
-	int i;
+	t_command 	*tmp;
+	t_command 	*next;
+	int 		i;
 
 	while (cmds)
 	{
 		tmp = cmds;
 		next = cmds->next;
 		i = 0;
-		//if (tmp->args)
-		//{
-			while (tmp->args[i])
-				free(tmp->args[i++]);
-		//}
+		while (tmp->args[i])
+			free(tmp->args[i++]);
 		free_redirections(tmp->infiles);
 		free_redirections(tmp->outfiles);
+		free_redirections(tmp->heredocs);
 		free(tmp);
 		cmds = next;
 	}

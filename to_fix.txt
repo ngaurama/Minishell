@@ -1,0 +1,12 @@
+minishell  |	shell
+
+cat << EOF < test.txt
+> ok			> ok
+> 				>
+> EOF			> EOF
+i				ok
+o
+				i
+				o
+
+
