@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/23 22:10:35 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/26 02:31:07 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void handle_input(t_shell *shell)
     if (*shell->input != '\0')
         add_history(shell->input);
     shell->arguments = tokenize_input(shell->input, shell);
+    //print_token_list(shell->arguments);
     if (shell->arguments)
         shell->command = shell->arguments->value;
     else
@@ -78,7 +79,7 @@ void execution(t_shell *shell)
     else
     {
         if (check_built_in(shell->cmds))
-            execute_built_in(shell);
+            execute_built_in(shell, shell->cmds);
         else
         {
             if (execute_command(shell) == 0)
@@ -93,7 +94,6 @@ void execution(t_shell *shell)
         }
     }
 }
-
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
@@ -108,6 +108,7 @@ int main(int argc, char **argv, char **envp)
         if (shell.arguments)
         {
             shell.cmds = parse_tokens(shell.arguments);
+            //print_command_list(shell.cmds);
             if (shell.cmds)
             {
                 execution(&shell);

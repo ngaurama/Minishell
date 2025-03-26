@@ -18,6 +18,7 @@ SRC = srcs/main.c \
 		srcs/execution/init.c \
 		srcs/execution/redirection.c \
 		srcs/execution/pipe.c \
+		srcs/execution/pipe_utils.c \
 		srcs/parsing/get_tokens.c \
 		srcs/parsing/get_cmd.c \
 		srcs/parsing/get_cmd_utils.c \
@@ -26,6 +27,7 @@ SRC = srcs/main.c \
 		srcs/parsing/parse_init.c \
 		srcs/parsing/free_parse.c \
 		srcs/parsing/parse_utils.c \
+		srcs/parsing/test_parser.c \
 		srcs/builtins/built_in.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/set_unset.c \

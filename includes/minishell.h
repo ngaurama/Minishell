@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/25 17:43:38 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/26 02:56:42 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <sys/stat.h>
 
 # define MAX_ARGS 1024
 
@@ -152,18 +153,27 @@ char		*ft_strncpy(char *dest, const char *src, size_t n);
 char		*ft_strcpy(char *dest, const char *src);
 
 //redirection.c
-int			redirection(t_shell *shell);
+// int			redirection(t_shell *shell);
+int handle_heredoc(const char *delimiter);
+int redirection(t_command *cmd);
 
 //pipe.c
 void		pipeline(t_shell *shell);
 
+//pipe_utils.c
+void setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd);
+void execute_child_pipes(t_shell *shell, t_command *cmd);
+void preprocess_heredocs(t_command *cmd);
+
 // BUILTINS
 // built_in.c
-void		execute_built_in(t_shell *shell);
+// void		execute_built_in(t_shell *shell);
+void execute_built_in(t_shell *shell, t_command *cmd);
 // cd.c
 void		ft_cd(t_shell *shell);
 // echo.c
-void		ft_echo(t_shell *shell);
+// void		ft_echo(t_shell *shell);
+void ft_echo(t_shell *shell, t_command *cmd);
 // env.c
 void		ft_env(t_shell *shell);
 // export.c

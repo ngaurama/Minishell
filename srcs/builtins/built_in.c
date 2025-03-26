@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:49 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/26 02:27:26 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		save_and_redirect_fds(int *saved_stdin, int *saved_stdout, t_shell *shell)
+int		save_and_redirect_fds(int *saved_stdin, int *saved_stdout, t_command *cmd)
 {
     *saved_stdin = dup(STDIN_FILENO);
     *saved_stdout = dup(STDOUT_FILENO);
@@ -21,7 +21,7 @@ int		save_and_redirect_fds(int *saved_stdin, int *saved_stdout, t_shell *shell)
         perror("dup failed");
         return (1);
     }
-    if (redirection(shell) != 0)
+    if (redirection(cmd) != 0)
     {
         close(*saved_stdin);
         close(*saved_stdout);
@@ -57,28 +57,35 @@ int		check_built_in(t_command *cmd)
 	return (0);
 }
 
-void	execute_built_in(t_shell *shell)
+void execute_built_in(t_shell *shell, t_command *cmd)
 {
-	int 	saved_stdin;
-	int 	saved_stdout;
-	char 	*cmd;
-
-	if (save_and_redirect_fds(&saved_stdin, &saved_stdout, shell) != 0)
-		return;
-	cmd = shell->cmds->args[0];
-	if (ft_strncmp(cmd, "echo", 5) == 0)
-		ft_echo(shell);
-	else if (ft_strncmp(cmd, "cd", 3) == 0)
-		ft_cd(shell);
-	else if (ft_strncmp(cmd, "pwd", 4) == 0)
-		ft_pwd(shell);
-	else if (ft_strncmp(cmd, "export", 7) == 0)
-		ft_export(shell);
-	else if (ft_strncmp(cmd, "unset", 6) == 0)
-		ft_unset(shell);
-	else if (ft_strncmp(cmd, "env", 4) == 0)
-		ft_env(shell);
-	else if (ft_strncmp(cmd, "exit", 5) == 0)
-		ft_exit(shell);
-	restore_fds(saved_stdin, saved_stdout);
+    int saved_stdin = -1;
+    int saved_stdout = -1;
+	
+    if (!cmd->pipe)
+    {
+        if (save_and_redirect_fds(&saved_stdin, &saved_stdout, cmd) != 0)
+            return;
+    }
+	if (!cmd->args[0])
+    {
+        shell->exit_status = 1;
+        return;
+    }
+    if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
+        ft_echo(shell, cmd);
+    else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
+        ft_cd(shell);
+    else if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
+        ft_pwd(shell);
+    else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+        ft_export(shell);
+    else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
+        ft_unset(shell);
+    else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
+        ft_env(shell);
+    else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
+        ft_exit(shell);
+    if (saved_stdin != -1 && saved_stdout != -1)
+        restore_fds(saved_stdin, saved_stdout);
 }
