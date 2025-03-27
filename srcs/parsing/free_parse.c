@@ -6,13 +6,13 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 23:21:38 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 14:59:43 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void free_redirections(t_redir *redirs)
+void 		free_redirections(t_redir *redirs)
 {
 	t_redir *tmp;
 	
@@ -60,7 +60,7 @@ void 		free_arguments(t_arg *args)
 	}
 }
 
-void	free_tokenizer(t_tokenizer *tok)
+void		free_tokenizer(t_tokenizer *tok)
 {
 	if (tok->token)
 		free(tok->token);

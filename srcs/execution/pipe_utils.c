@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 14:15:05 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 14:59:03 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,17 @@ void preprocess_heredocs(t_command *cmd, t_shell *shell)
     {
         if (cmd->heredocs)
         {
-			expand = (cmd->heredocs->src_token->quoted == 0);
+			if (cmd->heredocs->src_token)
+				expand = (cmd->heredocs->src_token->quoted == 0);
             fd = handle_heredoc(cmd->heredocs->filename, shell, expand);
             if (fd != -1)
             {
+				free_redirections(cmd->heredocs);
+				cmd->heredocs = NULL;
                 cmd->infiles = malloc(sizeof(t_redir));
                 cmd->infiles->type = T_REDIRECT_IN;
                 cmd->infiles->filename = ft_itoa(fd);
                 cmd->infiles->next = NULL;
-                cmd->heredocs = NULL;
             }
         }
         cmd = cmd->next;
