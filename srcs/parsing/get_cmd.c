@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 15:50:36 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 14:32:24 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,20 @@ void		add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
 	}
 }
 
-void		add_redirection(t_redir **redir_list, char *filename, int type)
+void		add_redirection(t_redir **redir_list, t_arg *token, int type)
 {
-	t_redir *new;
-	t_redir *tmp;
+	t_redir	*new;
+	t_redir	*tmp;
 
 	new = malloc(sizeof(t_redir));
 	if (!new)
 		return;
-	new->filename = ft_strdup(filename);
+	new->filename = ft_strdup(token->value);
 	new->type = type;
+	new->src_token = token;
 	new->next = NULL;
-    if (!*redir_list)
+
+	if (!*redir_list)
 		*redir_list = new;
 	else
 	{
@@ -60,11 +62,11 @@ int			handle_redirection(t_command *cmd, t_arg *tokens)
 		return (0);
 	}
 	if (tokens->type == T_REDIRECT_IN)
-		add_redirection(&cmd->infiles, next->value, tokens->type);
+		add_redirection(&cmd->infiles, next, tokens->type);
 	else if (tokens->type == T_HEREDOC)
-		add_redirection(&cmd->heredocs, next->value, tokens->type);
+		add_redirection(&cmd->heredocs, next, tokens->type);
 	else
-		add_redirection(&cmd->outfiles, next->value, tokens->type);
+		add_redirection(&cmd->outfiles, next, tokens->type);
 	return (1);
 }
 

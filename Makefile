@@ -17,8 +17,10 @@ SRC = srcs/main.c \
 		srcs/execution/utils.c \
 		srcs/execution/init.c \
 		srcs/execution/redirection.c \
+		srcs/execution/redirection_utils.c \
 		srcs/execution/pipe.c \
 		srcs/execution/pipe_utils.c \
+		srcs/execution/heredoc_expand.c \
 		srcs/parsing/get_tokens.c \
 		srcs/parsing/get_cmd.c \
 		srcs/parsing/get_cmd_utils.c \

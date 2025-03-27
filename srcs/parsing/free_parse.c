@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 15:50:57 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/26 23:21:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,11 @@ void 		free_arguments(t_arg *args)
 		free(tmp->value);
 		free(tmp);
 	}
+}
+
+void	free_tokenizer(t_tokenizer *tok)
+{
+	if (tok->token)
+		free(tok->token);
+	tok->token = NULL;
 }

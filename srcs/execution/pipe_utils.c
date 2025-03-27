@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/26 02:59:56 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:15:05 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
 
 void execute_child_pipes(t_shell *shell, t_command *cmd)
 {
-    if (redirection(cmd) != 0)
+    if (redirection(cmd, shell) != 0)
         exit(1);
     if (check_built_in(cmd))
     {
@@ -51,13 +51,17 @@ void execute_child_pipes(t_shell *shell, t_command *cmd)
     }
 }
 
-void preprocess_heredocs(t_command *cmd)
+void preprocess_heredocs(t_command *cmd, t_shell *shell)
 {
+	int	expand;
+	int	fd;
+	
     while (cmd)
     {
         if (cmd->heredocs)
         {
-            int fd = handle_heredoc(cmd->heredocs->filename);
+			expand = (cmd->heredocs->src_token->quoted == 0);
+            fd = handle_heredoc(cmd->heredocs->filename, shell, expand);
             if (fd != -1)
             {
                 cmd->infiles = malloc(sizeof(t_redir));

@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 17:03:20 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 13:46:21 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,12 @@ int		handle_special(char *input, t_tokenizer *tok)
 	return (tok->i + 1);
 }
 
-int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
+int		handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 {
 	char	current;
 
 	tok->in_quotes = 0;
 	tok->quote_char = 0;
-
 	while (input[tok->i]
 		&& (tok->in_quotes || !is_space_or_meta(input[tok->i])))
 	{
@@ -92,13 +91,10 @@ int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 
 void	parse_next_token(char *input, t_tokenizer *tok, t_shell *shell)
 {
-	while (input[tok->i] == ' ' || input[tok->i] == '\t')
-		tok->i++;
-	if (!input[tok->i])
-	{
-		tok->token[0] = '\0';
-		return;
-	}
+	if (skip_whitespace(input, tok))
+		return ;
+	if (tok->heredoc_next && tok->quoted == 0)
+		tok->should_expand = 0;
 	if (input[tok->i] == '$' && (input[tok->i + 1] == '"'
 		|| input[tok->i + 1] == '\''))
 	{
@@ -117,6 +113,7 @@ void	parse_next_token(char *input, t_tokenizer *tok, t_shell *shell)
 	else
 		tok->i = handle_word(input, tok, shell);
 	tok->token[tok->j] = '\0';
+	tok->heredoc_next = (tok->type == T_HEREDOC);
 }
 
 t_arg	*tokenize_input(char *input, t_shell *shell)
@@ -124,11 +121,8 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 	t_arg		*head;
 	t_tokenizer	tok;
 
-	tok.i = 0;
 	head = NULL;
-	tok.token_capacity = 64;
-	tok.token = malloc(tok.token_capacity);
-	if (!tok.token)
+	if (!init_tokenizer(&tok))
 		return (NULL);
 	while (input[tok.i])
 	{
@@ -136,11 +130,11 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 		parse_next_token(input, &tok, shell);
 		if (!tok.token[0])
 		{
-			head = add_token(head, "", tok.type);
+			head = add_token(head, "", tok.type, tok.quoted);
 			continue;
 		}
-		head = add_token(head, tok.token, tok.type);
+		head = add_token(head, tok.token, tok.type, tok.quoted);
 	}
-	free(tok.token);
+	free_tokenizer(&tok);
 	return (head);
 }
