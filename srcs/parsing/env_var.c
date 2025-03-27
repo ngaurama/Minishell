@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 22:12:53 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 14:43:03 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int		handle_quote_state(char *input, t_tokenizer *tok,
 	{
 		*in_quotes = 1;
 		*quote_char = input[tok->i];
+		tok->quoted = 1;
 		tok->i++;
 		return (1);
 	}
