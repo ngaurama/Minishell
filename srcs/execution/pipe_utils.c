@@ -6,13 +6,20 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 14:59:03 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 22:43:30 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
+void	free_and_exit(t_shell *shell, int exit_code)
+{
+	if (shell)
+		free_shell(shell);
+	exit(exit_code);
+}
+
+void 	setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
 {
     if (prev_pipe_read != -1 && !cmd->infiles && !cmd->heredocs)
     {
@@ -27,14 +34,14 @@ void setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
     }
 }
 
-void execute_child_pipes(t_shell *shell, t_command *cmd)
+void 	execute_child_pipes(t_shell *shell, t_command *cmd)
 {
     if (redirection(cmd, shell) != 0)
-        exit(1);
+		free_and_exit(shell, 1);
     if (check_built_in(cmd))
     {
         execute_built_in(shell, cmd);
-        exit(0);
+		free_and_exit(shell, 0);
     }
     else
     {
@@ -43,36 +50,52 @@ void execute_child_pipes(t_shell *shell, t_command *cmd)
             ft_putstr_fd("minishell: command not found: ", 2);
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd("\n", 2);
-            exit(127);
+            free_and_exit(shell, 127);
         }
         execve(shell->full_path, cmd->args, shell->env);
         perror("execve failed");
-        exit(1);
+		free_and_exit(shell, 1);
     }
 }
 
-void preprocess_heredocs(t_command *cmd, t_shell *shell)
+void 	preprocess_heredocs(t_command *cmd, t_shell *shell)
 {
-	int	expand;
-	int	fd;
-	
-    while (cmd)
-    {
-        if (cmd->heredocs)
-        {
-			if (cmd->heredocs->src_token)
-				expand = (cmd->heredocs->src_token->quoted == 0);
-            fd = handle_heredoc(cmd->heredocs->filename, shell, expand);
-            if (fd != -1)
-            {
+	t_redir	*hd;
+	int		fd, expand;
+
+	while (cmd)
+	{
+		fd = -1;
+		hd = cmd->heredocs;
+		while (hd)
+		{
+			expand = (hd->src_token && hd->src_token->quoted == 0);
+			fd = handle_heredoc(hd->filename, shell, expand);
+			if (fd == -1)
+			{
 				free_redirections(cmd->heredocs);
 				cmd->heredocs = NULL;
-                cmd->infiles = malloc(sizeof(t_redir));
-                cmd->infiles->type = T_REDIRECT_IN;
-                cmd->infiles->filename = ft_itoa(fd);
-                cmd->infiles->next = NULL;
-            }
-        }
-        cmd = cmd->next;
-    }
+				break;
+			}
+			hd = hd->next;
+		}
+
+		if (fd != -1)
+		{
+			free_redirections(cmd->heredocs);
+			cmd->heredocs = NULL;
+
+			if (cmd->infiles)
+				free_redirections(cmd->infiles);
+			
+			cmd->infiles = malloc(sizeof(t_redir));
+			if (!cmd->infiles)
+				return;
+			cmd->infiles->type = T_REDIRECT_IN;
+			cmd->infiles->filename = ft_itoa(fd); // "4", etc.
+			cmd->infiles->next = NULL;
+			cmd->infiles->src_token = NULL;
+		}
+		cmd = cmd->next;
+	}
 }

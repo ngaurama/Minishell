@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 14:32:47 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 22:45:49 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 volatile sig_atomic_t g_signal_num = 0;
 
-void handle_signal(int signum)
+void	handle_signal(int signum)
 {
     g_signal_num = signum;
 
@@ -27,7 +27,7 @@ void handle_signal(int signum)
     }
 }
 
-void setup_signals(void)
+void 	setup_signals(t_shell *shell)
 {
     struct sigaction sa;
 
@@ -37,42 +37,41 @@ void setup_signals(void)
     if (sigaction(SIGINT, &sa, NULL) == -1)
     {
         perror("sigaction");
-        exit(1);
+		free_and_exit(shell, 1);
     }
     sa.sa_handler = SIG_IGN;
     if (sigaction(SIGQUIT, &sa, NULL) == -1)
     {
         perror("sigaction");
-        exit(1);
+		free_and_exit(shell, 1);
     }
     sa.sa_handler = handle_signal;
     if (sigaction(SIGTERM, &sa, NULL) == -1)
     {
         perror("sigaction");
-        exit(1);
+		free_and_exit(shell, 1);
     }
 }
 
-void handle_input(t_shell *shell)
+void 	handle_input(t_shell *shell)
 {
-    shell->input = readline("minishell$ ");
-    if (!shell->input)
-    {
-        printf("exit\n");
-        free_shell(shell);
-        exit(0);
-    }
-    if (*shell->input != '\0')
-        add_history(shell->input);
-    shell->arguments = tokenize_input(shell->input, shell);
-    //print_token_list(shell->arguments);
-    if (shell->arguments)
-        shell->command = shell->arguments->value;
-    else
-        shell->command = NULL;
+	shell->input = readline("minishell$ ");
+	if (!shell->input)
+	{
+		printf("exit\n");
+		free_and_exit(shell, 0);
+	}
+	if (*shell->input != '\0')
+		add_history(shell->input);
+	shell->arguments = tokenize_input(shell->input, shell);
+	//print_token_list(shell->arguments);
+	if (shell->arguments)
+		shell->command = shell->arguments->value;
+	else
+		shell->command = NULL;
 }
 
-void execution(t_shell *shell)
+void 	execution(t_shell *shell)
 {
     if (shell->cmds->pipe)
         pipeline(shell);
@@ -95,21 +94,21 @@ void execution(t_shell *shell)
     }
 }
 
-int main(int argc, char **argv, char **envp)
+int 	main(int argc, char **argv, char **envp)
 {
     t_shell shell;
 
     (void)argc;
     (void)argv;
     init_shell(&shell, envp);
-    setup_signals();
+    setup_signals(&shell);
     while (1)
     {
         handle_input(&shell);
         if (shell.arguments)
         {
             shell.cmds = parse_tokens(shell.arguments);
-            //print_command_list(shell.cmds);
+            print_command_list(shell.cmds);
             if (shell.cmds)
             {
                 execution(&shell);

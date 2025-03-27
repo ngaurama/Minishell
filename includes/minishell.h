@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 15:00:00 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 23:42:00 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,19 +176,21 @@ char 		*heredoc_expand(char *line, t_shell *shell);
 void		pipeline(t_shell *shell);
 
 //pipe_utils.c
-void setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd);
-void execute_child_pipes(t_shell *shell, t_command *cmd);
-void preprocess_heredocs(t_command *cmd, t_shell *shell);
+void 		setup_child_pipes(int prev_pipe_read, int pipefd[2],
+				t_command *cmd);
+void 		execute_child_pipes(t_shell *shell, t_command *cmd);
+void 		preprocess_heredocs(t_command *cmd, t_shell *shell);
+void		free_and_exit(t_shell *shell, int exit_code);
 
 // BUILTINS
 // built_in.c
 // void		execute_built_in(t_shell *shell);
-void execute_built_in(t_shell *shell, t_command *cmd);
+void 		execute_built_in(t_shell *shell, t_command *cmd);
 // cd.c
 void		ft_cd(t_shell *shell);
 // echo.c
 // void		ft_echo(t_shell *shell);
-void ft_echo(t_shell *shell, t_command *cmd);
+void 		ft_echo(t_shell *shell, t_command *cmd);
 // env.c
 void		ft_env(t_shell *shell);
 // export.c

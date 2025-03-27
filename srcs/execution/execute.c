@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 12:21:54 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 22:34:57 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,11 @@ void handle_command_not_found(t_shell *shell)
 
 void execute_child_process(t_shell *shell)
 {
-    if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
-    {
-        perror("execve failed");
-        exit(1);
-    }
+	if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
+	{
+		perror("execve failed");
+		free_and_exit(shell, 1);
+	}
 }
 
 int execute_command(t_shell *shell)

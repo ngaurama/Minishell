@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 14:30:02 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 15:42:50 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ int 	handle_redirect_in_file(const char *filename)
 
 int 	handle_heredoc_input(t_redir *redir, t_shell *shell)
 {
-    int expand = 1;
+    int expand;
 
+	expand = 1;
     if (redir->src_token)
         expand = (redir->src_token->quoted == 0);
-
-    return handle_heredoc(redir->filename, shell, expand);
+    return (handle_heredoc(redir->filename, shell, expand));
 }
 
 int		stop_heredoc(char *line, const char *delimiter)

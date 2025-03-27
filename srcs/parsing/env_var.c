@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 14:43:03 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 23:50:45 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,16 @@ void	expand_variable(char *input, t_tokenizer *tok, t_shell *shell)
 		return ;
 	var_len = ft_strlen(var);
 	val = expand_var(var, shell);
-	if (val)
-		append_str_to_token(tok, val);
+	if (!val)
+		val = ft_strdup("");
+	if (*val == '\0' && !tok->in_quotes)
+	{
+		tok->i += var_len;
+		free(var);
+		free(val);
+		return ;
+	}
+	append_str_to_token(tok, val);
 	tok->i += var_len;
 	free(var);
 	free(val);
