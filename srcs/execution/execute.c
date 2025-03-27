@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/26 02:29:55 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:21:54 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int execute_command(t_shell *shell)
     int saved_stdin, saved_stdout;
     if (!save_fds(&saved_stdin, &saved_stdout))
         return (1);
-    if (redirection(shell->cmds) != 0)
+    if (redirection(shell->cmds, shell) != 0)
         return (restore_fds(saved_stdin, saved_stdout), 1);
     if (find_full_path(shell, shell->cmds->args[0]) != 0)
         return (handle_command_not_found(shell), restore_fds(saved_stdin, saved_stdout), 1);

@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/25 17:49:51 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/26 23:02:31 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,16 @@ int		is_space_or_meta(char c)
 	);
 }
 
-void	tok_reset(t_tokenizer *tok)
+int		skip_whitespace(char *input, t_tokenizer *tok)
 {
-	tok->j = 0;
-	tok->type = T_WORD;
-	tok->should_expand = 1;
-	tok->quoted = 0;
+	while (input[tok->i] == ' ' || input[tok->i] == '\t')
+		tok->i++;
+	if (!input[tok->i])
+	{
+		tok->token[0] = '\0';
+		return (1);
+	}
+	return (0);
 }
 
 void	print_parse_error(const char *token)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/26 03:00:54 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/27 02:10:20 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void pipeline_init(t_shell *shell, int buffer[2], int *prev_pipe_read)
 {
-    preprocess_heredocs(shell->cmds);
+    preprocess_heredocs(shell->cmds, shell);
     if (pipe(buffer) == -1) 
     {
         perror("pipe");

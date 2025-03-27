@@ -1,0 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
+/*   Updated: 2025/03/27 14:30:02 by npbk             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+
+int 	handle_redirect_in_file(const char *filename)
+{
+    int fd;
+
+    if (ft_isdigit(filename[0]))
+        fd = ft_atoi(filename);
+    else
+        fd = open(filename, O_RDONLY);
+
+    if (fd == -1)
+        perror(filename);
+
+    return fd;
+}
+
+int 	handle_heredoc_input(t_redir *redir, t_shell *shell)
+{
+    int expand = 1;
+
+    if (redir->src_token)
+        expand = (redir->src_token->quoted == 0);
+
+    return handle_heredoc(redir->filename, shell, expand);
+}
+
+int		stop_heredoc(char *line, const char *delimiter)
+{
+	if (!line)
+	{
+		ft_putstr_fd("minishell: warning: ", 2);
+		ft_putstr_fd("here-document delimited by end-of-file\n", 2);
+		return (1);
+	}
+	if (ft_strcmp(line, delimiter) == 0)
+	{
+		free(line);
+		return (1);
+	}
+	return (0);
+}
+
+void	write_heredoc_line(int fd, char *line, t_shell *shell, int expand)
+{
+	char *expanded;
+
+	if (expand)
+	{
+		expanded = heredoc_expand(line, shell);
+		write(fd, expanded, ft_strlen(expanded));
+		free(expanded);
+	}
+	else
+		write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
+}

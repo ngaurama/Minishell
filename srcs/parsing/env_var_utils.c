@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:03:53 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 16:55:14 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 02:15:33 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*get_env_value(char **env, char *var_name)
 	return (NULL);
 }
 
-char	*extract_var_name(char *str)
+char	*extract_var_name(const char *str)
 {
 	int		len;
 	char	*var_name;
@@ -69,19 +69,13 @@ int		is_valid_var_start(char c)
 	return (0);
 }
 
-int handle_dollar(char *input, t_tokenizer *tok, t_shell *shell)
+int		should_expand_dollar(char next, int in_quotes, char quote_char)
 {
-	char	next;
-
-	if (input[tok->i] != '$')
+	if (!next || is_space_or_meta(next)
+		|| next == '"' || next == '\''
+		|| !is_valid_var_start(next)
+		|| (in_quotes && quote_char == '\''))
 		return (0);
-	next = input[tok->i + 1];
-	if (!should_expand_dollar(next, tok->in_quotes, tok->quote_char))
-	{
-		append_char_to_token(tok, '$');
-		tok->i++;
-	}
-	else
-		expand_variable(input, tok, shell);
 	return (1);
 }
+

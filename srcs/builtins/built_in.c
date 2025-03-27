@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/26 02:27:26 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/27 02:17:58 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		save_and_redirect_fds(int *saved_stdin, int *saved_stdout, t_command *cmd)
+int		save_and_redirect_fds(int *saved_stdin, int *saved_stdout,
+			t_command *cmd, t_shell *shell)
 {
     *saved_stdin = dup(STDIN_FILENO);
     *saved_stdout = dup(STDOUT_FILENO);
@@ -21,7 +22,7 @@ int		save_and_redirect_fds(int *saved_stdin, int *saved_stdout, t_command *cmd)
         perror("dup failed");
         return (1);
     }
-    if (redirection(cmd) != 0)
+    if (redirection(cmd, shell) != 0)
     {
         close(*saved_stdin);
         close(*saved_stdout);
@@ -64,7 +65,7 @@ void execute_built_in(t_shell *shell, t_command *cmd)
 	
     if (!cmd->pipe)
     {
-        if (save_and_redirect_fds(&saved_stdin, &saved_stdout, cmd) != 0)
+        if (save_and_redirect_fds(&saved_stdin, &saved_stdout, cmd, shell) != 0)
             return;
     }
 	if (!cmd->args[0])

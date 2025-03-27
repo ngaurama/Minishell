@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/26 16:55:28 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 14:27:22 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,13 @@ typedef struct s_tokenizer
 	int		j;
 	int		type;
 	int		should_expand;
+	int		heredoc_next;
 	int		in_quotes;
 	int		quoted;
 	char	quote_char;
 	int		token_capacity;
 	char	*token;
 }	t_tokenizer;
-
-typedef struct s_redir
-{
-	char			*filename;
-	int				type;
-	struct s_redir	*next;
-}	t_redir;
 
 typedef struct s_arg
 {
@@ -68,6 +62,14 @@ typedef struct s_arg
 	int				quoted;
 	struct s_arg	*next;
 }	t_arg;
+
+typedef struct s_redir
+{
+	char			*filename;
+	int				type;
+	t_arg			*src_token;
+	struct s_redir	*next;
+}	t_redir;
 
 typedef struct s_command
 {
@@ -101,7 +103,7 @@ t_arg		*tokenize_input(char *input, t_shell *shell);
 // env_var.c
 int			handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
 int			handle_tilde(char *input, t_tokenizer *tok, t_shell *shell);
-int			should_expand_dollar(char next, int in_quotes, char quote_char);
+int 		handle_dollar(char *input, t_tokenizer *tok, t_shell *shell);
 void		expand_variable(char *input, t_tokenizer *tok,
 				t_shell *shell);
 int			handle_quote_state(char *input, t_tokenizer *tok,
@@ -109,10 +111,10 @@ int			handle_quote_state(char *input, t_tokenizer *tok,
 
 // env_var_utils.c
 char		*get_env_value(char **env, char *var_name);
-char		*extract_var_name(char *start);
+char	*extract_var_name(const char *str);
 int			is_valid_var_start(char c);
 char		*expand_var(char *var, t_shell *shell);
-int 		handle_dollar(char *input, t_tokenizer *tok, t_shell *shell);
+int			should_expand_dollar(char next, int in_quotes, char quote_char);
 
 // get_cmd.c / get_cmd_utils.c
 t_command	*parse_tokens(t_arg *tokens);
@@ -123,19 +125,22 @@ int			handle_redir_or_free(t_command *cmd, t_arg **tokens,
 				t_command *head);
 
 // parse_init.c
-t_arg		*add_token(t_arg *head, char *token, int type);
+t_arg		*add_token(t_arg *head, char *token, int type, int quoted);
 t_command	*init_command(void);
+int			init_tokenizer(t_tokenizer *tok);
 int 		ensure_token_capacity(t_tokenizer *tok, int extra);
+void		tok_reset(t_tokenizer *tok);
 
 // free_parse.c
 void		free_commands(t_command *cmds);
 void		free_arguments(t_arg *args);
+void		free_tokenizer(t_tokenizer *tok);
 
 // parse_utils.c
 void		append_char_to_token(t_tokenizer *tok, char c);
 void		append_str_to_token(t_tokenizer *tok, char *str);
 int			is_space_or_meta(char c);
-void		tok_reset(t_tokenizer *tok);
+int			skip_whitespace(char *input, t_tokenizer *tok);
 void		print_parse_error(const char *token);
     
 // execute.c
@@ -154,8 +159,17 @@ char		*ft_strcpy(char *dest, const char *src);
 
 //redirection.c
 // int			redirection(t_shell *shell);
-int handle_heredoc(const char *delimiter);
-int redirection(t_command *cmd);
+int 		handle_heredoc(const char *delimiter, t_shell *shell, int expand);
+int 		redirection(t_command *cmd, t_shell *shell);
+
+//redirection_utils.c
+int 		handle_redirect_in_file(const char *filename);
+int 		handle_heredoc_input(t_redir *redir, t_shell *shell);
+int			stop_heredoc(char *line, const char *delimiter);
+void		write_heredoc_line(int fd, char *line, t_shell *shell, int expand);
+
+//heredoc_expand.c
+char 		*heredoc_expand(char *line, t_shell *shell);
 
 //pipe.c
 void		pipeline(t_shell *shell);
@@ -163,7 +177,7 @@ void		pipeline(t_shell *shell);
 //pipe_utils.c
 void setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd);
 void execute_child_pipes(t_shell *shell, t_command *cmd);
-void preprocess_heredocs(t_command *cmd);
+void preprocess_heredocs(t_command *cmd, t_shell *shell);
 
 // BUILTINS
 // built_in.c
