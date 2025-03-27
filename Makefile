@@ -14,11 +14,13 @@ LIBFT = libft/libft.a
 
 SRC = srcs/main.c \
 		srcs/execution/execute.c \
+		srcs/execution/full_path.c \
 		srcs/execution/utils.c \
 		srcs/execution/init.c \
 		srcs/execution/redirection.c \
 		srcs/execution/redirection_utils.c \
 		srcs/execution/pipe.c \
+		srcs/execution/signals.c \
 		srcs/execution/pipe_utils.c \
 		srcs/execution/heredoc_expand.c \
 		srcs/parsing/get_tokens.c \

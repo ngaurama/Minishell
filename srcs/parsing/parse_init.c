@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 23:49:38 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 00:05:30 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ t_arg		*add_token(t_arg *head, char *token, int type, int quoted)
 	t_arg *new;
 	t_arg *tmp;
 
-	if (!token || (token[0] == '\0' && quoted == 0))
-		return (head);
-	if (!token)
+	if (!token || (*token == '\0' && !quoted)) //fixed for export ""
 		return (head);
 	//printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
 	new = malloc(sizeof(t_arg));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/26 23:02:31 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 18:16:20 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,12 @@ int		skip_whitespace(char *input, t_tokenizer *tok)
 
 void	print_parse_error(const char *token)
 {
-	if (token)
+	if (ft_strcmp(token, "\n") != 0)
 	{
-		write(2, "minishell: parse error near unexpected token `", 46);
-		write(2, token, ft_strlen(token));
-		write(2, "`\n", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
+		ft_putstr_fd((char *)token, STDERR_FILENO);
+		write(STDERR_FILENO, "'\n", 2);
 	}
 	else
-	{
-		write(2, "minishell: parse error near unexpected token `\\n`\n", 51);
-	}
+		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
 }

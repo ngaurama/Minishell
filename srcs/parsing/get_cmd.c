@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 14:32:24 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 23:53:42 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int			handle_redirection(t_command *cmd, t_arg *tokens)
 	next = tokens->next;
 	if (!next)
 	{
-		print_parse_error("\\n");
+		print_parse_error("\n"); //fixed for >> and other token syntax errors
 		return (0);
 	}
 	if (next->type != T_WORD)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:14:49 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/24 01:38:07 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 23:37:25 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int			is_valid_identifier(const char *key)
 {
 	int	i;
 
-	if (!key || (!ft_isalpha(key[0]) && key[0] != '_'))
+	if (!key || !*key || (!ft_isalpha(key[0]) && key[0] != '_'))
 		return (0);
 	i = 1;
 	while (key[i])
@@ -33,6 +33,15 @@ static char	*make_env_var(const char *key, const char *value)
 	size_t	size;
 	char	*var;
 
+	if (!value)
+    {
+        size = ft_strlen(key) + 1;
+        var = malloc(size);
+        if (!var)
+            return (NULL);
+        ft_strlcpy(var, key, size);
+        return (var);
+    }
 	size = ft_strlen(key) + ft_strlen(value) + 2;
 	var = malloc(size);
 	if (!var)

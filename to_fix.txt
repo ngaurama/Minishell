@@ -1,12 +1,16 @@
 minishell  |	shell
 
-cat << EOF < test.txt
-> ok			> ok
-> 				>
-> EOF			> EOF
-i				ok
-o
-				i
-				o
+echo $""
+$			\n
 
+echo $"HOME"
+$HOME		HOME
 
+echo $""HOME
+$HOME		HOME
+
+echo $'HOME'
+$HOME		HOME
+
+"$HOMEdskjhfkdshfsd"
+\n			command not found

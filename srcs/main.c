@@ -6,72 +6,13 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 00:25:46 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 00:30:25 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-volatile sig_atomic_t g_signal_num = 0;
-
-void	handle_signal(int signum)
-{
-    g_signal_num = signum;
-
-    if (signum == SIGINT)
-    {
-        rl_on_new_line();
-        printf("\n");
-        rl_replace_line("", 0);
-        rl_redisplay();
-    }
-}
-
-void 	setup_signals(t_shell *shell)
-{
-    struct sigaction sa;
-
-    sa.sa_handler = handle_signal;
-    sa.sa_flags = 0;
-    sigemptyset(&sa.sa_mask);
-    if (sigaction(SIGINT, &sa, NULL) == -1)
-    {
-        perror("sigaction");
-		free_and_exit(shell, 1);
-    }
-    sa.sa_handler = SIG_IGN;
-    if (sigaction(SIGQUIT, &sa, NULL) == -1)
-    {
-        perror("sigaction");
-		free_and_exit(shell, 1);
-    }
-    sa.sa_handler = handle_signal;
-    if (sigaction(SIGTERM, &sa, NULL) == -1)
-    {
-        perror("sigaction");
-		free_and_exit(shell, 1);
-    }
-}
-
-void 	handle_input(t_shell *shell)
-{
-	shell->input = readline("minishell$ ");
-	if (!shell->input)
-	{
-		printf("exit\n");
-		free_and_exit(shell, 0);
-	}
-	if (*shell->input != '\0')
-		add_history(shell->input);
-	shell->arguments = tokenize_input(shell->input, shell);
-	//print_token_list(shell->arguments);
-	if (shell->arguments)
-		shell->command = shell->arguments->value;
-	else
-		shell->command = NULL;
-}
-
-void 	execution(t_shell *shell)
+void execution(t_shell *shell)
 {
     if (shell->cmds->pipe)
         pipeline(shell);
@@ -85,8 +26,13 @@ void 	execution(t_shell *shell)
             {
                 int status;
                 pid_t waited_pid = waitpid(shell->pid, &status, 0);
+                while (waited_pid == -1 && errno == EINTR)
+                    waited_pid = waitpid(shell->pid, &status, 0);
                 if (waited_pid == -1)
+                {
                     perror("waitpid failed");
+                    shell->exit_status = 1;
+                }
                 else
                     update_exit_status(shell, status);
             }
@@ -94,32 +40,80 @@ void 	execution(t_shell *shell)
     }
 }
 
-int 	main(int argc, char **argv, char **envp)
+static void process_input(t_shell *shell)
 {
-    t_shell shell;
+    shell->arguments = tokenize_input(shell->input, shell);
+    if (shell->arguments)
+    {
+        shell->command = shell->arguments->value;
+        shell->cmds = parse_tokens(shell->arguments);
+        if (shell->cmds)
+        {
+            execution(shell);
+            free_commands(shell->cmds);
+            shell->cmds = NULL;
+        }
+        free_arguments(shell->arguments);
+        shell->arguments = NULL;
+    }
+    free(shell->input);
+    shell->input = NULL;
+}
 
-    (void)argc;
-    (void)argv;
-    init_shell(&shell, envp);
-    setup_signals(&shell);
+static void interactive_mode(t_shell *shell)
+{
     while (1)
     {
-        handle_input(&shell);
-        if (shell.arguments)
+        shell->input = readline("minishell$ ");
+        if (!shell->input)
         {
-            shell.cmds = parse_tokens(shell.arguments);
-            print_command_list(shell.cmds);
-            if (shell.cmds)
-            {
-                execution(&shell);
-                free_commands(shell.cmds);
-				shell.cmds = NULL;
-            }
-            free_arguments(shell.arguments);
-			shell.arguments = NULL;
+            printf("exit\n");
+            break;
         }
+        if (*shell->input != '\0')
+            add_history(shell->input);
+        if (*shell->input)
+            process_input(shell);
+        else
+            free(shell->input);
     }
-    clear_history();
+}
+
+static void non_interactive_mode(t_shell *shell)
+{
+    shell->input = readline("");
+    if (shell->input && *shell->input)
+        process_input(shell);
+    else
+        free(shell->input);
+}
+
+static int command_mode(t_shell *shell, char *command)
+{
+    shell->input = ft_strdup(command);
+    if (!shell->input)
+        return (1);
+    process_input(shell);
+    return (shell->exit_status);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+    t_shell shell;
+    int interactive = isatty(STDIN_FILENO);
+
+    init_shell(&shell, envp);
+    setup_signals();
+    if (argc > 2 && !ft_strcmp(argv[1], "-c"))
+    {
+        int status = command_mode(&shell, argv[2]);
+        free_shell(&shell);
+        return (status);
+    }
+    if (interactive)
+        interactive_mode(&shell);
+    else
+        non_interactive_mode(&shell);
     free_shell(&shell);
-    return (0);
+    return (shell.exit_status);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 23:42:00 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 00:03:16 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,12 @@
 # include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <errno.h>
 #include <sys/stat.h>
 
 # define MAX_ARGS 1024
 
-#include <signal.h>
-
 extern volatile sig_atomic_t g_signal_num;
-
 
 # define T_WORD			1	// Regular arguments
 # define T_PIPE			2	// "|"
@@ -205,6 +203,10 @@ void		ft_exit(t_shell *shell);
 //set_unset.c
 void		set_env_var(t_shell *shell, const char *key, const char *value);
 int			is_valid_identifier(const char *key);
+
+//signals.c
+void setup_signals(void);
+void handle_signal(int signum);
 
 // For debugging
 void		print_token_list(t_arg *tokens);
