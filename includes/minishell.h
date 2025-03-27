@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 14:27:22 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 15:00:00 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ int 		ensure_token_capacity(t_tokenizer *tok, int extra);
 void		tok_reset(t_tokenizer *tok);
 
 // free_parse.c
+void 		free_redirections(t_redir *redirs);
 void		free_commands(t_command *cmds);
 void		free_arguments(t_arg *args);
 void		free_tokenizer(t_tokenizer *tok);
