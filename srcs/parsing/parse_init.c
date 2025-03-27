@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 14:32:16 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 23:49:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ t_arg		*add_token(t_arg *head, char *token, int type, int quoted)
 	t_arg *new;
 	t_arg *tmp;
 
-	if (!token || *token == '\0')
+	if (!token || (token[0] == '\0' && quoted == 0))
+		return (head);
+	if (!token)
 		return (head);
 	//printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
 	new = malloc(sizeof(t_arg));

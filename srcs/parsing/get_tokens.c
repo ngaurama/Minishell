@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 13:46:21 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 23:42:44 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ int		handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 		append_char_to_token(tok, current);
 		tok->i++;
 	}
+	if (tok->j == 0)
+	tok->token[0] = '\0';
 	tok->token[tok->j] = '\0';
 	return (tok->i);
 }
@@ -113,6 +115,8 @@ void	parse_next_token(char *input, t_tokenizer *tok, t_shell *shell)
 	else
 		tok->i = handle_word(input, tok, shell);
 	tok->token[tok->j] = '\0';
+	if (tok->token[0] == '\0' && !tok->quoted)
+		return ;
 	tok->heredoc_next = (tok->type == T_HEREDOC);
 }
 
