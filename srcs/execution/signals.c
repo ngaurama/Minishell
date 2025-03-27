@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 23:54:17 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/28 00:31:00 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void handle_signal(int signum)
         rl_on_new_line();
         printf("\n");
         fflush(stdout);       
-        //rl_replace_line("", 0);
+        rl_replace_line("", 0);
         rl_redisplay();
     }
 }
