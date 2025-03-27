@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:27 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/25 18:35:28 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/27 23:45:58 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	print_env_var(char *var)
 {
     char *equal_sign = ft_strchr(var, '=');
     
-    if (equal_sign)
+    if (equal_sign && *(equal_sign + 1))
     {
         *equal_sign = '\0';
         printf("declare -x %s=\"%s\"\n", var, equal_sign + 1);
@@ -109,7 +109,7 @@ static void	export_var_from_arg(char *arg, t_shell *shell, int *status)
 		if (get_env_value(shell->env, arg))
 			try_export(arg, get_env_value(shell->env, arg), shell, status);
 		else
-			try_export(arg, "", shell, status);
+			try_export(arg, NULL, shell, status);
 	}
 }
 

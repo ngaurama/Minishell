@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 14:26:11 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/27 17:52:52 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int handle_output_redirection(t_redir *redir)
             flags = O_WRONLY | O_CREAT | O_APPEND;
         else
         {
-            write(2, "Invalid output redirection type\n", 32);
+            ft_putstr_fd("Invalid output redirection type\n", STDERR_FILENO);
             return (1);
         }
         fd = open(redir->filename, flags, 0644);
