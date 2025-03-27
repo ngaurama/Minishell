@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 22:45:49 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 00:25:46 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	handle_signal(int signum)
     {
         rl_on_new_line();
         printf("\n");
-        //rl_replace_line("", 0);
+        rl_replace_line("", 0);
         rl_redisplay();
     }
 }
