@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   set_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:14:49 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 23:37:25 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/28 19:24:15 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int			is_valid_identifier(const char *key)
+int	is_valid_identifier(const char *key)
 {
 	int	i;
 
@@ -34,14 +34,14 @@ static char	*make_env_var(const char *key, const char *value)
 	char	*var;
 
 	if (!value)
-    {
-        size = ft_strlen(key) + 1;
-        var = malloc(size);
-        if (!var)
-            return (NULL);
-        ft_strlcpy(var, key, size);
-        return (var);
-    }
+	{
+		size = ft_strlen(key) + 1;
+		var = malloc(size);
+		if (!var)
+			return (NULL);
+		ft_strlcpy(var, key, size);
+		return (var);
+	}
 	size = ft_strlen(key) + ft_strlen(value) + 2;
 	var = malloc(size);
 	if (!var)
@@ -69,20 +69,20 @@ static int	find_env_index(t_shell *shell, const char *key)
 	return (-1);
 }
 
-void		set_env_var(t_shell *shell, const char *key, const char *value)
+void	set_env_var(t_shell *shell, const char *key, const char *value)
 {
 	char	*new_var;
 	int		i;
 
 	new_var = make_env_var(key, value);
 	if (!new_var)
-		return;
+		return ;
 	i = find_env_index(shell, key);
 	if (i >= 0)
 	{
 		free(shell->env[i]);
 		shell->env[i] = new_var;
-		return;
+		return ;
 	}
 	i = 0;
 	while (shell->env[i])

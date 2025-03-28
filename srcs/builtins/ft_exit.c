@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 20:08:46 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 16:43:16 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 19:23:44 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	handle_exit_errors(t_shell *shell, char *arg)
 	return (0);
 }
 
-void		ft_exit(t_shell *shell)
+void	ft_exit(t_shell *shell)
 {
 	int		status;
 	char	*arg;
@@ -58,7 +58,7 @@ void		ft_exit(t_shell *shell)
 	status = shell->exit_status;
 	arg = shell->cmds->args[1];
 	if (handle_exit_errors(shell, arg))
-		return;
+		return ;
 	if (arg)
 		status = ft_atoi(arg) % 256;
 	free_shell(shell);

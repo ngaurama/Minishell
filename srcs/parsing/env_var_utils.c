@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:03:53 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 02:15:33 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 18:24:51 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,21 @@ char	*extract_var_name(const char *str)
 	return (var_name);
 }
 
-char 	*expand_var(char *var, t_shell *shell)
+char	*expand_var(char *var, t_shell *shell)
 {
 	if (ft_strncmp(var, "?", 2) == 0)
-		return ft_itoa(shell->exit_status);
+		return (ft_itoa(shell->exit_status));
 	return (get_env_value(shell->env, var));
 }
 
-int		is_valid_var_start(char c)
+int	is_valid_var_start(char c)
 {
 	if (ft_isalpha(c) || c == '_' || c == '?')
 		return (1);
 	return (0);
 }
 
-int		should_expand_dollar(char next, int in_quotes, char quote_char)
+int	should_expand_dollar(char next, int in_quotes, char quote_char)
 {
 	if (!next || is_space_or_meta(next)
 		|| next == '"' || next == '\''

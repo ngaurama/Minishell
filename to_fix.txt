@@ -14,3 +14,21 @@ $HOME		HOME
 
 "$HOMEdskjhfkdshfsd"
 \n			command not found
+
+@124
+minishell$ echo $9HOME
+$9HOME
+instead of
+HOME
+
+@207 
+minishell$ "$HOMEwewpelwpel"
+minishell: : is a directory
+minishell: : command not found
+
+@213
+minishell$ cat
+
+
+^C
+minishell$ minishell$ 

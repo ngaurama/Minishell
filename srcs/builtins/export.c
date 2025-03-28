@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:27 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 23:45:58 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/28 19:23:37 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,67 +14,69 @@
 
 static void	sort_env(char **env, int size)
 {
-    int     i;
-    int     j;
-    char    *tmp;
-    int     swapped;
+	int		i;
+	int		j;
+	char	*tmp;
+	int		swapped;
 
-    i = 0;
-    while (i < size - 1)
-    {
-        swapped = 0;
-        j = 0;
-        while (j < size - i - 1)
-        {
-            if (ft_strcmp(env[j], env[j + 1]) > 0)
-            {
-                tmp = env[j];
-                env[j] = env[j + 1];
-                env[j + 1] = tmp;
-                swapped = 1;
-            }
-            j++;
-        }
-        if (!swapped)
-            break;
-        i++;
-    }
+	i = 0;
+	while (i < size - 1)
+	{
+		swapped = 0;
+		j = 0;
+		while (j < size - i - 1)
+		{
+			if (ft_strcmp(env[j], env[j + 1]) > 0)
+			{
+				tmp = env[j];
+				env[j] = env[j + 1];
+				env[j + 1] = tmp;
+				swapped = 1;
+			}
+			j++;
+		}
+		if (!swapped)
+			break ;
+		i++;
+	}
 }
 
 static void	print_env_var(char *var)
 {
-    char *equal_sign = ft_strchr(var, '=');
-    
-    if (equal_sign && *(equal_sign + 1))
-    {
-        *equal_sign = '\0';
-        printf("declare -x %s=\"%s\"\n", var, equal_sign + 1);
-        *equal_sign = '=';
-    }
-    else
-        printf("declare -x %s\n", var);
+	char	*equal_sign;
+
+	equal_sign = ft_strchr(var, '=');
+	if (equal_sign && *(equal_sign + 1))
+	{
+		*equal_sign = '\0';
+		printf("declare -x %s=\"%s\"\n", var, equal_sign + 1);
+		*equal_sign = '=';
+	}
+	else
+		printf("%s\n", var);
 }
 
 static void	print_sorted_env(t_shell *shell)
 {
-    int     count = 0;
-    char    **env_copy;
-    int     i;
+	int		count;
+	char	**env_copy;
+	int		i;
 
-    while (shell->env[count]) 
+	count = 0;
+	while (shell->env[count])
 		count++;
-    env_copy = malloc(sizeof(char *) * (count + 1));
-    if (!env_copy) 
-		return;
-    i = -1;
-    while (++i < count)
-        env_copy[i] = shell->env[i];
-    env_copy[count] = NULL;
-    sort_env(env_copy, count);
-    i = -1;
-    while (env_copy[++i])
-        print_env_var(env_copy[i]);
-    free(env_copy);
+	env_copy = malloc(sizeof(char *) * (count + 1));
+	if (!env_copy)
+		return ;
+	i = -1;
+	while (++i < count)
+		env_copy[i] = shell->env[i];
+	env_copy[count] = NULL;
+	sort_env(env_copy, count);
+	i = -1;
+	while (env_copy[++i])
+		print_env_var(env_copy[i]);
+	free(env_copy);
 }
 
 static void	try_export(const char *key, const char *value, t_shell *shell,

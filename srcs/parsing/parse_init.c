@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parse_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 00:05:30 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:29:45 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_arg		*add_token(t_arg *head, char *token, int type, int quoted)
+t_arg	*add_token(t_arg *head, char *token, int type, int quoted)
 {
-	t_arg *new;
-	t_arg *tmp;
+	t_arg	*new;
+	t_arg	*tmp;
 
 	if (!token || (*token == '\0' && !quoted)) //fixed for export ""
 		return (head);
@@ -53,7 +53,7 @@ t_command	*init_command(void)
 	return (cmd);
 }
 
-int 		ensure_token_capacity(t_tokenizer *tok, int extra)
+int	ensure_token_capacity(t_tokenizer *tok, int extra)
 {
 	char	*new_token;
 	int		new_capacity;
@@ -71,7 +71,7 @@ int 		ensure_token_capacity(t_tokenizer *tok, int extra)
 	return (1);
 }
 
-int			init_tokenizer(t_tokenizer *tok)
+int	init_tokenizer(t_tokenizer *tok)
 {
 	tok->i = 0;
 	tok->j = 0;
@@ -88,7 +88,7 @@ int			init_tokenizer(t_tokenizer *tok)
 	return (1);
 }
 
-void		tok_reset(t_tokenizer *tok)
+void	tok_reset(t_tokenizer *tok)
 {
 	tok->j = 0;
 	tok->type = T_WORD;

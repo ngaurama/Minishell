@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:53 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/24 01:43:34 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 19:24:44 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 static void	unset_env_var(t_shell *shell, const char *key)
 {
-	int i;
-	int len;
+	int	i;
+	int	len;
 
 	i = 0;
 	len = ft_strlen(key);
-	while(shell->env[i])
+	while (shell->env[i])
 	{
 		if (ft_strncmp(shell->env[i], key, len) == 0
-		&& shell->env[i][len] == '=')
+			&& shell->env[i][len] == '=')
 		{
 			free(shell->env[i]);
 			while (shell->env[i + 1])
@@ -31,13 +31,13 @@ static void	unset_env_var(t_shell *shell, const char *key)
 				i++;
 			}
 			shell->env[i] = NULL;
-			return;
+			return ;
 		}
 		i++;
 	}
 }
 
-void		ft_unset(t_shell *shell)
+void	ft_unset(t_shell *shell)
 {
 	int	i;
 	int	status;

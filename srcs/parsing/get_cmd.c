@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 23:53:42 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/28 19:15:39 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void		add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
+void	add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
 {
 	if (*arg_count < MAX_ARGS - 1)
 	{
@@ -22,14 +22,14 @@ void		add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
 	}
 }
 
-void		add_redirection(t_redir **redir_list, t_arg *token, int type)
+void	add_redirection(t_redir **redir_list, t_arg *token, int type)
 {
 	t_redir	*new;
 	t_redir	*tmp;
 
 	new = malloc(sizeof(t_redir));
 	if (!new)
-		return;
+		return ;
 	new->filename = ft_strdup(token->value);
 	new->type = type;
 	new->src_token = token;
@@ -46,14 +46,14 @@ void		add_redirection(t_redir **redir_list, t_arg *token, int type)
 	}
 }
 
-int			handle_redirection(t_command *cmd, t_arg *tokens)
+int	handle_redirection(t_command *cmd, t_arg *tokens)
 {
 	t_arg	*next;
 
 	next = tokens->next;
 	if (!next)
 	{
-		print_parse_error("\n"); //fixed for >> and other token syntax errors
+		print_parse_error("\n");
 		return (0);
 	}
 	if (next->type != T_WORD)
@@ -103,7 +103,8 @@ t_command	*parse_tokens(t_arg *tokens)
 			if (!handle_redir_or_free(cmd, &tokens, head))
 				return (NULL);
 		}
-		else if (tokens->type == T_PIPE &&
+// assignement in control structure
+		else if (tokens->type == T_PIPE && \
 			(cmd = handle_pipe(cmd, &arg_count, prev_token)) == NULL)
 			return (free_commands(head), NULL);
 		prev_token = tokens;

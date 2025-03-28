@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 23:50:45 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 18:25:04 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 	return (1);
 }
 
-int		handle_tilde(char *input, t_tokenizer *tok, t_shell *shell)
+int	handle_tilde(char *input, t_tokenizer *tok, t_shell *shell)
 {
 	char	*home;
 
@@ -52,7 +52,7 @@ int		handle_tilde(char *input, t_tokenizer *tok, t_shell *shell)
 	return (0);
 }
 
-int		handle_quote_state(char *input, t_tokenizer *tok,
+int	handle_quote_state(char *input, t_tokenizer *tok,
 			int *in_quotes, char *quote_char)
 {
 	if (!*in_quotes && (input[tok->i] == '"' || input[tok->i] == '\''))
@@ -73,7 +73,7 @@ int		handle_quote_state(char *input, t_tokenizer *tok,
 	return (0);
 }
 
-int handle_dollar(char *input, t_tokenizer *tok, t_shell *shell)
+int	handle_dollar(char *input, t_tokenizer *tok, t_shell *shell)
 {
 	char	next;
 

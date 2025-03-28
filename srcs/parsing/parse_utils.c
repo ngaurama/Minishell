@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 18:16:20 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:30:41 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,17 @@ void	append_str_to_token(t_tokenizer *tok, char *str)
 		tok->token[tok->j++] = str[i++];
 }
 
-int		is_space_or_meta(char c)
+int	is_space_or_meta(char c)
 {
 	return (
-		c == ' ' ||
-		c == '|' ||
-		c == '<' ||
+		c == ' ' || \
+		c == '|' || \
+		c == '<' || \
 		c == '>'
 	);
 }
 
-int		skip_whitespace(char *input, t_tokenizer *tok)
+int	skip_whitespace(char *input, t_tokenizer *tok)
 {
 	while (input[tok->i] == ' ' || input[tok->i] == '\t')
 		tok->i++;
@@ -56,7 +56,8 @@ void	print_parse_error(const char *token)
 {
 	if (ft_strcmp(token, "\n") != 0)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
+		ft_putstr_fd("minishell: syntax error near unexpected token `",
+			STDERR_FILENO);
 		ft_putstr_fd((char *)token, STDERR_FILENO);
 		write(STDERR_FILENO, "'\n", 2);
 	}

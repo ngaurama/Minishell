@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/24 01:37:51 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/28 19:22:37 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	change_directory(char *dir, char *oldpwd, t_shell *shell)
 	return (0);
 }
 
-void		ft_cd(t_shell *shell)
+void	ft_cd(t_shell *shell)
 {
 	char	*dir;
 	char	oldpwd[1024];
@@ -72,7 +72,7 @@ void		ft_cd(t_shell *shell)
 	if (!dir)
 	{
 		shell->exit_status = 1;
-		return;
+		return ;
 	}
 	if (change_directory(dir, oldpwd, shell) && dir != shell->cmds->args[1])
 		free(dir);
