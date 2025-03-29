@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 19:21:48 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 20:49:58 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	check_built_in(t_command *cmd)
 	const char	*builtins[8];
 
 	i = 0;
-	if (!cmd || !cmd->args[0])
+	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	command = cmd->args[0];
 	builtins[0] = "echo";

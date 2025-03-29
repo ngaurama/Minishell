@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 18:25:04 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 19:20:56 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,26 @@
 
 int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 {
-	char	*var;
-	char	*val;
-	int		var_len;
+	char	next;
 
+	if (!input[tok->i + 1])
+		return (handle_single_dollar(tok, 1));
+	next = input[tok->i + 1];
 	tok->i++;
-	var = extract_var_name(&input[tok->i]);
-	if (!var || var[0] == '\0')
+	if (next == '?')
+		return (handle_exit_expansion(tok, shell, 1));
+	if (next == '$')
+		return (handle_single_dollar(tok, 1));
+	if (ft_isdigit(next))
+		return (skip_digits(input, tok, 1));
+	if (next == '"' || next == '\'')
 	{
 		append_char_to_token(tok, '$');
-		free(var);
-		return (0);
+		return (1);
 	}
-	var_len = ft_strlen(var);
-	val = expand_var(var, shell);
-	if (val)
-		append_str_to_token(tok, val);
-	tok->i += var_len;
-	free(var);
-	free(val);
+	if (!ft_isalpha(next) && next != '_')
+		return (handle_single_dollar(tok, 1));
+	expand_variable(input, tok, shell, 0);
 	return (1);
 }
 
@@ -73,36 +74,35 @@ int	handle_quote_state(char *input, t_tokenizer *tok,
 	return (0);
 }
 
-int	handle_dollar(char *input, t_tokenizer *tok, t_shell *shell)
+int handle_dollar(char *input, t_tokenizer *tok, t_shell *shell)
 {
-	char	next;
+	char next;
 
 	if (input[tok->i] != '$')
 		return (0);
-	if (!tok->should_expand)
-	{
-		append_char_to_token(tok, '$');
-		tok->i++;
-		return (1);
-	}
 	next = input[tok->i + 1];
-	if (!should_expand_dollar(next, tok->in_quotes, tok->quote_char))
-	{
-		append_char_to_token(tok, '$');
-		tok->i++;
-	}
-	else
-		expand_variable(input, tok, shell);
+	if (next == '\0')
+		return (handle_single_dollar(tok, 0));
+	if (next == '?')
+		return (handle_exit_expansion(tok, shell, 0));
+	if (ft_isdigit(next))
+		return (skip_digits(input, tok, 0));
+	if (next == '"' || next == '\'')
+		return (handle_dollar_quote(input, tok, shell));
+	if (is_space_or_meta(next) || (!ft_isalpha(next) && next != '_'))
+		return (handle_literal_dollar(tok));
+	expand_variable(input, tok, shell, 1);
 	return (1);
 }
 
-void	expand_variable(char *input, t_tokenizer *tok, t_shell *shell)
+void	expand_variable(char *input, t_tokenizer *tok, t_shell *shell, int skip)
 {
 	char	*var;
 	char	*val;
 	int		var_len;
 
-	tok->i++;
+	if (skip)
+		tok->i++;
 	var = extract_var_name(&input[tok->i]);
 	if (!var)
 		return ;

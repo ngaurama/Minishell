@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 00:30:25 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/29 20:04:25 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void process_input(t_shell *shell)
     if (shell->arguments)
     {
         shell->command = shell->arguments->value;
-        shell->cmds = parse_tokens(shell->arguments);
+        shell->cmds = parse_tokens(shell, shell->arguments);
         if (shell->cmds)
         {
             execution(shell);

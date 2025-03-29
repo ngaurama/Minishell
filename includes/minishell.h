@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 00:03:16 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/29 22:09:46 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_redir
 
 typedef struct s_command
 {
-	char				*args[MAX_ARGS];	// Arguments for execve()
+	char				**args;				// Arguments for execve()
 	t_redir				*infiles;			// Files for "<"
 	t_redir				*outfiles;			// Files for ">" or ">>"
 	t_redir				*heredocs;
@@ -79,6 +79,14 @@ typedef struct s_command
 	int					pipe;				// 1 if there's a pipe "|"
 	struct s_command	*next;				// Next command in the pipeline
 }	t_command;
+
+typedef struct s_parse_data
+{
+	t_command	*cmd;
+	t_command	*head;
+	t_arg		*prev_token;
+	int			arg_count;
+}	t_parse_data;
 
 typedef struct s_shell {
 	t_arg		*arguments;
@@ -97,31 +105,43 @@ void		free_shell(t_shell *shell);
 
 // get_tokens.c / get_tokens_2.c
 t_arg		*tokenize_input(char *input, t_shell *shell);
+int			handle_quotes(char *input, t_tokenizer *tok,
+				int in_word, t_shell *shell);
 
 // env_var.c
 int			handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell);
 int			handle_tilde(char *input, t_tokenizer *tok, t_shell *shell);
 int 		handle_dollar(char *input, t_tokenizer *tok, t_shell *shell);
-void		expand_variable(char *input, t_tokenizer *tok,
-				t_shell *shell);
+void		expand_variable(char *input, t_tokenizer *tok, t_shell *shell,
+				int skip);
 int			handle_quote_state(char *input, t_tokenizer *tok,
 				int *in_quotes, char *quote_char);
 
 // env_var_utils.c
 char		*get_env_value(char **env, char *var_name);
-char	*extract_var_name(const char *str);
+char		*extract_var_name(const char *str);
 int			is_valid_var_start(char c);
 char		*expand_var(char *var, t_shell *shell);
 int			should_expand_dollar(char next, int in_quotes, char quote_char);
 
+// handle_dollar.c
+int			handle_single_dollar(t_tokenizer *tok, int quoted);
+int			handle_exit_expansion(t_tokenizer *tok, t_shell *shell, int quoted);
+int			skip_digits(char *input, t_tokenizer *tok, int quoted);
+int			handle_dollar_quote(char *input, t_tokenizer *tok, t_shell *shell);
+int			handle_literal_dollar(t_tokenizer *tok);
+
 // get_cmd.c / get_cmd_utils.c
-t_command	*parse_tokens(t_arg *tokens);
-int			handle_redirection(t_command *cmd, t_arg *tokens);
+t_command	*parse_tokens(t_shell *shell, t_arg *tokens);
+int			handle_redirection(t_command *cmd, t_arg *tokens,
+				t_arg *prev_token);
 int			is_standalone(t_arg *token, t_arg *prev);
 int			is_redir_token(int type);
 int			handle_redir_or_free(t_command *cmd, t_arg **tokens,
-				t_command *head);
-
+				t_arg *prev_token);
+void		add_argument_to_cmd(t_shell *shell, t_command *cmd, char *arg,
+				int *arg_count);
+				
 // parse_init.c
 t_arg		*add_token(t_arg *head, char *token, int type, int quoted);
 t_command	*init_command(void);

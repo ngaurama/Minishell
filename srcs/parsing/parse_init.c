@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 18:29:45 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 20:35:16 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_arg	*add_token(t_arg *head, char *token, int type, int quoted)
 	t_arg	*new;
 	t_arg	*tmp;
 
-	if (!token || (*token == '\0' && !quoted)) //fixed for export ""
+	if (!token || (*token == '\0' && !quoted))
 		return (head);
 	//printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
 	new = malloc(sizeof(t_arg));
@@ -43,7 +43,7 @@ t_command	*init_command(void)
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	cmd->args[0] = NULL;
+	cmd->args = NULL;
 	cmd->infiles = NULL;
 	cmd->outfiles = NULL;
 	cmd->heredocs = NULL;
