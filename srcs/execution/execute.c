@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 19:19:53 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 22:17:24 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int execute_command(t_shell *shell)
 {
 	int	path_result;
 	
-	if (!shell || !shell->cmds || !shell->cmds->args[0])
+	if (!shell || !shell->cmds || !shell->cmds->args || !shell->cmds->args[0])
 		return (1);
 
 	int saved_stdin, saved_stdout;

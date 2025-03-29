@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:37:25 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 21:11:27 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/29 22:05:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,10 @@ int	is_redir_token(int type)
 		type == T_APPEND || type == T_HEREDOC);
 }
 
-int	handle_redir_or_free(t_command *cmd, t_arg **tokens,
-		t_command *head)
+int	handle_redir_or_free(t_command *cmd, t_arg **tokens, t_arg *prev_token)
 {
-	if (!handle_redirection(cmd, *tokens))
-	{
-		free_commands(head);
+	if (!handle_redirection(cmd, *tokens, prev_token))
 		return (0);
-	}
 	if ((*tokens)->next)
 		*tokens = (*tokens)->next;
 	return (1);

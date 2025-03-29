@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/29 21:11:09 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/29 22:09:46 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,12 @@ int			handle_literal_dollar(t_tokenizer *tok);
 
 // get_cmd.c / get_cmd_utils.c
 t_command	*parse_tokens(t_shell *shell, t_arg *tokens);
-int			handle_redirection(t_command *cmd, t_arg *tokens);
+int			handle_redirection(t_command *cmd, t_arg *tokens,
+				t_arg *prev_token);
 int			is_standalone(t_arg *token, t_arg *prev);
 int			is_redir_token(int type);
 int			handle_redir_or_free(t_command *cmd, t_arg **tokens,
-				t_command *head);
+				t_arg *prev_token);
 void		add_argument_to_cmd(t_shell *shell, t_command *cmd, char *arg,
 				int *arg_count);
 				

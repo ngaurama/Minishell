@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 21:11:23 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/29 22:19:57 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,15 @@ void	add_redirection(t_redir **redir_list, t_arg *token, int type)
 	}
 }
 
-int	handle_redirection(t_command *cmd, t_arg *tokens)
+int	handle_redirection(t_command *cmd, t_arg *tokens, t_arg *prev_token)
 {
 	t_arg	*next;
 
+	if (!prev_token && tokens->type != T_HEREDOC)
+	{
+		print_parse_error(tokens->value);
+		return (0);
+	}
 	next = tokens->next;
 	if (!next)
 	{
@@ -60,12 +65,18 @@ int	handle_redirection(t_command *cmd, t_arg *tokens)
 	return (1);
 }
 
-int	handle_pipe(t_command **cmd, int *arg_count, t_arg *prev_token)
+int handle_pipe(t_command **cmd, int *arg_count, t_arg *prev_token, t_arg *next)
+
 {
 	if (!prev_token || prev_token->type == T_PIPE)
 	{
 		print_parse_error("|");
 		(*cmd)->next = NULL;
+		return (1);
+	}
+	if (!next)
+	{
+		print_parse_error("|");
 		return (1);
 	}
 	(*cmd)->pipe = 1;
@@ -77,21 +88,27 @@ int	handle_pipe(t_command **cmd, int *arg_count, t_arg *prev_token)
 	return (0);
 }
 
-int	handle_token(t_shell *shell, t_parse_data *p_data, t_arg **tokens)
+int	token_loop(t_shell *shell, t_parse_data *p_data, t_arg *tokens)
 {
-	if (is_standalone(*tokens, p_data->prev_token))
+	while (tokens)
 	{
-		add_argument_to_cmd(shell, p_data->cmd, (*tokens)->value,
-			&p_data->arg_count);
-	}
-	else if (is_redir_token((*tokens)->type))
-	{
-		if (!handle_redir_or_free(p_data->cmd, tokens, p_data->head))
+		if (is_standalone(tokens, p_data->prev_token))
+		{
+			add_argument_to_cmd(shell, p_data->cmd, tokens->value,
+				&p_data->arg_count);
+		}
+		else if (is_redir_token(tokens->type))
+		{
+			if (!handle_redir_or_free(p_data->cmd, &tokens, p_data->prev_token))
+				return (1);
+		}
+		else if (tokens->type == T_PIPE &&
+			handle_pipe(&p_data->cmd, &p_data->arg_count, p_data->prev_token,
+				tokens->next))
 			return (1);
+		p_data->prev_token = tokens;
+		tokens = tokens->next;
 	}
-	else if ((*tokens)->type == T_PIPE &&
-		handle_pipe(&p_data->cmd, &p_data->arg_count, p_data->prev_token))
-		return (1);
 	return (0);
 }
 
@@ -103,19 +120,8 @@ t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
 	p_data.head = p_data.cmd;
 	p_data.prev_token = NULL;
 	p_data.arg_count = 0;
-	while (tokens)
+	if (!p_data.cmd || token_loop(shell, &p_data, tokens))
 	{
-		if (handle_token(shell, &p_data, &tokens))
-		{
-			free_commands(p_data.head);
-			return (NULL);
-		}
-		p_data.prev_token = tokens;
-		tokens = tokens->next;
-	}
-	if (p_data.prev_token && p_data.prev_token->type == T_PIPE)
-	{
-		print_parse_error("|");
 		free_commands(p_data.head);
 		return (NULL);
 	}
