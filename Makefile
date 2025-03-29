@@ -28,6 +28,7 @@ SRC = srcs/main.c \
 		srcs/parsing/get_cmd_utils.c \
 		srcs/parsing/env_var.c \
 		srcs/parsing/env_var_utils.c \
+		srcs/parsing/handle_dollar.c \
 		srcs/parsing/parse_init.c \
 		srcs/parsing/free_parse.c \
 		srcs/parsing/parse_utils.c \

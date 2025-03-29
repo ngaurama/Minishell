@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 18:29:15 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 17:09:36 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,6 @@ void	parse_next_token(char *input, t_tokenizer *tok, t_shell *shell)
 		return ;
 	if (tok->heredoc_next && tok->quoted == 0)
 		tok->should_expand = 0;
-	if (input[tok->i] == '$' && (input[tok->i + 1] == '"'
-			|| input[tok->i + 1] == '\''))
-	{
-		append_char_to_token(tok, '$');
-		tok->i++;
-	}
 	if (input[tok->i] == '\'' || input[tok->i] == '"')
 	{
 		tok->i = handle_quotes(input, tok, 0, shell);

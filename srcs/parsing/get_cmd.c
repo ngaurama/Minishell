@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 19:15:39 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 21:11:23 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	add_argument_to_cmd(t_command *cmd, char *arg, int *arg_count)
-{
-	if (*arg_count < MAX_ARGS - 1)
-	{
-		cmd->args[*arg_count] = ft_strdup(arg);
-		(*arg_count)++;
-		cmd->args[*arg_count] = NULL;
-	}
-}
 
 void	add_redirection(t_redir **redir_list, t_arg *token, int type)
 {
@@ -70,45 +60,64 @@ int	handle_redirection(t_command *cmd, t_arg *tokens)
 	return (1);
 }
 
-t_command	*handle_pipe(t_command *cmd, int *arg_count, t_arg *prev_token)
+int	handle_pipe(t_command **cmd, int *arg_count, t_arg *prev_token)
 {
 	if (!prev_token || prev_token->type == T_PIPE)
 	{
 		print_parse_error("|");
-		return (NULL);
+		(*cmd)->next = NULL;
+		return (1);
 	}
-	cmd->pipe = 1;
-	cmd->next = init_command();
+	(*cmd)->pipe = 1;
+	(*cmd)->next = init_command();
+	if (!(*cmd)->next)
+		return (1);
 	*arg_count = 0;
-	return (cmd->next);
+	*cmd = (*cmd)->next;
+	return (0);
 }
 
-t_command	*parse_tokens(t_arg *tokens)
+int	handle_token(t_shell *shell, t_parse_data *p_data, t_arg **tokens)
 {
-	t_command	*cmd;
-	t_command	*head;
-	int			arg_count;
-	t_arg		*prev_token;
+	if (is_standalone(*tokens, p_data->prev_token))
+	{
+		add_argument_to_cmd(shell, p_data->cmd, (*tokens)->value,
+			&p_data->arg_count);
+	}
+	else if (is_redir_token((*tokens)->type))
+	{
+		if (!handle_redir_or_free(p_data->cmd, tokens, p_data->head))
+			return (1);
+	}
+	else if ((*tokens)->type == T_PIPE &&
+		handle_pipe(&p_data->cmd, &p_data->arg_count, p_data->prev_token))
+		return (1);
+	return (0);
+}
 
-	cmd = init_command();
-	head = cmd;
-	arg_count = 0;
-	prev_token = NULL;
+t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
+{
+	t_parse_data	p_data;
+
+	p_data.cmd = init_command();
+	p_data.head = p_data.cmd;
+	p_data.prev_token = NULL;
+	p_data.arg_count = 0;
 	while (tokens)
 	{
-		if (is_standalone(tokens, prev_token))
-			add_argument_to_cmd(cmd, tokens->value, &arg_count);
-		else if (is_redir_token(tokens->type))
+		if (handle_token(shell, &p_data, &tokens))
 		{
-			if (!handle_redir_or_free(cmd, &tokens, head))
-				return (NULL);
+			free_commands(p_data.head);
+			return (NULL);
 		}
-// assignement in control structure
-		else if (tokens->type == T_PIPE && \
-			(cmd = handle_pipe(cmd, &arg_count, prev_token)) == NULL)
-			return (free_commands(head), NULL);
-		prev_token = tokens;
+		p_data.prev_token = tokens;
 		tokens = tokens->next;
 	}
-	return (head);
+	if (p_data.prev_token && p_data.prev_token->type == T_PIPE)
+	{
+		print_parse_error("|");
+		free_commands(p_data.head);
+		return (NULL);
+	}
+	return (p_data.head);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 18:25:53 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 20:32:35 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,19 @@ void	free_commands(t_command *cmds)
 	t_command	*next;
 	int			i;
 
+	if (!cmds)
+		return ;
 	while (cmds)
 	{
 		tmp = cmds;
 		next = cmds->next;
-		i = 0;
-		while (tmp->args[i])
-			free(tmp->args[i++]);
+		if (tmp->args)
+		{
+			i = 0;
+			while (tmp->args[i])
+				free(tmp->args[i++]);
+			free(tmp->args);
+		}
 		free_redirections(tmp->infiles);
 		free_redirections(tmp->outfiles);
 		free_redirections(tmp->heredocs);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:03:53 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 18:24:51 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/29 17:36:32 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,27 +32,22 @@ char	*get_env_value(char **env, char *var_name)
 	return (NULL);
 }
 
-char	*extract_var_name(const char *str)
+char *extract_var_name(const char *str)
 {
 	int		len;
-	char	*var_name;
+	char	*var;
 
-	len = 0;
-	if (str[len] == '?')
+	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+		return (NULL);
+	len = 1;
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
 		len++;
-	else
-	{
-		while (ft_isalnum(str[len]) || str[len] == '_')
-			len++;
-	}
-	if (len == 0)
+	var = malloc(sizeof(char) * (len + 1));
+	if (!var)
 		return (NULL);
-	var_name = malloc(len + 1);
-	if (!var_name)
-		return (NULL);
-	ft_strncpy(var_name, str, len);
-	var_name[len] = '\0';
-	return (var_name);
+	ft_strncpy(var, str, len);
+	var[len] = '\0';
+	return (var);
 }
 
 char	*expand_var(char *var, t_shell *shell)
@@ -68,14 +63,3 @@ int	is_valid_var_start(char c)
 		return (1);
 	return (0);
 }
-
-int	should_expand_dollar(char next, int in_quotes, char quote_char)
-{
-	if (!next || is_space_or_meta(next)
-		|| next == '"' || next == '\''
-		|| !is_valid_var_start(next)
-		|| (in_quotes && quote_char == '\''))
-		return (0);
-	return (1);
-}
-
