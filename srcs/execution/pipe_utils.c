@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 00:04:12 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/30 00:01:57 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ void 	setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
 
 void 	execute_child_pipes(t_shell *shell, t_command *cmd)
 {
+	if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0') 
+	{
+        ft_putstr_fd("minishell: : command not found\n", STDERR_FILENO);
+        free_and_exit(shell, 127);
+    }
     if (redirection(cmd, shell) != 0)
 		free_and_exit(shell, 1);
     if (check_built_in(cmd))
@@ -79,7 +84,6 @@ void 	preprocess_heredocs(t_command *cmd, t_shell *shell)
 			}
 			hd = hd->next;
 		}
-
 		if (fd != -1)
 		{
 			free_redirections(cmd->heredocs);

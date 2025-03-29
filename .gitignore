@@ -8,3 +8,4 @@ test.txt
 valgrind.log
 test_parser.c
 minishell_tester/
+tester_stuff/

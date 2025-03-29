@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 19:25:55 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/30 00:43:14 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,8 @@ void	handle_signal(int signum)
 	{
 		rl_on_new_line();
 		printf("\n");
-		fflush(stdout);
-		rl_replace_line("", 0);
-		rl_redisplay();
+		//rl_replace_line("", 0); //Uncomment this
+		//rl_redisplay(); //Try without uncommenting this
 	}
 }
 
@@ -35,7 +34,7 @@ void	setup_signals(void)
 	struct sigaction	sa;
 
 	sa.sa_handler = handle_signal;
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART; //adjusted to fix cat and ctrl+c
 	sigemptyset(&sa.sa_mask);
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/29 22:17:24 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/30 00:02:15 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,12 @@ int execute_command(t_shell *shell)
 	
 	if (!shell || !shell->cmds || !shell->cmds->args || !shell->cmds->args[0])
 		return (1);
-
+	if (shell->cmds->args[0][0] == '\0') 
+	{
+        ft_putstr_fd("minishell: : command not found\n", STDERR_FILENO);
+        shell->exit_status = 127;
+        return (1);
+    }
 	int saved_stdin, saved_stdout;
 	if (!save_fds(&saved_stdin, &saved_stdout))
 		return (1);

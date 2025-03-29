@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 02:10:20 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/30 00:13:03 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ void pipeline_cleanup(int buffer[2], int prev_pipe_read)
     char buf[1024];
     ssize_t n;
 
+    while (wait(NULL) > 0) //to make sure we wait for child process so errors print at the end
+        ;
     close(buffer[1]);
     n = read(buffer[0], buf, sizeof(buf)-1);
     while (n > 0)

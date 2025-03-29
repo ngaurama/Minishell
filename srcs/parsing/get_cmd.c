@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 22:19:57 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/30 00:42:33 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int	token_loop(t_shell *shell, t_parse_data *p_data, t_arg *tokens)
 t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
 {
 	t_parse_data	p_data;
+	t_command *current;
 
 	p_data.cmd = init_command();
 	p_data.head = p_data.cmd;
@@ -125,5 +126,15 @@ t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
 		free_commands(p_data.head);
 		return (NULL);
 	}
+	current = p_data.head;
+    while (current)
+    {
+        if (!current->args && current->heredocs != NULL)
+        {
+            int temp_count = 0;
+            add_argument_to_cmd(shell, current, "cat", &temp_count);
+        }
+        current = current->next;
+    }
 	return (p_data.head);
 }

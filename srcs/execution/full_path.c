@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/27 17:45:35 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/30 00:42:47 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ static int direct_path(t_shell *shell, const char *command)
 {
     if (access(command, F_OK | X_OK) == 0)
     {
+        if (access(command, X_OK) != 0)
+        {
+            ft_putstr_fd("minishell: ", STDERR_FILENO);
+            ft_putstr_fd((char *)command, STDERR_FILENO);
+            ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+            return (1);
+        }
         if (is_directory(command, command))
             return (2);
         if (shell->full_path)
@@ -102,10 +109,12 @@ int find_full_path(t_shell *shell, const char *command)
         if (direct_result >= 0)
             return (direct_result);
     }
-    path_var = getenv("PATH");
+    //path_var = getenv("PATH"); //Fixed external commands after 'unset PATH' can remove this line
+    path_var = get_env_value(shell->env, "PATH");
     if (!path_var)
         return (1);
     path_var_copy = ft_strdup(path_var);
+    free(path_var);
     if (!path_var_copy)
         return (1);
     if (shell->full_path)

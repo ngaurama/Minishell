@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/29 20:04:25 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/30 00:17:25 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void execution(t_shell *shell)
             {
                 int status;
                 pid_t waited_pid = waitpid(shell->pid, &status, 0);
-                while (waited_pid == -1 && errno == EINTR)
-                    waited_pid = waitpid(shell->pid, &status, 0);
                 if (waited_pid == -1)
                 {
                     perror("waitpid failed");
