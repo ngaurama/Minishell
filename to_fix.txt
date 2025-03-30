@@ -11,3 +11,7 @@ minishell$ cat
 
 ^C
 minishell$ minishell$ 
+
+cat | << EOF  // not sure if it works properly
+
+add heredoc cancel on ctrl+c

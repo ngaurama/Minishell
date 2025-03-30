@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 00:43:14 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/30 21:45:55 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,14 @@ void	handle_signal(int signum)
 
 	if (signum == SIGINT)
 	{
-		rl_on_new_line();
-		printf("\n");
-		//rl_replace_line("", 0); //Uncomment this
-		//rl_redisplay(); //Try without uncommenting this
+		write(1, "\n", 1);
+		if (rl_done == 0) // GNU Readline internal flag that tells if the line is still active
+		{
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+			g_signal_num = 0;
+		}
 	}
 }
 
