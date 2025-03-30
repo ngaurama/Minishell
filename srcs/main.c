@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 00:17:25 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/30 21:56:18 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,24 @@ static void interactive_mode(t_shell *shell)
 {
     while (1)
     {
+		g_signal_num = 0;
         shell->input = readline("minishell$ ");
         if (!shell->input)
         {
+			if (g_signal_num == SIGINT)
+			{
+				write(1, "\n", 1);
+				g_signal_num = 0;
+				continue;
+			}
             printf("exit\n");
             break;
         }
-        if (*shell->input != '\0')
-            add_history(shell->input);
         if (*shell->input)
+		{
+			add_history(shell->input);
             process_input(shell);
+		}
         else
             free(shell->input);
     }
