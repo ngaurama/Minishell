@@ -1,17 +1,15 @@
 minishell  |	shell
 
-@207 
-minishell$ "$HOMEwewpelwpel"
-minishell: : is a directory
-minishell: : command not found
-
-@213
-minishell$ cat
-
-
-^C
-minishell$ minishell$ 
-
 cat | << EOF  // not sure if it works properly
 
 add heredoc cancel on ctrl+c
+
+@219
+cat
+
+Ctrl-\ (should Quit (core dumped))
+
+@220
+Ctrl-Z shouldn't do anything
+
+@450 ?
