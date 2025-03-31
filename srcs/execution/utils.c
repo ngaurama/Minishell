@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 13:43:12 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 19:15:55 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,20 +107,20 @@ char	*ft_strtok(char *str, const char *delim)
 	return (start);
 }
 
-char *ft_strndup(const char *s, size_t n)
+char	*ft_strndup(const char *s, size_t n)
 {
-    size_t i;
-    char *dup;
+	size_t	i;
+	char	*dup;
 
 	dup = (char *)malloc(n + 1);
-    if (!dup)
-        return NULL;
+	if (!dup)
+		return (NULL);
 	i = 0;
-    while(i < n && s[i] != '\0')
+	while (i < n && s[i] != '\0')
 	{
         dup[i] = s[i];
 		i++;
 	}
     dup[i] = '\0';
-    return dup;
+	return (dup);
 }
