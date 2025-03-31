@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 23:49:52 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 22:58:46 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 		tok->i++;
 	}
 	if (tok->j == 0)
-	tok->token[0] = '\0';
+		tok->token[0] = '\0';
 	tok->token[tok->j] = '\0';
 	return (tok->i);
 }

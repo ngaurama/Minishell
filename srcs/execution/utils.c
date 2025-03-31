@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 19:15:55 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 23:34:25 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,6 @@ void	print_error(const char *msg)
 		len++;
 	write(2, msg, len);
 	write(2, "\n", 1);
-}
-
-char	*ft_strcat(char *dest, const char *src)
-{
-	char	*ptr;
-
-	ptr = dest;
-	while (*ptr)
-		ptr++;
-	while (*src)
-		*ptr++ = *src++;
-	*ptr = '\0';
-	return (dest);
 }
 
 char	*ft_strncpy(char *dest, const char *src, size_t n)
@@ -105,22 +92,4 @@ char	*ft_strtok(char *str, const char *delim)
 	else
 		next_token = NULL;
 	return (start);
-}
-
-char	*ft_strndup(const char *s, size_t n)
-{
-	size_t	i;
-	char	*dup;
-
-	dup = (char *)malloc(n + 1);
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < n && s[i] != '\0')
-	{
-        dup[i] = s[i];
-		i++;
-	}
-    dup[i] = '\0';
-	return (dup);
 }

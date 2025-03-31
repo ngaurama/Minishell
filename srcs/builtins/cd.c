@@ -3,16 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 20:01:14 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 23:14:50 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	*get_target_dir(t_shell *shell, int *free_dir)
+static char	*recover_pwd(char *oldpwd, char *dir, t_shell *shell)
+{
+	char	*new_dir;
+	char	*tmp;
+
+	new_dir = NULL;
+	if (ft_strncmp(dir, "..", 3) == 0)
+		new_dir = ft_strjoin(oldpwd, "/..");
+	else if (dir[0] == '/')
+		new_dir = ft_strdup(dir);
+	else
+	{
+		tmp = ft_strjoin(oldpwd, "/");
+		new_dir = ft_strjoin(tmp, dir);
+		free(tmp);
+	}
+	ft_putstr_fd(
+		"cd: error retrieving current directory: getcwd: "
+		"cannot access parent directories: No such file or directory\n",
+		STDERR_FILENO);
+	shell->exit_status = 1;
+	return (new_dir);
+}
+
+static int	change_directory(char *dir, char *oldpwd, t_shell *shell)
+{
+	char	*new_dir;
+
+	if (chdir(dir) == -1)
+		return (print_cd_error(dir, shell), 1);
+	new_dir = getcwd(NULL, 0);
+	if (!new_dir)
+		new_dir = recover_pwd(oldpwd, dir, shell);
+	set_env_var(shell, "OLDPWD", oldpwd);
+	set_env_var(shell, "PWD", new_dir);
+	free(shell->current_dir);
+	shell->current_dir = new_dir;
+	return (0);
+}
+
+static char	*get_oldpwd(t_shell *shell)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		if (shell->current_dir)
+			return (ft_strdup(shell->current_dir));
+		return (ft_strdup("/"));
+	}
+	return (cwd);
+}
+
+static char	*get_cd_target(t_shell *shell, int *free_dir)
 {
 	char	*dir;
 
@@ -41,68 +95,23 @@ static char	*get_target_dir(t_shell *shell, int *free_dir)
 	return (dir);
 }
 
-static int	change_directory(char *dir, char *oldpwd, t_shell *shell)
-{
-	char	*new_dir;
-
-	if (chdir(dir) == -1)
-    {
-        ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-        ft_putstr_fd(dir, STDERR_FILENO);
-        ft_putstr_fd(": ", STDERR_FILENO);
-        ft_putstr_fd(strerror(errno), STDERR_FILENO);
-        ft_putstr_fd("\n", STDERR_FILENO);
-        shell->exit_status = 1;
-        return (1);
-    }
-    new_dir = getcwd(NULL, 0);
-    if (!new_dir)
-    {
-        if (ft_strcmp(dir, "..") == 0)
-        {
-            char *tmp = ft_strjoin(oldpwd, "/..");
-            new_dir = tmp;
-        }
-        else if (dir[0] == '/')
-            new_dir = ft_strdup(dir);
-        else
-        {
-            char *tmp = ft_strjoin(oldpwd, "/");
-            new_dir = ft_strjoin(tmp, dir);
-            free(tmp);
-        }
-        ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", STDERR_FILENO);
-        shell->exit_status = 1;
-    }
-    set_env_var(shell, "OLDPWD", oldpwd);
-    set_env_var(shell, "PWD", new_dir);
-    free(shell->current_dir);
-    shell->current_dir = new_dir;
-    if (shell->exit_status == 0)
-        shell->exit_status = 0;
-    return (0);
-}
-
 void	ft_cd(t_shell *shell)
 {
 	char	*dir;
 	char	*oldpwd;
 	int		free_dir;
 
+	if (!validate_cd_args(shell))
+		return ;
+	oldpwd = get_oldpwd(shell);
+	if (!oldpwd)
+		return ;
 	free_dir = 0;
-    oldpwd = getcwd(NULL, 0);
-	if (!oldpwd) 
-	{
-		if (shell->current_dir)
-			oldpwd = ft_strdup(shell->current_dir);
-		else
-			oldpwd = ft_strdup("/");
-	}
-	dir = get_target_dir(shell, &free_dir);
+	dir = get_cd_target(shell, &free_dir);
 	if (!dir)
 	{
-        shell->exit_status = 1;
 		free(oldpwd);
+		shell->exit_status = 1;
 		return ;
 	}
 	change_directory(dir, oldpwd, shell);

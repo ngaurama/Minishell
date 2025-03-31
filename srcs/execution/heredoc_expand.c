@@ -6,13 +6,14 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 00:39:48 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/27 01:27:12 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 23:48:19 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	handle_dollar_sequence(const char *line, int i, char **result, t_shell *shell)
+static int	handle_dollar_sequence(const char *line, int i,
+				char **result, t_shell *shell)
 {
 	char	*var_name;
 	char	*value;
@@ -23,7 +24,6 @@ static int	handle_dollar_sequence(const char *line, int i, char **result, t_shel
 	var_name = extract_var_name(&line[i]);
 	if (!var_name)
 		return (i);
-
 	var_len = ft_strlen(var_name);
 	value = expand_var(var_name, shell);
 	if (value)
@@ -50,7 +50,7 @@ static int	skip_and_copy_literal(const char *line, int i, char **result)
 	return (i + 1);
 }
 
-char 		*heredoc_expand(char *line, t_shell *shell)
+char	*heredoc_expand(char *line, t_shell *shell)
 {
 	int		i;
 	char	*result;
@@ -64,5 +64,5 @@ char 		*heredoc_expand(char *line, t_shell *shell)
 		else
 			i = skip_and_copy_literal(line, i, &result);
 	}
-	return result;
+	return (result);
 }

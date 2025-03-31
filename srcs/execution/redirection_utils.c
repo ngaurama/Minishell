@@ -3,41 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 12:55:23 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 23:39:38 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int 	handle_redirect_in_file(const char *filename)
+int	handle_redirect_in_file(const char *filename)
 {
-    int fd;
+	int	fd;
 
-    if (ft_isdigit(filename[0]))
-        fd = ft_atoi(filename);
-    else
-        fd = open(filename, O_RDONLY);
-
-    if (fd == -1)
-        perror(filename);
-
-    return fd;
+	if (ft_isdigit(filename[0]))
+		fd = ft_atoi(filename);
+	else
+		fd = open(filename, O_RDONLY);
+	if (fd == -1)
+		perror(filename);
+	return (fd);
 }
 
-int 	handle_heredoc_input(t_redir *redir, t_shell *shell)
+int	handle_heredoc_input(t_redir *redir, t_shell *shell)
 {
-    int expand;
+	int	expand;
 
 	expand = 1;
-    if (redir->src_token)
-        expand = (redir->src_token->quoted == 0);
-    return (handle_heredoc(redir->filename, shell, expand));
+	if (redir->src_token)
+		expand = (redir->src_token->quoted == 0);
+	return (handle_heredoc(redir->filename, shell, expand));
 }
 
-int		stop_heredoc(char *line, const char *delimiter)
+int	stop_heredoc(char *line, const char *delimiter)
 {
 	if (!line)
 	{
@@ -45,7 +43,7 @@ int		stop_heredoc(char *line, const char *delimiter)
 		ft_putstr_fd("here-document delimited by end-of-file\n", 2);
 		return (1);
 	}
-	if (ft_strcmp(line, delimiter) == 0)
+	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
 	{
 		free(line);
 		return (1);
@@ -55,7 +53,7 @@ int		stop_heredoc(char *line, const char *delimiter)
 
 void	write_heredoc_line(int fd, char *line, t_shell *shell, int expand)
 {
-	char *expanded;
+	char	*expanded;
 
 	if (expand)
 	{
