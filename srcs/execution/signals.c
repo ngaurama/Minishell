@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 21:45:55 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 16:51:36 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	setup_signals(void)
 	struct sigaction	sa;
 
 	sa.sa_handler = handle_signal;
-	sa.sa_flags = SA_RESTART; //adjusted to fix cat and ctrl+c
+	sa.sa_flags = 0; //adjusted to fix cat and ctrl+c
 	sigemptyset(&sa.sa_mask);
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 	{
@@ -51,6 +51,11 @@ void	setup_signals(void)
 		perror("sigaction");
 		exit(1);
 	}
+    if (sigaction(SIGTSTP, &sa, NULL) == -1)
+    {
+        perror("sigaction");
+        exit(1);
+    }
 	sa.sa_handler = handle_signal;
 	if (sigaction(SIGTERM, &sa, NULL) == -1)
 	{

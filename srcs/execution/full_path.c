@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 00:42:47 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 14:08:44 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,21 @@ static char *build_path(const char *dir, const char *command)
 
 static int direct_path(t_shell *shell, const char *command)
 {
-    if (access(command, F_OK | X_OK) == 0)
+    if (access(command, F_OK) == 0)
     {
         if (access(command, X_OK) != 0)
         {
             ft_putstr_fd("minishell: ", STDERR_FILENO);
             ft_putstr_fd((char *)command, STDERR_FILENO);
             ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+            shell->exit_status = 126;
             return (1);
         }
         if (is_directory(command, command))
+        {
+            shell->exit_status = 126;
             return (2);
+        }
         if (shell->full_path)
             free(shell->full_path);
         shell->full_path = ft_strdup(command);

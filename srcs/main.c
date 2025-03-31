@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 21:56:18 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 15:32:43 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,17 @@
 
 void execution(t_shell *shell)
 {
+    if (!shell || !shell->cmds)
+    {
+        shell->exit_status = 1;
+        return;
+    }
     if (shell->cmds->pipe)
         pipeline(shell);
+    else if (check_built_in(shell->cmds))
+        execute_built_in(shell, shell->cmds);
     else
-    {
-        if (check_built_in(shell->cmds))
-            execute_built_in(shell, shell->cmds);
-        else
-        {
-            if (execute_command(shell) == 0)
-            {
-                int status;
-                pid_t waited_pid = waitpid(shell->pid, &status, 0);
-                if (waited_pid == -1)
-                {
-                    perror("waitpid failed");
-                    shell->exit_status = 1;
-                }
-                else
-                    update_exit_status(shell, status);
-            }
-        }
-    }
+        execute_command(shell);
 }
 
 static void process_input(t_shell *shell)

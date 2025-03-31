@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 23:43:06 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 13:38:17 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ void	init_shell(t_shell *shell, char **envp)
 		i++;
 	}
 	shell->env[i] = NULL;
+	shell->current_dir = getcwd(NULL, 0);
+    if (!shell->current_dir)
+        shell->current_dir = ft_strdup(get_env_value(shell->env, "PWD"));
+	if (!shell->current_dir)
+        shell->current_dir = ft_strdup("/");
 	shell->exit_status = 0;
 }
 
@@ -57,6 +62,7 @@ void	free_shell(t_shell *shell)
 	{
 		free_commands(shell->cmds);
 	}
+	free(shell->current_dir);
 	if (shell->env)
 	{
 		i = 0;
