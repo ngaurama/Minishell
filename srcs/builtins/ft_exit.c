@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 20:08:46 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 18:54:15 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 22:59:09 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	ft_isnumeric(const char *str)
 	return (1);
 }
 
-static int	handle_exit_errors(t_shell *shell, char *arg)
+int	handle_exit_errors(t_shell *shell, char *arg)
 {
 	if (arg && !ft_isnumeric(arg))
 	{
@@ -64,4 +64,3 @@ void	ft_exit(t_shell *shell)
 	free_shell(shell);
 	exit(status);
 }
-

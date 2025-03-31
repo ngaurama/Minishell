@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 19:12:45 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 23:53:12 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ typedef struct s_parse_data
 	int			arg_count;
 }	t_parse_data;
 
-typedef struct s_shell {
+typedef struct s_shell
+{
 	t_arg		*arguments;
 	t_command	*cmds;
 	char		*input;
@@ -98,7 +99,7 @@ typedef struct s_shell {
 	char		**env;
 	int			env_cap;
 	int			exit_status;
-	char *current_dir;
+	char		*current_dir;
 }	t_shell;
 
 // init.c
@@ -172,10 +173,8 @@ void		restore_fds(int saved_stdin, int saved_stdout);
 void		print_error(const char *msg);
 char		*ft_strtok(char *str, const char *delim);
 int			ft_strcmp(const char *s1, const char *s2);
-char		*ft_strcat(char *dest, const char *src);
 char		*ft_strncpy(char *dest, const char *src, size_t n);
 char		*ft_strcpy(char *dest, const char *src);
-char *ft_strndup(const char *s, size_t n);
 
 //redirection.c
 // int			redirection(t_shell *shell);
@@ -205,6 +204,11 @@ void		free_and_exit(t_shell *shell, int exit_code);
 // built_in.c
 // void		execute_built_in(t_shell *shell);
 void		execute_built_in(t_shell *shell, t_command *cmd);
+
+// build_in_utils.c
+void		print_cd_error(char *dir, t_shell *shell);
+int			validate_cd_args(t_shell *shell);
+void		sort_env(char **env, int size);
 // cd.c
 void		ft_cd(t_shell *shell);
 // echo.c

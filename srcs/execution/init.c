@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 19:16:51 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 23:40:44 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,6 @@ void	free_shell(t_shell *shell)
 			free(shell->env[i++]);
 		free(shell->env);
 	}
-    clear_history(); //mac
+	clear_history(); //mac
 	//rl_clear_history();
 }

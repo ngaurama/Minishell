@@ -3,43 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:27 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 19:23:37 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 22:59:25 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-static void	sort_env(char **env, int size)
-{
-	int		i;
-	int		j;
-	char	*tmp;
-	int		swapped;
-
-	i = 0;
-	while (i < size - 1)
-	{
-		swapped = 0;
-		j = 0;
-		while (j < size - i - 1)
-		{
-			if (ft_strcmp(env[j], env[j + 1]) > 0)
-			{
-				tmp = env[j];
-				env[j] = env[j + 1];
-				env[j + 1] = tmp;
-				swapped = 1;
-			}
-			j++;
-		}
-		if (!swapped)
-			break ;
-		i++;
-	}
-}
 
 static void	print_env_var(char *var)
 {
@@ -115,7 +86,7 @@ static void	export_var_from_arg(char *arg, t_shell *shell, int *status)
 	}
 }
 
-void		ft_export(t_shell *shell)
+void	ft_export(t_shell *shell)
 {
 	int	i;
 	int	status;

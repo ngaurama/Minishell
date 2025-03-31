@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 19:11:28 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 22:58:08 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	add_redirection(t_redir **redir_list, t_arg *token, int type)
 	new->type = type;
 	new->src_token = token;
 	new->next = NULL;
-
 	if (!*redir_list)
 		*redir_list = new;
 	else

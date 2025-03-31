@@ -6,12 +6,14 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/30 21:46:00 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 23:01:46 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+//Token creation debug
+//printf("Token created: [%s] (type: %d)\n", token, type);
 t_arg	*add_token(t_arg *head, char *token, int type, int quoted)
 {
 	t_arg	*new;
@@ -19,7 +21,6 @@ t_arg	*add_token(t_arg *head, char *token, int type, int quoted)
 
 	if (!token || (*token == '\0' && !quoted))
 		return (head);
-	//printf("Token created: [%s] (type: %d)\n", token, type); // DEBUG
 	new = malloc(sizeof(t_arg));
 	if (!new)
 		return (NULL);

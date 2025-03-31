@@ -34,6 +34,7 @@ SRC = srcs/main.c \
 		srcs/parsing/parse_utils.c \
 		srcs/parsing/test_parser.c \
 		srcs/builtins/built_in.c \
+		srcs/builtins/built_in_utils.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/set_unset.c \
 		srcs/builtins/echo.c \
