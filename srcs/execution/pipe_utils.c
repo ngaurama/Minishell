@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 16:39:12 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 19:11:48 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,8 @@ void 	setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
 
 void 	execute_child_pipes(t_shell *shell, t_command *cmd)
 {
-	if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0') 
-	{
-        ft_putstr_fd("minishell: : command not found\n", STDERR_FILENO);
+	if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0')
         free_and_exit(shell, 127);
-    }
     if (redirection(cmd, shell) != 0)
 		free_and_exit(shell, 1);
     if (check_built_in(cmd))
@@ -50,6 +47,8 @@ void 	execute_child_pipes(t_shell *shell, t_command *cmd)
     }
     else
     {
+		signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
         if (find_full_path(shell, cmd->args[0]) != 0)
         {
             ft_putstr_fd("minishell: ", STDERR_FILENO);

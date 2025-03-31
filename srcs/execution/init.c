@@ -6,7 +6,11 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/03/31 15:11:39 by npagnon          ###   ########.fr       */
+=======
+/*   Updated: 2025/03/31 13:38:17 by ngaurama         ###   ########.fr       */
+>>>>>>> 151460aeb0aca9f33948f8265b1213a014203b4d
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +42,11 @@ void	init_shell(t_shell *shell, char **envp)
 	while (envp[++i])
 		shell->env[i] = ft_strdup(envp[i]);
 	shell->env[i] = NULL;
+	shell->current_dir = getcwd(NULL, 0);
+    if (!shell->current_dir)
+        shell->current_dir = ft_strdup(get_env_value(shell->env, "PWD"));
+	if (!shell->current_dir)
+        shell->current_dir = ft_strdup("/");
 	shell->exit_status = 0;
 }
 
@@ -59,6 +68,7 @@ void	free_shell(t_shell *shell)
 	{
 		free_commands(shell->cmds);
 	}
+	free(shell->current_dir);
 	if (shell->env)
 	{
 		i = 0;

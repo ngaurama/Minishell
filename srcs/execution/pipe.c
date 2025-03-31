@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 00:13:03 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 13:23:44 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,22 @@ void pipeline_handle_special(t_shell *shell, t_command **cmd, int pipefd[2])
         setup_child_pipes(-1, pipefd, *cmd);
         execute_child_pipes(shell, *cmd);
     }
-    waitpid(writer_pid, NULL, 0);
-    *cmd = (*cmd)->next;
-    pid_t reader_pid = fork();
-    if (reader_pid == 0) 
+    else if (writer_pid > 0)
     {
-        setup_child_pipes(-1, pipefd, *cmd);
-        execute_child_pipes(shell, *cmd);
+        *cmd = (*cmd)->next;
+        pid_t reader_pid = fork();
+        if (reader_pid == 0) 
+        {
+            setup_child_pipes(-1, pipefd, *cmd);
+            execute_child_pipes(shell, *cmd);
+        }
+        else if (reader_pid > 0)
+            *cmd = (*cmd)->next;
+        else
+            perror("fork failed");
     }
-    waitpid(reader_pid, NULL, 0);
-    *cmd = (*cmd)->next;
+    else
+        perror("fork failed");
 }
 
 void pipeline_handle_regular(t_shell *shell, t_command *cmd, int buffer[2], int *prev_pipe_read, int pipefd[2])
@@ -100,8 +106,10 @@ void pipeline_cleanup(int buffer[2], int prev_pipe_read)
 {
     char buf[1024];
     ssize_t n;
+    int status;
+    pid_t pid;
 
-    while (wait(NULL) > 0) //to make sure we wait for child process so errors print at the end
+    while ((pid = wait(&status)) > 0)
         ;
     close(buffer[1]);
     n = read(buffer[0], buf, sizeof(buf)-1);
@@ -114,8 +122,6 @@ void pipeline_cleanup(int buffer[2], int prev_pipe_read)
     close(buffer[0]);
     if (prev_pipe_read != -1)
         close(prev_pipe_read);
-    while (wait(NULL) > 0)
-        ;
 }
 
 void pipeline(t_shell *shell)

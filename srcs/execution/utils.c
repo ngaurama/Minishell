@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/24 01:38:52 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 13:43:12 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,22 @@ char	*ft_strtok(char *str, const char *delim)
 	else
 		next_token = NULL;
 	return (start);
+}
+
+char *ft_strndup(const char *s, size_t n)
+{
+    size_t i;
+    char *dup;
+
+	dup = (char *)malloc(n + 1);
+    if (!dup)
+        return NULL;
+	i = 0;
+    while(i < n && s[i] != '\0')
+	{
+        dup[i] = s[i];
+		i++;
+	}
+    dup[i] = '\0';
+    return dup;
 }

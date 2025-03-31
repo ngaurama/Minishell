@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 18:41:17 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 19:12:45 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_shell {
 	char		**env;
 	int			env_cap;
 	int			exit_status;
+	char *current_dir;
 }	t_shell;
 
 // init.c
@@ -174,6 +175,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_strcat(char *dest, const char *src);
 char		*ft_strncpy(char *dest, const char *src, size_t n);
 char		*ft_strcpy(char *dest, const char *src);
+char *ft_strndup(const char *s, size_t n);
 
 //redirection.c
 // int			redirection(t_shell *shell);

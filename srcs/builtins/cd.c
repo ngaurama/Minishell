@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 12:35:42 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 19:10:53 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,51 +39,68 @@ static char	*get_target_dir(t_shell *shell)
 	return (dir);
 }
 
-static int	change_directory(char *dir, char *oldpwd, t_shell *shell)
+static int change_directory(char *dir, char *oldpwd, t_shell *shell)
 {
-	char	*cwd;
+    char *new_dir;
 
 	if (chdir(dir) == -1)
-	{
-		perror("cd");
-		shell->exit_status = 1;
-		return (1);
-	}
-	cwd = getcwd(NULL, 0);
-	if (cwd)
-	{
-		set_env_var(shell, "PWD", cwd);
-		set_env_var(shell, "OLDPWD", oldpwd);
-		free(cwd);
-	}
-	else
-		perror("cd: getcwd after chdir");
-
-	shell->exit_status = 0;
-	return (0);
+    {
+        ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+        ft_putstr_fd(dir, STDERR_FILENO);
+        ft_putstr_fd(": ", STDERR_FILENO);
+        ft_putstr_fd(strerror(errno), STDERR_FILENO);
+        ft_putstr_fd("\n", STDERR_FILENO);
+        shell->exit_status = 1;
+        return (1);
+    }
+    new_dir = getcwd(NULL, 0);
+    if (!new_dir)
+    {
+        if (ft_strcmp(dir, "..") == 0)
+        {
+            char *tmp = ft_strjoin(oldpwd, "/..");
+            new_dir = tmp;
+        }
+        else if (dir[0] == '/')
+            new_dir = ft_strdup(dir);
+        else
+        {
+            char *tmp = ft_strjoin(oldpwd, "/");
+            new_dir = ft_strjoin(tmp, dir);
+            free(tmp);
+        }
+        ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", STDERR_FILENO);
+        shell->exit_status = 1;
+    }
+    set_env_var(shell, "OLDPWD", oldpwd);
+    set_env_var(shell, "PWD", new_dir);
+    free(shell->current_dir);
+    shell->current_dir = new_dir;
+    if (shell->exit_status == 0)
+        shell->exit_status = 0;
+    return (0);
 }
 
-void	ft_cd(t_shell *shell)
+void ft_cd(t_shell *shell)
 {
-	char	*dir;
-	char	*oldpwd;
+    char *dir;
+    char *oldpwd;
 
-	oldpwd = getcwd(NULL, 0);
-	if (!oldpwd)
+    oldpwd = getcwd(NULL, 0);
+	if (!oldpwd) 
 	{
-		perror("cd: getcwd");
-		oldpwd = ft_strdup("");
+		if (shell->current_dir)
+			oldpwd = ft_strdup(shell->current_dir);
+		else
+			oldpwd = ft_strdup("/");
 	}
-	dir = get_target_dir(shell);
-	if (!dir)
-	{
-		shell->exit_status = 1;
-		free(oldpwd);
-		return ;
-	}
-	if (change_directory(dir, oldpwd, shell) && dir != shell->cmds->args[1])
-		free(dir);
-	else if (dir != shell->cmds->args[1])
-		free(dir);
-	free(oldpwd);
+    dir = get_target_dir(shell);
+    if (!dir)
+    {
+        shell->exit_status = 1;
+        free(oldpwd);
+        return;
+    }
+    change_directory(dir, oldpwd, shell);
+    free(oldpwd);
 }
