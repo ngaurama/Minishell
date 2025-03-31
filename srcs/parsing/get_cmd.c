@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/30 00:42:33 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:40:49 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,10 @@ void	add_redirection(t_redir **redir_list, t_arg *token, int type)
 	}
 }
 
-int	handle_redirection(t_command *cmd, t_arg *tokens, t_arg *prev_token)
+int	handle_redirection(t_command *cmd, t_arg *tokens)
 {
 	t_arg	*next;
 
-	if (!prev_token && tokens->type != T_HEREDOC)
-	{
-		print_parse_error(tokens->value);
-		return (0);
-	}
 	next = tokens->next;
 	if (!next)
 	{
@@ -65,7 +60,7 @@ int	handle_redirection(t_command *cmd, t_arg *tokens, t_arg *prev_token)
 	return (1);
 }
 
-int handle_pipe(t_command **cmd, int *arg_count, t_arg *prev_token, t_arg *next)
+int	handle_pipe(t_command **cmd, int *arg_count, t_arg *prev_token, t_arg *next)
 
 {
 	if (!prev_token || prev_token->type == T_PIPE)
@@ -97,12 +92,15 @@ int	token_loop(t_shell *shell, t_parse_data *p_data, t_arg *tokens)
 			add_argument_to_cmd(shell, p_data->cmd, tokens->value,
 				&p_data->arg_count);
 		}
-		else if (is_redir_token(tokens->type))
+		else if (tokens->type == T_REDIRECT_IN || \
+				tokens->type == T_REDIRECT_OUT || \
+				tokens->type == T_APPEND || \
+				tokens->type == T_HEREDOC)
 		{
-			if (!handle_redir_or_free(p_data->cmd, &tokens, p_data->prev_token))
+			if (!handle_redir_or_free(p_data->cmd, &tokens))
 				return (1);
 		}
-		else if (tokens->type == T_PIPE &&
+		else if (tokens->type == T_PIPE && \
 			handle_pipe(&p_data->cmd, &p_data->arg_count, p_data->prev_token,
 				tokens->next))
 			return (1);
@@ -115,7 +113,6 @@ int	token_loop(t_shell *shell, t_parse_data *p_data, t_arg *tokens)
 t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
 {
 	t_parse_data	p_data;
-	t_command *current;
 
 	p_data.cmd = init_command();
 	p_data.head = p_data.cmd;
@@ -126,15 +123,6 @@ t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
 		free_commands(p_data.head);
 		return (NULL);
 	}
-	current = p_data.head;
-    while (current)
-    {
-        if (!current->args && current->heredocs != NULL)
-        {
-            int temp_count = 0;
-            add_argument_to_cmd(shell, current, "cat", &temp_count);
-        }
-        current = current->next;
-    }
+	default_redir_cmds(shell, p_data.head);
 	return (p_data.head);
 }

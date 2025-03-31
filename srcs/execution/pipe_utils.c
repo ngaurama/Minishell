@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/30 00:01:57 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 16:39:12 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void 	execute_child_pipes(t_shell *shell, t_command *cmd)
             ft_putstr_fd("minishell: ", STDERR_FILENO);
             ft_putstr_fd(cmd->args[0], STDERR_FILENO);
             ft_putstr_fd(": command not found\n", STDERR_FILENO);
-            exit(127);
+            free_and_exit(shell, 127);
         }
         execve(shell->full_path, cmd->args, shell->env);
         perror("execve failed");

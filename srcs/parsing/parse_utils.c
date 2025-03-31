@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/28 18:30:41 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 18:59:09 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ void	print_parse_error(const char *token)
 		write(STDERR_FILENO, "'\n", 2);
 	}
 	else
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: syntax error near unexpected token \
+			`newline'\n", STDERR_FILENO);
 }

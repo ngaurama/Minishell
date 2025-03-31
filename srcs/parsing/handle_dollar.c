@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 17:34:40 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 19:06:39 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 12:41:24 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	handle_single_dollar(t_tokenizer *tok, int quoted)
 int	handle_exit_expansion(t_tokenizer *tok, t_shell *shell, int quoted)
 {
 	char	*status;
-	
+
 	status = ft_itoa(shell->exit_status);
 	append_str_to_token(tok, status);
 	free(status);

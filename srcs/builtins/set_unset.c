@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:14:49 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/28 19:24:15 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 15:14:48 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,12 @@ void	set_env_var(t_shell *shell, const char *key, const char *value)
 	i = 0;
 	while (shell->env[i])
 		i++;
-	if (i >= MAX_ARGS - 2)
-		return (free(new_var), (void)0);
+	if (i >= shell->env_cap - 1)
+	{
+		print_error("env: environment full");
+		free(new_var);
+		return ;
+	}
 	shell->env[i] = new_var;
 	shell->env[i + 1] = NULL;
 }

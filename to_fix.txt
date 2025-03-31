@@ -11,5 +11,3 @@ Ctrl-\ (should Quit (core dumped))
 
 @220
 Ctrl-Z shouldn't do anything
-
-@450 ?

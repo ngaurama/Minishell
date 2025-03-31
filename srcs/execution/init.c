@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 23:43:06 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:11:39 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,29 @@
 
 void	init_shell(t_shell *shell, char **envp)
 {
-	int i;
-    
+	int	i;
+	int	envp_size;
+
 	ft_memset(shell, 0, sizeof(t_shell));
 	if (!envp)
 	{
 		shell->env = NULL;
 		shell->exit_status = 0;
-		return;
+		return ;
 	}
-	shell->env = malloc(sizeof(char *) * MAX_ARGS);
+	envp_size = 0;
+	while (envp[envp_size])
+		envp_size++;
+	shell->env_cap = envp_size + ENV_EXTRA;
+	shell->env = malloc(sizeof(char *) * (shell->env_cap));
 	if (!shell->env)
 	{
 		perror("malloc failed");
 		exit(1);
 	}
-	i = 0;
-	while (envp[i])
-	{
+	i = -1;
+	while (envp[++i])
 		shell->env[i] = ft_strdup(envp[i]);
-		i++;
-	}
 	shell->env[i] = NULL;
 	shell->exit_status = 0;
 }

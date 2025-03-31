@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:03:53 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/29 17:36:32 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 12:43:26 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*get_env_value(char **env, char *var_name)
 	return (NULL);
 }
 
-char *extract_var_name(const char *str)
+char	*extract_var_name(const char *str)
 {
 	int		len;
 	char	*var;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/29 20:49:58 by npbk             ###   ########.fr       */
+/*   Updated: 2025/03/31 18:57:05 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,24 @@ int	check_built_in(t_command *cmd)
 	return (0);
 }
 
+void	choose_builtin(t_shell *shell, t_command *cmd)
+{
+	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
+		ft_echo(shell, cmd);
+	else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
+		ft_cd(shell);
+	else if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
+		ft_pwd(shell);
+	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+		ft_export(shell);
+	else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
+		ft_unset(shell);
+	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
+		ft_env(shell);
+	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
+		ft_exit(shell);
+}
+
 void	execute_built_in(t_shell *shell, t_command *cmd)
 {
 	int	saved_stdin;
@@ -75,20 +93,7 @@ void	execute_built_in(t_shell *shell, t_command *cmd)
 		shell->exit_status = 1;
 		return ;
 	}
-	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
-		ft_echo(shell, cmd);
-	else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
-		ft_cd(shell);
-	else if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
-		ft_pwd(shell);
-	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-		ft_export(shell);
-	else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
-		ft_unset(shell);
-	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
-		ft_env(shell);
-	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-		ft_exit(shell);
+	choose_builtin(shell, cmd);
 	if (saved_stdin != -1 && saved_stdout != -1)
 		restore_fds(saved_stdin, saved_stdout);
 }
