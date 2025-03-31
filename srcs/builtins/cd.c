@@ -6,13 +6,13 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 19:10:53 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/03/31 20:01:14 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	*get_target_dir(t_shell *shell)
+static char	*get_target_dir(t_shell *shell, int *free_dir)
 {
 	char	*dir;
 
@@ -25,6 +25,7 @@ static char	*get_target_dir(t_shell *shell)
 			print_error("cd: HOME not set");
 			return (NULL);
 		}
+		*free_dir = 1;
 	}
 	else if (ft_strncmp(dir, "-", 2) == 0)
 	{
@@ -34,14 +35,15 @@ static char	*get_target_dir(t_shell *shell)
 			print_error("cd: OLDPWD not set");
 			return (NULL);
 		}
+		*free_dir = 1;
 		printf("%s\n", dir);
 	}
 	return (dir);
 }
 
-static int change_directory(char *dir, char *oldpwd, t_shell *shell)
+static int	change_directory(char *dir, char *oldpwd, t_shell *shell)
 {
-    char *new_dir;
+	char	*new_dir;
 
 	if (chdir(dir) == -1)
     {
@@ -81,11 +83,13 @@ static int change_directory(char *dir, char *oldpwd, t_shell *shell)
     return (0);
 }
 
-void ft_cd(t_shell *shell)
+void	ft_cd(t_shell *shell)
 {
-    char *dir;
-    char *oldpwd;
+	char	*dir;
+	char	*oldpwd;
+	int		free_dir;
 
+	free_dir = 0;
     oldpwd = getcwd(NULL, 0);
 	if (!oldpwd) 
 	{
@@ -94,13 +98,15 @@ void ft_cd(t_shell *shell)
 		else
 			oldpwd = ft_strdup("/");
 	}
-    dir = get_target_dir(shell);
-    if (!dir)
-    {
+	dir = get_target_dir(shell, &free_dir);
+	if (!dir)
+	{
         shell->exit_status = 1;
-        free(oldpwd);
-        return;
-    }
-    change_directory(dir, oldpwd, shell);
-    free(oldpwd);
+		free(oldpwd);
+		return ;
+	}
+	change_directory(dir, oldpwd, shell);
+	free(oldpwd);
+	if (free_dir)
+		free(dir);
 }
