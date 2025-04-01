@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 23:46:37 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/01 11:47:46 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,9 @@ void	pipeline_cleanup(int buffer[2], int prev_pipe_read)
 	int		status;
 	pid_t	pid;
 
-	while ((pid = wait(&status)) > 0)
-		;
+	pid = wait(&status);
+	while (pid > 0)
+		pid = wait(&status);
 	close(buffer[1]);
 	n = read(buffer[0], buf, sizeof(buf) - 1);
 	while (n > 0)

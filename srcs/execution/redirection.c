@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 23:38:20 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/01 15:41:52 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,16 @@ int	handle_input_redirection(t_redir *redir, t_shell *shell)
 		else
 			return (1);
 		if (fd == -1)
+		{
+			perror(redir->filename);
+			shell->redir_err = 1;
 			return (1);
-		dup2(fd, STDIN_FILENO);
-		close(fd);
+		}
+		if (!shell->redir_err || (redir->type == T_HEREDOC))
+		{
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
 		redir = redir->next;
 	}
 	return (0);

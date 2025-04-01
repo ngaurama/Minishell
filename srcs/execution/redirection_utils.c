@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 23:39:38 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/01 13:26:12 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ int	handle_redirect_in_file(const char *filename)
 {
 	int	fd;
 
-	if (ft_isdigit(filename[0]))
+	/* if (ft_isdigit(filename[0]))
 		fd = ft_atoi(filename);
-	else
-		fd = open(filename, O_RDONLY);
+	else */
+	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		perror(filename);
+		return (-1);
 	return (fd);
 }
 

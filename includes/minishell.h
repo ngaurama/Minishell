@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 11:17:34 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/01 13:55:47 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_shell
 	int			env_cap;
 	int			exit_status;
 	char		*current_dir;
+	int			redir_err;
 }	t_shell;
 
 // init.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 23:52:08 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/01 14:59:21 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static int	setup_execution(t_shell *shell, int *saved_stdin, int *saved_stdout)
 		return (shell->exit_status = 127, 1);
 	}
 	if (!save_fds(saved_stdin, saved_stdout) || \
-		redirection(shell->cmds, shell) != 0)
+		redirection(shell->cmds, shell) != 0 || \
+		shell->redir_err == 1)
 		return (shell->exit_status = 1, 1);
 	return (0);
 }
@@ -83,7 +84,7 @@ static int	handle_path_failure(t_shell *shell, int path_result)
 	if (path_result == 1)
 	{
 		if (access(shell->cmds->args[0], F_OK) == 0)
-			shell->exit_status = 126;
+			shell->exit_status = 127; // command not found
 		else
 			handle_command_not_found(shell);
 	}
@@ -95,18 +96,19 @@ static int	handle_path_failure(t_shell *shell, int path_result)
 static int	fork_and_execute(t_shell *shell)
 {
 	pid_t	pid;
+	int		status;
+	int		sig;
 
 	pid = fork();
 	if (pid == 0)
 		execute_child_process(shell);
 	if (pid > 0)
 	{
-		int status;
 		shell->pid = pid;
 		waitpid(pid, &status, 0);
 		if (WIFSIGNALED(status))
 		{
-			int sig = WTERMSIG(status);
+			sig = WTERMSIG(status);
 			if (sig == SIGQUIT)
 				ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
 			else if (sig == SIGINT)

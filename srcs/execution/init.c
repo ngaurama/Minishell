@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/01 11:29:31 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/01 13:58:04 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	init_shell(t_shell *shell, char **envp)
 	}
 	init_env(shell, envp);
 	shell->exit_status = 0;
+	shell->redir_err = 0;
 }
 
 void	free_shell(t_shell *shell)
