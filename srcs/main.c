@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 02:57:23 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:16:01 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	main(int argc, char **argv, char **envp)
 
 	interactive = isatty(STDIN_FILENO);
 	init_shell(&shell, envp);
-	setup_signals();
+	setup_signals(&shell);
 	if (argc > 2 && !ft_strcmp(argv[1], "-c"))
 	{
 		status = command_mode(&shell, argv[2]);

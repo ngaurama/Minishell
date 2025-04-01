@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 02:58:11 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:17:34 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define _XOPEN_SOURCE 700
 
 # include "../libft/libft.h"
 # include "../libft/get_next_line.h"
@@ -231,7 +233,7 @@ void		set_env_var(t_shell *shell, const char *key, const char *value);
 int			is_valid_identifier(const char *key);
 
 //signals.c
-void		setup_signals(void);
+void		setup_signals(t_shell *shell);
 void		handle_signal(int signum);
 
 // For debugging

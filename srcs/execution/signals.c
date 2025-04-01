@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 23:36:32 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/01 11:16:33 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,33 +30,27 @@ void	handle_signal(int signum)
 	}
 }
 
-void	setup_signals(void)
+static int	set_signal_handler(int sig, void (*handler)(int))
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = handle_signal;
+	sa.sa_handler = handler;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGINT, &sa, NULL) == -1)
+	if (sigaction(sig, &sa, NULL) == -1)
+		return (-1);
+	return (0);
+}
+
+void	setup_signals(t_shell *shell)
+{
+	if (set_signal_handler(SIGINT, handle_signal) < 0
+		|| set_signal_handler(SIGQUIT, SIG_IGN) < 0
+		|| set_signal_handler(SIGTSTP, SIG_IGN) < 0
+		|| set_signal_handler(SIGTERM, handle_signal) < 0)
 	{
 		perror("sigaction");
-		exit(1);
-	}
-	sa.sa_handler = SIG_IGN;
-	if (sigaction(SIGQUIT, &sa, NULL) == -1)
-	{
-		perror("sigaction");
-		exit(1);
-	}
-	if (sigaction(SIGTSTP, &sa, NULL) == -1)
-	{
-		perror("sigaction");
-		exit(1);
-	}
-	sa.sa_handler = handle_signal;
-	if (sigaction(SIGTERM, &sa, NULL) == -1)
-	{
-		perror("sigaction");
+		free_shell(shell);
 		exit(1);
 	}
 }
