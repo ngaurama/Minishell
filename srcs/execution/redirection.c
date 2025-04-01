@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 15:41:52 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/01 16:38:17 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,14 @@ int	handle_heredoc(const char *delimiter, t_shell *shell, int expand)
 	return (pipefd[0]);
 }
 
-int	handle_input_redirection(t_redir *redir, t_shell *shell)
+int	manage_heredocs(t_redir *redir, t_shell *shell)
 {
 	int	fd;
 
+	fd = -1;
 	while (redir)
 	{
-		if (redir->type == T_REDIRECT_IN)
-			fd = handle_redirect_in_file(redir->filename);
-		else if (redir->type == T_HEREDOC)
+		if (redir->type == T_HEREDOC)
 			fd = handle_heredoc_input(redir, shell);
 		else
 			return (1);
@@ -49,7 +48,33 @@ int	handle_input_redirection(t_redir *redir, t_shell *shell)
 			shell->redir_err = 1;
 			return (1);
 		}
-		if (!shell->redir_err || (redir->type == T_HEREDOC))
+		redir = redir->next;
+	}
+	if (!shell->redir_err && fd != -1)
+	{
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	return (0);
+}
+
+int	handle_input_redirection(t_redir *redir, t_shell *shell)
+{
+	int	fd;
+
+	while (redir)
+	{
+		if (redir->type == T_REDIRECT_IN)
+			fd = handle_redirect_in_file(redir->filename);
+		else
+			return (1);
+		if (fd == -1 && !shell->redir_err)
+		{
+			perror(redir->filename);
+			shell->redir_err = 1;
+			return (1);
+		}
+		if (!shell->redir_err)
 		{
 			dup2(fd, STDIN_FILENO);
 			close(fd);
@@ -87,7 +112,7 @@ int	handle_output_redirection(t_redir *redir)
 
 int	redirection(t_command *cmd, t_shell *shell)
 {
-	if (handle_input_redirection(cmd->heredocs, shell) != 0)
+	if (manage_heredocs(cmd->heredocs, shell) != 0)
 		return (1);
 	if (handle_input_redirection(cmd->infiles, shell) != 0)
 		return (1);

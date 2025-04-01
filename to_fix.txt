@@ -11,21 +11,3 @@ Ctrl-\ (should Quit (core dumped))
 
 @220
 Ctrl-Z shouldn't do anything
-
-chained heredocs like 
-minishell$ >> 1 >> 2 >> 3
-> 1
-> minishell: warning: here-document delimited by end-of-file
-> minishell: warning: here-document delimited by end-of-file
-minishell$
-  or
-minishell$ >> 1 >> 2 >> 3
-> one
-> 1
-// (then the rest continues itself)
-> one
-> minishell: warning: here-document delimited by end-of-file
-> one
-> minishell: warning: here-document delimited by end-of-file
-one
-minishell$
