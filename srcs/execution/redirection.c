@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 16:38:17 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/01 16:52:52 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	handle_input_redirection(t_redir *redir, t_shell *shell)
 {
 	int	fd;
 
+	fd = -1;
 	while (redir)
 	{
 		if (redir->type == T_REDIRECT_IN)
@@ -74,12 +75,12 @@ int	handle_input_redirection(t_redir *redir, t_shell *shell)
 			shell->redir_err = 1;
 			return (1);
 		}
-		if (!shell->redir_err)
-		{
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
 		redir = redir->next;
+	}
+	if (!shell->redir_err && fd != -1)
+	{
+		dup2(fd, STDIN_FILENO);
+		close(fd);
 	}
 	return (0);
 }
