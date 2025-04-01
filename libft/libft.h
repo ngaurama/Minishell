@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 09:01:07 by ngaurama          #+#    #+#             */
-/*   Updated: 2024/11/12 10:38:42 by ngaurama         ###   ########.fr       */
+/*   Updated: 2024/12/11 20:07:57 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LIBFT_H
 
 // C-std includes
+# include <limits.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -41,6 +42,9 @@ void				*ft_memchr(const void *s, int c, size_t n);
 char				*ft_strnstr(const char *haystack, const char *needle,
 						size_t len);
 int					ft_atoi(const char *str);
+
+long				ft_strtol(char *str, char **endptr);
+char				*ft_strtok(char *str, const char *delim);
 
 // Functions using Malloc
 void				*ft_calloc(size_t count, size_t size);
