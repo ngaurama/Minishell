@@ -1,10 +1,8 @@
 minishell  |	shell
 
-cat | << EOF  // not sure if it works properly
-
 add heredoc cancel on ctrl+c
 
-//Wrong exit_status
+// tester issue
 Test  55: ❌ cat minishell.h | grep ");"$
 mini exit code = 0
 bash exit code = 1
@@ -12,7 +10,6 @@ Test  56: ❌ export GHOST=123 | env | grep GHOST
 mini exit code = 0
 bash exit code = 1
 
-// wrong exit_status
 Test  99: ❌ echo hi | echo bye >./test_files/invalid_permission
 mini exit code = 0
 bash exit code = 1
@@ -20,6 +17,13 @@ Test 100: ❌ echo hi | >./outfiles/outfile01 echo bye >./test_files/invalid_per
 mini exit code = 0
 bash exit code = 1
 Test 101: ❌ echo hi | echo bye >./test_files/invalid_permission >./outfiles/outfile01
+mini exit code = 0
+bash exit code = 1
+
+Test 128: ❌ echo hi | echo bye >>./test_files/invalid_permission
+mini exit code = 0
+bash exit code = 1
+Test 129: ❌ echo hi | echo >>./outfiles/outfile01 bye >./test_files/invalid_permission
 mini exit code = 0
 bash exit code = 1
 
@@ -34,25 +38,3 @@ Only in ./bash_outfiles: outfile01
 mini outfiles:
 cat: './mini_outfiles/*': No such file or directory
 bash outfiles:
-
-//FINE
-Test 107: ✅⚠️  cat >./test_files/invalid_permission <missing
-mini error = ( No such file or directory Permission denied)
-bash error = ( Permission denied)
-
-
-//FINE
-Test 120: ✅⚠️  ls >>./test_files/invalid_permission >>./outfiles/outfile02 <missing
-mini error = ( No such file or directory)
-bash error = ( Permission denied)
-
-Test 128: ❌ echo hi | echo bye >>./test_files/invalid_permission
-mini exit code = 0
-bash exit code = 1
-Test 129: ❌ echo hi | echo >>./outfiles/outfile01 bye >./test_files/invalid_permission
-mini exit code = 0
-bash exit code = 1
-
-Test 136: ❌ ./test_files/invalid_permission
-mini exit code = 127
-bash exit code = 126

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/02 14:53:07 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/02 17:21:05 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,36 @@ static void	init_env(t_shell *shell, char **envp)
 		shell->current_dir = ft_strdup("/");
 }
 
+static void	init_minimal_env(t_shell *shell, char **env)
+{
+	char	*env_value;
+	char	*cwd;
+	int		lvl;
+	char	*next;
+
+	cwd = getcwd(NULL, 0);
+	env_value = get_env_value(env, "PWD");
+	if (cwd && !env_value)
+		set_env_var(shell, "PWD", cwd);
+	free(cwd);
+	free(env_value);
+	env_value = get_env_value(env, "SHLVL");
+	if (!env_value)
+		set_env_var(shell, "SHLVL", "1");
+	else
+	{
+		lvl = ft_atoi(env_value);
+		next = ft_itoa(lvl + 1);
+		set_env_var(shell, "SHLVL", next);
+		free(next);
+	}
+	free(env_value);
+}
+
 void	init_shell(t_shell *shell, char **envp)
 {
+	char	*env_value;
+
 	ft_memset(shell, 0, sizeof(t_shell));
 	if (!envp)
 	{
@@ -49,6 +77,11 @@ void	init_shell(t_shell *shell, char **envp)
 		return ;
 	}
 	init_env(shell, envp);
+	init_minimal_env(shell, shell->env);
+	env_value = get_env_value(shell->env, "OLDPWD");
+	if (!env_value)
+		set_env_var(shell, "OLDPWD", NULL);
+	free(env_value);
 	shell->exit_status = 0;
 	shell->redir_err = 0;
 }
