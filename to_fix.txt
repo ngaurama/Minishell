@@ -38,3 +38,7 @@ Only in ./bash_outfiles: outfile01
 mini outfiles:
 cat: './mini_outfiles/*': No such file or directory
 bash outfiles:
+
+
+ctrl+c heredocs and cat leaking // conditional jump on uninit values
+open fd's

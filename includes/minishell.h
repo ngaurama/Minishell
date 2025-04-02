@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 14:44:53 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/02 21:09:08 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-//valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-origins=yes --gen-suppressions=all --log-file=valgrind.log --suppressions=valgrind.supp -s ./minishell
 # define _XOPEN_SOURCE 700
 
 # include "../libft/libft.h"
@@ -196,9 +195,6 @@ int			stop_heredoc(char *line, const char *delimiter);
 void		write_heredoc_line(int fd, char *line, t_shell *shell, int expand);
 int			handle_inredir_error(t_redir *redir, t_shell *shell);
 
-//heredocs.c
-void		preprocess_heredocs(t_command *cmd, t_shell *shell);
-
 //heredoc_expand.c
 char		*heredoc_expand(char *line, t_shell *shell);
 
@@ -209,6 +205,7 @@ void		pipeline(t_shell *shell);
 void		setup_child_pipes(int prev_pipe_read, int pipefd[2],
 				t_command *cmd);
 void		execute_child_pipes(t_shell *shell, t_command *cmd);
+void		preprocess_heredocs(t_command *cmd, t_shell *shell);
 void		free_and_exit(t_shell *shell, int exit_code);
 
 // BUILTINS

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 14:23:03 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/02 21:12:07 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	update_exit_status(t_shell *shell, int status)
 {
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		shell->exit_status = 128 + WTERMSIG(status);
+	 else if (WIFSIGNALED(status))
+	 	shell->exit_status = 128 + WTERMSIG(status);
 	else
 		shell->exit_status = 1;
 }
@@ -112,6 +112,7 @@ static int	fork_and_execute(t_shell *shell)
 	int		status;
 	int		sig;
 
+	status = 0;
 	pid = fork();
 	if (pid == 0)
 		execute_child_process(shell);
@@ -122,10 +123,14 @@ static int	fork_and_execute(t_shell *shell)
 		if (WIFSIGNALED(status))
 		{
 			sig = WTERMSIG(status);
-			if (sig == SIGQUIT)
-				ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
-			else if (sig == SIGINT)
-				ft_putstr_fd("\n", STDERR_FILENO);
+			printf("%d\n", sig);
+			if (sig % 2 != 0)
+			{
+				if (sig == SIGQUIT)
+					ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
+				else if (sig == SIGINT)
+					ft_putstr_fd("\n", STDERR_FILENO);
+			}
 		}
 		update_exit_status(shell, status);
 		return (0);
