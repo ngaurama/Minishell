@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/01 13:26:12 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/02 12:42:16 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@ int	handle_redirect_in_file(const char *filename)
 {
 	int	fd;
 
-	/* if (ft_isdigit(filename[0]))
-		fd = ft_atoi(filename);
-	else */
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return (-1);
@@ -64,4 +61,14 @@ void	write_heredoc_line(int fd, char *line, t_shell *shell, int expand)
 	else
 		write(fd, line, ft_strlen(line));
 	write(fd, "\n", 1);
+}
+
+int	handle_inredir_error(t_redir *redir, t_shell *shell)
+{
+	if (redir->filename)
+		perror(redir->filename);
+	else
+		perror("heredoc");
+	shell->redir_err = 1;
+	return (1);
 }

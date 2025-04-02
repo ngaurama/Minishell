@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:37:25 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 19:02:07 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/02 11:22:03 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	default_redir_cmds(t_shell *shell, t_command *head)
 		{
 			temp_count = 0;
 			if (current->heredocs && !current->pipe && !current->next)
-				add_argument_to_cmd(shell, current, "cat", &temp_count);
+				add_argument_to_cmd(shell, current, "true", &temp_count);
 			else if (current->infiles || current->outfiles || current->append)
 				add_argument_to_cmd(shell, current, "true", &temp_count);
 		}

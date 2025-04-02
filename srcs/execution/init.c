@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/01 13:58:04 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/02 14:53:07 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ void	free_shell(t_shell *shell)
 {
 	int	i;
 
+	if (!shell || shell->freed)
+		return ;
+	shell->freed = 1;
 	if (shell->input)
 		free(shell->input);
 	if (shell->full_path)
@@ -64,13 +67,9 @@ void	free_shell(t_shell *shell)
 	if (shell->command)
 		shell->command = NULL;
 	if (shell->arguments)
-	{
 		free_arguments(shell->arguments);
-	}
 	if (shell->cmds)
-	{
 		free_commands(shell->cmds);
-	}
 	free(shell->current_dir);
 	if (shell->env)
 	{

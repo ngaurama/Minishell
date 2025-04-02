@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 22:07:13 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/02 12:51:01 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,19 @@ void	execute_built_in(t_shell *shell, t_command *cmd)
 	if (!cmd->pipe)
 	{
 		if (save_and_redirect_fds(&saved_stdin, &saved_stdout, cmd, shell) != 0)
+		{
+			shell->exit_status = 1;
+			shell->redir_err = 0;
 			return ;
+		}
+	}
+	if (shell->redir_err)
+	{
+		shell->exit_status = 1;
+		if (saved_stdin != -1 && saved_stdout != -1)
+			restore_fds(saved_stdin, saved_stdout);
+		shell->redir_err = 0;
+		return ;
 	}
 	if (!cmd->args[0])
 	{

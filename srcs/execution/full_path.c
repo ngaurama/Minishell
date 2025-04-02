@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   full_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 15:23:21 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/02 14:28:25 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	is_directory(const char *path, const char *command)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd((char *)command, STDERR_FILENO);
-		ft_putstr_fd(": is a directory\n", STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
 		return (1);
 	}
 	return (0);
@@ -54,11 +54,13 @@ static int	direct_path(t_shell *shell, const char *command)
 			ft_putstr_fd((char *)command, STDERR_FILENO);
 			ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
 			shell->exit_status = 126;
+			shell->err_printed = 1;
 			return (1);
 		}
 		if (is_directory(command, command))
 		{
 			shell->exit_status = 126;
+			shell->err_printed = 1;
 			return (2);
 		}
 		if (shell->full_path)

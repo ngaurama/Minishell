@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 12:38:13 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/02 12:17:48 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,46 +59,5 @@ void 	execute_child_pipes(t_shell *shell, t_command *cmd)
 		execve(shell->full_path, cmd->args, shell->env);
 		perror("execve failed");
 		free_and_exit(shell, 1);
-	}
-}
-
-void 	preprocess_heredocs(t_command *cmd, t_shell *shell)
-{
-	t_redir	*hd;
-	int		fd, expand;
-
-	while (cmd)
-	{
-		fd = -1;
-		hd = cmd->heredocs;
-		while (hd)
-		{
-			expand = (hd->src_token && hd->src_token->quoted == 0);
-			fd = handle_heredoc(hd->filename, shell, expand);
-			if (fd == -1)
-			{
-				free_redirections(cmd->heredocs);
-				cmd->heredocs = NULL;
-				break;
-			}
-			hd = hd->next;
-		}
-		if (fd != -1)
-		{
-			free_redirections(cmd->heredocs);
-			cmd->heredocs = NULL;
-
-			if (cmd->infiles)
-				free_redirections(cmd->infiles);
-			
-			cmd->infiles = malloc(sizeof(t_redir));
-			if (!cmd->infiles)
-				return;
-			cmd->infiles->type = T_REDIRECT_IN;
-			cmd->infiles->filename = ft_itoa(fd); // "4", etc.
-			cmd->infiles->next = NULL;
-			cmd->infiles->src_token = NULL;
-		}
-		cmd = cmd->next;
 	}
 }

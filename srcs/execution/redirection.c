@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 16:52:52 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/02 13:47:04 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,15 @@ int	handle_input_redirection(t_redir *redir, t_shell *shell)
 	fd = -1;
 	while (redir)
 	{
-		if (redir->type == T_REDIRECT_IN)
+		if (redir->filename)
 			fd = handle_redirect_in_file(redir->filename);
 		else
-			return (1);
-		if (fd == -1 && !shell->redir_err)
-		{
-			perror(redir->filename);
-			shell->redir_err = 1;
-			return (1);
-		}
+			fd = redir->fd;
+		if (fd == -1)
+			return (handle_inredir_error(redir, shell));
 		redir = redir->next;
 	}
-	if (!shell->redir_err && fd != -1)
+	if (fd != -1)
 	{
 		dup2(fd, STDIN_FILENO);
 		close(fd);
@@ -113,11 +109,14 @@ int	handle_output_redirection(t_redir *redir)
 
 int	redirection(t_command *cmd, t_shell *shell)
 {
-	if (manage_heredocs(cmd->heredocs, shell) != 0)
-		return (1);
+	int	ret;
+
+	ret = manage_heredocs(cmd->heredocs, shell);
+	if (ret != 0)
+		shell->redir_err = 1;
 	if (handle_input_redirection(cmd->infiles, shell) != 0)
 		return (1);
 	if (handle_output_redirection(cmd->outfiles) != 0)
 		return (1);
-	return (0);
+	return (shell->redir_err);
 }

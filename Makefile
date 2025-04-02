@@ -22,6 +22,7 @@ SRC = srcs/main.c \
 		srcs/execution/pipe.c \
 		srcs/execution/signals.c \
 		srcs/execution/pipe_utils.c \
+		srcs/execution/heredocs.c \
 		srcs/execution/heredoc_expand.c \
 		srcs/parsing/get_tokens.c \
 		srcs/parsing/get_cmd.c \
