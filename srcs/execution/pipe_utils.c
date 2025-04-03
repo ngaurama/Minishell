@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 12:28:11 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 13:41:49 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,19 @@ void	execute_child_pipes(t_shell *shell, t_command *cmd)
 		free_and_exit(shell, 127);
 	if (redirection(cmd, shell) != 0)
 		free_and_exit(shell, 1);
-	if (check_built_in(cmd))
-	{
-		execute_built_in(shell, cmd);
-		free_and_exit(shell, 0);
-	}
-	else
+	if (check_built_in(cmd)) 
+		free_and_exit(shell, execute_built_in(shell, cmd));
+	else 
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		if (find_full_path(shell, cmd->args[0]) != 0)
-			child_error_and_exit(shell, cmd->args[0]);
+		if (find_full_path(shell, cmd->args[0]) != 0) 
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+			free_and_exit(shell, 127);
+		}
 		execve(shell->full_path, cmd->args, shell->env);
 		perror("execve failed");
 		free_and_exit(shell, 1);

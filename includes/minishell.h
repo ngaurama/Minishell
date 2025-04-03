@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 12:18:50 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 13:40:31 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,8 +226,7 @@ void		handle_fork_error(int buffer[2]);
 // BUILTINS
 // built_in.c
 int			check_built_in(t_command *cmds);
-// void		execute_built_in(t_shell *shell);
-void		execute_built_in(t_shell *shell, t_command *cmd);
+int			execute_built_in(t_shell *shell, t_command *cmd);
 
 // build_in_utils.c
 void		print_cd_error(char *dir, t_shell *shell);
