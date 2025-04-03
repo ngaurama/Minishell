@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/01 11:47:46 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/03 12:55:08 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	pipeline_init(t_shell *shell, int buffer[2], int *prev_pipe_read)
-{
-	preprocess_heredocs(shell->cmds, shell);
-	if (pipe(buffer) == -1)
-	{
-		perror("pipe");
-		return ;
-	}
-	*prev_pipe_read = -1;
-}
 
 void	pipeline_handle_special(t_shell *shell, t_command **cmd, int pipefd[2])
 {
@@ -53,7 +42,7 @@ void	pipeline_handle_special(t_shell *shell, t_command **cmd, int pipefd[2])
 }
 
 void	pipeline_handle_regular(t_shell *shell, t_command *cmd,
-			int buffer[2], int *prev_pipe_read, int pipefd[2])
+			int buffer[2], int *prev_pipe_read)
 {
 	pid_t	pid;
 
@@ -63,7 +52,7 @@ void	pipeline_handle_regular(t_shell *shell, t_command *cmd,
 		close(buffer[0]);
 		dup2(buffer[1], STDERR_FILENO);
 		close(buffer[1]);
-		setup_child_pipes(*prev_pipe_read, pipefd, cmd);
+		setup_child_pipes(*prev_pipe_read, cmd->pipefd, cmd);
 		execute_child_pipes(shell, cmd);
 	}
 	else if (pid > 0)
@@ -72,39 +61,34 @@ void	pipeline_handle_regular(t_shell *shell, t_command *cmd,
 			close(*prev_pipe_read);
 		if (cmd->pipe)
 		{
-			close(pipefd[1]);
-			*prev_pipe_read = pipefd[0];
+			close(cmd->pipefd[1]);
+			*prev_pipe_read = cmd->pipefd[0];
 		}
 	}
 	else
-	{
-		perror("fork failed");
-		close(buffer[0]);
-		close(buffer[1]);
-	}
+		handle_fork_error(buffer);
 }
 
 void	pipeline_process(t_shell *shell, int buffer[2], int *prev_pipe_read)
 {
 	t_command	*cmd;
-	int			pipefd[2];
 
 	cmd = shell->cmds;
 	while (cmd)
 	{
 		if (cmd->outfiles && cmd->pipe && cmd->next)
 		{
-			pipeline_handle_special(shell, &cmd, pipefd);
+			pipeline_handle_special(shell, &cmd, cmd->pipefd);
 			continue ;
 		}
-		if (cmd->pipe && pipe(pipefd) == -1)
+		if (cmd->pipe && pipe(cmd->pipefd) == -1)
 		{
 			perror("pipe");
 			close(buffer[0]);
 			close(buffer[1]);
 			return ;
 		}
-		pipeline_handle_regular(shell, cmd, buffer, prev_pipe_read, pipefd);
+		pipeline_handle_regular(shell, cmd, buffer, prev_pipe_read);
 		cmd = cmd->next;
 	}
 }

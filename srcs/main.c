@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 14:34:22 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 13:01:10 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,24 +74,26 @@ static void	interactive_mode(t_shell *shell)
 	}
 }
 
-static void non_interactive_mode(t_shell *shell)
+static void	non_interactive_mode(t_shell *shell)
 {
-    char *line = NULL;
-    
-    line = get_next_line(STDIN_FILENO);
-    while (line != NULL) 
-    {
-        size_t len = ft_strlen(line);
-        if (len > 0 && line[len - 1] == '\n')
-            line[len - 1] = '\0';
-        shell->input = ft_strdup(line);
-        free(line);
-        if (shell->input && *(shell->input))
-            process_input(shell);
-        else if (shell->input)
-            free(shell->input);
-        line = get_next_line(STDIN_FILENO);
-    }
+	char	*line;
+	size_t	len;
+
+	line = NULL;
+	line = get_next_line(STDIN_FILENO);
+	while (line != NULL)
+	{
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+		shell->input = ft_strdup(line);
+		free(line);
+		if (shell->input && *(shell->input))
+			process_input(shell);
+		else if (shell->input)
+			free(shell->input);
+		line = get_next_line(STDIN_FILENO);
+	}
 }
 
 static int	command_mode(t_shell *shell, char *command)

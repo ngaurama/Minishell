@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 20:08:46 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 22:59:09 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 12:35:52 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,37 @@ static int	ft_isnumeric(const char *str)
 	return (1);
 }
 
-int	handle_exit_errors(t_shell *shell, char *arg)
+void	not_numeric_arg_exit(t_shell *shell, const char *arg)
 {
-	if (arg && !ft_isnumeric(arg))
+	char	*tmp;
+	char	*msg;
+
+	tmp = ft_strjoin("exit: ", arg);
+	if (!tmp)
 	{
-		ft_putstr_fd("exit: ", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
 		free_shell(shell);
 		exit(2);
 	}
+	msg = ft_strjoin(tmp, ": numeric argument required\n");
+	free(tmp);
+	if (!msg)
+	{
+		free_shell(shell);
+		exit(2);
+	}
+	write(STDERR_FILENO, msg, ft_strlen(msg));
+	free(msg);
+	free_shell(shell);
+	exit(2);
+}
+
+int	handle_exit_errors(t_shell *shell, char *arg)
+{
+	if (arg && !ft_isnumeric(arg))
+		not_numeric_arg_exit(shell, arg);
 	if (arg && shell->cmds->args[2])
 	{
-		ft_putstr_fd("exit: too many arguments\n", 2);
+		write(STDERR_FILENO, "exit: too many arguments\n", 26);
 		shell->exit_status = 1;
 		return (1);
 	}

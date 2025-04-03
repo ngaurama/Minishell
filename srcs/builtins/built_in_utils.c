@@ -6,7 +6,7 @@
 /*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 22:21:16 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 23:22:19 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 12:30:18 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 void	print_cd_error(char *dir, t_shell *shell)
 {
-	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-	ft_putstr_fd(dir, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(strerror(errno), STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
+	char	*tmp;
+	char	*msg;
+
+	tmp = ft_strjoin("minishell: cd: ", dir);
+	msg = ft_strjoin(tmp, ": No such file or directory\n");
+	free(tmp);
+	write(STDERR_FILENO, msg, ft_strlen(msg));
+	free(msg);
 	shell->exit_status = 1;
 }
 

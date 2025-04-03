@@ -3,64 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 21:12:07 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/03 12:45:17 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	update_exit_status(t_shell *shell, int status)
-{
-	if (WIFEXITED(status))
-		shell->exit_status = WEXITSTATUS(status);
-	 else if (WIFSIGNALED(status))
-	 	shell->exit_status = 128 + WTERMSIG(status);
-	else
-		shell->exit_status = 1;
-}
-
-int	save_fds(int *saved_stdin, int *saved_stdout)
-{
-	*saved_stdin = dup(STDIN_FILENO);
-	*saved_stdout = dup(STDOUT_FILENO);
-	if (*saved_stdin == -1 || *saved_stdout == -1)
-	{
-		perror("dup failed");
-		return (0);
-	}
-	return (1);
-}
-
-void	restore_fds(int saved_stdin, int saved_stdout)
-{
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdin);
-	close(saved_stdout);
-}
-
-void	handle_command_not_found(t_shell *shell)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(shell->cmds->args[0], STDERR_FILENO);
-	ft_putstr_fd(": command not found\n", STDERR_FILENO);
-	shell->err_printed = 1;
-	shell->exit_status = 127;
-}
-
-void	execute_child_process(t_shell *shell)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	if (execve(shell->full_path, shell->cmds->args, shell->env) == -1)
-	{
-		perror("execve failed");
-		exit(1);
-	}
-}
 
 static int	setup_execution(t_shell *shell, int *saved_stdin, int *saved_stdout)
 {
@@ -106,33 +56,37 @@ static int	handle_path_failure(t_shell *shell, int path_result)
 	return (1);
 }
 
+static void	handle_parent_process(pid_t pid, t_shell *shell)
+{
+	int	status;
+	int	sig;
+
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	waitpid(pid, &status, 0);
+	setup_signals(shell);
+	if (WIFSIGNALED(status))
+	{
+		sig = WTERMSIG(status);
+		if (sig == SIGQUIT)
+			ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
+		else if (sig == SIGINT)
+			ft_putstr_fd("\n", STDERR_FILENO);
+	}
+	update_exit_status(shell, status);
+}
+
 static int	fork_and_execute(t_shell *shell)
 {
 	pid_t	pid;
-	int		status;
-	int		sig;
 
-	status = 0;
 	pid = fork();
 	if (pid == 0)
 		execute_child_process(shell);
 	if (pid > 0)
 	{
 		shell->pid = pid;
-		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			sig = WTERMSIG(status);
-			printf("%d\n", sig);
-			if (sig % 2 != 0)
-			{
-				if (sig == SIGQUIT)
-					ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
-				else if (sig == SIGINT)
-					ft_putstr_fd("\n", STDERR_FILENO);
-			}
-		}
-		update_exit_status(shell, status);
+		handle_parent_process(pid, shell);
 		return (0);
 	}
 	perror("fork failed");

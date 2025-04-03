@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 21:09:08 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/03 12:18:50 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_command
 	t_redir				*heredocs;
 	int					append;				// 1 if ">>", 0 if ">"
 	int					pipe;				// 1 if there's a pipe "|"
+	int					pipefd[2];
 	struct s_command	*next;				// Next command in the pipeline
 }	t_command;
 
@@ -171,17 +172,27 @@ int			skip_whitespace(char *input, t_tokenizer *tok);
 void		print_parse_error(const char *token);
 
 // execute.c
-void		update_exit_status(t_shell *shell, int status);
-int			check_built_in(t_command *cmds);
 int			execute_command(t_shell *shell);
-int			find_full_path(t_shell *shell, const char *command);
+
+// execute_utils.c
+void		update_exit_status(t_shell *shell, int status);
+int			save_fds(int *saved_stdin, int *saved_stdout);
 void		restore_fds(int saved_stdin, int saved_stdout);
+void		handle_command_not_found(t_shell *shell);
+void		execute_child_process(t_shell *shell);
+
+// full_path.c
+int			find_full_path(t_shell *shell, const char *command);
+
 // utils.c
 void		print_error(const char *msg);
 char		*ft_strtok(char *str, const char *delim);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_strncpy(char *dest, const char *src, size_t n);
 char		*ft_strcpy(char *dest, const char *src);
+
+// utils2.c
+void		child_error_and_exit(t_shell *shell, const char *cmd);
 
 //redirection.c
 // int			redirection(t_shell *shell);
@@ -198,18 +209,23 @@ int			handle_inredir_error(t_redir *redir, t_shell *shell);
 //heredoc_expand.c
 char		*heredoc_expand(char *line, t_shell *shell);
 
+// heredocs.c
+void		preprocess_heredocs(t_command *cmd, t_shell *shell);
+
 //pipe.c
 void		pipeline(t_shell *shell);
 
 //pipe_utils.c
 void		setup_child_pipes(int prev_pipe_read, int pipefd[2],
 				t_command *cmd);
+void		pipeline_init(t_shell *shell, int buffer[2], int *prev_pipe_read);
 void		execute_child_pipes(t_shell *shell, t_command *cmd);
-void		preprocess_heredocs(t_command *cmd, t_shell *shell);
 void		free_and_exit(t_shell *shell, int exit_code);
+void		handle_fork_error(int buffer[2]);
 
 // BUILTINS
 // built_in.c
+int			check_built_in(t_command *cmds);
 // void		execute_built_in(t_shell *shell);
 void		execute_built_in(t_shell *shell, t_command *cmd);
 

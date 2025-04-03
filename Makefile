@@ -14,8 +14,10 @@ LIBFT = libft/libft.a
 
 SRC = srcs/main.c \
 		srcs/execution/execute.c \
+		srcs/execution/execute_utils.c \
 		srcs/execution/full_path.c \
 		srcs/execution/utils.c \
+		srcs/execution/utils2.c \
 		srcs/execution/init.c \
 		srcs/execution/redirection.c \
 		srcs/execution/redirection_utils.c \

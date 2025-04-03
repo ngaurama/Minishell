@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 19:56:29 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/03 12:59:42 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,33 +76,43 @@ void	choose_builtin(t_shell *shell, t_command *cmd)
 		ft_exit(shell);
 }
 
-void	execute_built_in(t_shell *shell, t_command *cmd)
+int	setup_builtin_redirections(t_shell *shell, t_command *cmd,
+	int *saved_stdin, int *saved_stdout)
 {
-	int	saved_stdin;
-	int	saved_stdout;
-
-	saved_stdin = -1;
-	saved_stdout = -1;
+	*saved_stdin = -1;
+	*saved_stdout = -1;
 	if (!cmd->pipe)
 	{
-		if (save_and_redirect_fds(&saved_stdin, &saved_stdout, cmd, shell) != 0)
+		if (save_and_redirect_fds(saved_stdin, saved_stdout, cmd, shell) != 0)
 		{
 			shell->exit_status = 1;
 			shell->redir_err = 0;
-			return ;
+			return (1);
 		}
 	}
 	if (shell->redir_err)
 	{
 		shell->exit_status = 1;
-		if (saved_stdin != -1 && saved_stdout != -1)
-			restore_fds(saved_stdin, saved_stdout);
+		if (*saved_stdin != -1 && *saved_stdout != -1)
+			restore_fds(*saved_stdin, *saved_stdout);
 		shell->redir_err = 0;
-		return ;
+		return (1);
 	}
+	return (0);
+}
+
+void	execute_built_in(t_shell *shell, t_command *cmd)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+
+	if (setup_builtin_redirections(shell, cmd, &saved_stdin, &saved_stdout))
+		return ;
 	if (!cmd->args[0])
 	{
 		shell->exit_status = 1;
+		if (saved_stdin != -1 && saved_stdout != -1)
+			restore_fds(saved_stdin, saved_stdout);
 		return ;
 	}
 	choose_builtin(shell, cmd);
