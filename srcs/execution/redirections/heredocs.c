@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:16:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/02 12:28:23 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 16:38:43 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static t_redir	*create_heredoc_redir(int fd)
 {

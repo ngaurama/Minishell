@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   full_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/02 14:28:25 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 16:42:29 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static int	is_directory(const char *path, const char *command)
 {

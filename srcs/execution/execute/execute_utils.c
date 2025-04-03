@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 11:25:03 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/03 11:58:57 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 16:42:27 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 void	update_exit_status(t_shell *shell, int status)
 {

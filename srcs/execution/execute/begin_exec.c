@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   begin_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/04 15:58:06 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 18:24:51 by ngaurama         ###   ########.fr       */
+/*   Created: 2025/04/03 15:33:06 by ngaurama          #+#    #+#             */
+/*   Updated: 2025/04/03 16:42:25 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../../includes/minishell.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	execution(t_shell *shell)
 {
-	void	*ptr;
-
-	if (count != 0 && size != 0 && (count * size) / count != size)
-		return (NULL);
-	ptr = malloc(count * size);
-	if (!ptr)
-		return (NULL);
-	ft_memset(ptr, -1, size);
-	return (ptr);
+	if (!shell || !shell->cmds)
+	{
+		shell->exit_status = 1;
+		return ;
+	}
+	if (shell->cmds->pipe)
+		pipeline(shell);
+	else if (check_built_in(shell->cmds))
+		execute_built_in(shell, shell->cmds);
+	else
+		execute_command(shell);
 }

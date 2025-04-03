@@ -6,11 +6,11 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 14:11:51 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:38:53 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 volatile sig_atomic_t	g_signal_num = 0;
 
@@ -22,7 +22,7 @@ void	handle_signal(int signum)
 		write(1, "\n", 1);
 		if (rl_done == 0)
 		{
-			//rl_replace_line("", 0);
+			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
 			g_signal_num = 0;

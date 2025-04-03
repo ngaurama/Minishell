@@ -6,11 +6,11 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 14:06:44 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:42:21 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static int	setup_execution(t_shell *shell, int *saved_stdin, int *saved_stdout)
 {
