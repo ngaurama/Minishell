@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 08:38:49 by ngaurama          #+#    #+#             */
-/*   Updated: 2024/11/12 15:32:56 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:26:13 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,26 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 		i++;
 	}
 	return (NULL);
+}
+
+char    *ft_strstr(const char *haystack, const char *needle)
+{
+    size_t  needle_len;
+    size_t  i;
+
+    if (!haystack || !needle)
+        return (NULL);
+        
+    needle_len = ft_strlen(needle);
+    if (!*needle)
+        return ((char *)haystack);
+        
+    i = 0;
+    while (haystack[i])
+    {
+        if (!ft_memcmp(&haystack[i], needle, needle_len))
+            return ((char *)&haystack[i]);
+        i++;
+    }
+    return (NULL);
 }
