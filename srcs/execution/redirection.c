@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 19:44:08 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 22:10:34 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
 	while (1)
 	{
 		line = readline("> ");
-		if (stop_heredoc(line, delimiter))
+		if (stop_heredoc(line, delimiter, expand, shell))
 			break ;
 		if (g_signal_num == SIGINT)
 		{
@@ -42,15 +42,16 @@ void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
 	rl_event_hook = NULL;
 }
 
+// leave signal(SIGINT, SIG_IGN); here
 int	handle_heredoc(const char *delimiter, t_shell *shell, int expand)
 {
 	int		pipefd[2];
 	pid_t	pid;
 	int		status;
-	int 	fd; 
+	int 	fd;
 
 	status = 0;
-	//signal(SIGINT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 	if (pipe(pipefd) == -1)
 		return (-1);
 	pid = fork();
@@ -106,7 +107,6 @@ int	manage_heredocs(t_redir *redir, t_shell *shell)
 			return (1);
 		if (fd == -1)
 		{
-			//perror(redir->filename);
 			shell->redir_err = 130;
 			return (1);
 		}

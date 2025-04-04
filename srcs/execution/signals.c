@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:54:15 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 19:54:47 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 21:08:46 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,12 @@ void	handle_signal_heredoc(int signum)
 {
 	g_signal_num = signum;
 	if (signum == SIGINT)
-	{
-		//rl_replace_line("", 0);
-		//rl_on_new_line();
-		//rl_redisplay();
-		//g_signal_num = SIGINT;
 		rl_done = 1;
-	}
 }
 
-int	rl_hook()
+int	rl_hook(void)
 {
 	if (g_signal_num)
-	{
-		//rl_replace_line("", 0);
 		rl_done = 1;
-	}
-	return 0;
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 19:28:07 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 20:59:49 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	free_redirections(t_redir *redirs)
 		redirs = redirs->next;
 		if (tmp->filename)
 			free(tmp->filename);
+		tmp->filename = NULL;
 		free(tmp);
 	}
 }

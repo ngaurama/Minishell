@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 20:04:47 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 22:10:58 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,6 @@ static int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t last_pid)
 				ft_putstr_fd("\n", STDERR_FILENO);
 		}
 	}
-	// {
-	// 	waitpid(last_pid, &status, 0);
-	// 	if (WIFEXITED(status))
-	// 		return (WEXITSTATUS(status));
-	// 	else if (WIFSIGNALED(status))
-	// 		return (128 + WTERMSIG(status));
-	// }
 	return (status);
 }
 
