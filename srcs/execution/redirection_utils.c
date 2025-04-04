@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/02 12:42:16 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/04 21:25:27 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,26 @@ int	handle_heredoc_input(t_redir *redir, t_shell *shell)
 	return (handle_heredoc(redir->filename, shell, expand));
 }
 
-int	stop_heredoc(char *line, const char *delimiter)
+int	stop_heredoc(char *line, const char *delimiter, int expand, t_shell *shell)
 {
+	char	*expanded;
+
 	if (!line)
 	{
 		ft_putstr_fd("minishell: warning: ", 2);
 		ft_putstr_fd("here-document delimited by end-of-file\n", 2);
 		return (1);
 	}
-	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
+	if (expand)
+		expanded = heredoc_expand(line, shell);
+	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0
+		|| ft_strncmp(expanded, delimiter, ft_strlen(delimiter) + 1) == 0)
 	{
 		free(line);
+		free(expanded);
 		return (1);
 	}
+	free(expanded);
 	return (0);
 }
 

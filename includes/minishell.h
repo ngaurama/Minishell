@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 22:12:31 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:19:58 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ typedef struct s_shell
 	int			freed;
 }	t_shell;
 
-int	rl_hook();
-void		handle_signal_heredoc(int signum);
 // init.c
 void		init_shell(t_shell *shell, char **envp);
 void		free_shell(t_shell *shell);
@@ -209,7 +207,8 @@ int			redirection(t_command *cmd, t_shell *shell);
 //redirection_utils.c
 int			handle_redirect_in_file(const char *filename);
 int			handle_heredoc_input(t_redir *redir, t_shell *shell);
-int			stop_heredoc(char *line, const char *delimiter);
+int			stop_heredoc(char *line, const char *delimiter, int expand,
+				t_shell *shell);
 void		write_heredoc_line(int fd, char *line, t_shell *shell, int expand);
 int			handle_inredir_error(t_redir *redir, t_shell *shell);
 
@@ -265,6 +264,8 @@ int			is_valid_identifier(const char *key);
 //signals.c
 void		setup_signals(t_shell *shell);
 void		handle_signal(int signum);
+int			rl_hook(void);
+void		handle_signal_heredoc(int signum);
 
 // For debugging
 void		print_token_list(t_arg *tokens);

@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 21:58:33 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:22:07 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
 			free_shell(shell);
 			exit(130);
 		}
-		if (stop_heredoc(line, delimiter))
+		if (stop_heredoc(line, delimiter, expand, shell))
 			break ;
 		write_heredoc_line(out_fd, line, shell, expand);
 		free(line);
@@ -43,12 +43,13 @@ void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
 	close (out_fd);
 }
 
+// leave signal(SIGINT, SIG_IGN); here
 int	handle_heredoc(const char *delimiter, t_shell *shell, int expand)
 {
 	int		pipefd[2];
 	pid_t	pid;
 	int		status;
-	int 	fd; 
+	int 	fd;
 
 	status = 0;
 	signal(SIGINT, SIG_IGN);
@@ -110,7 +111,6 @@ int	manage_heredocs(t_redir *redir, t_shell *shell)
 			return (1);
 		if (fd == -1)
 		{
-			//perror(redir->filename);
 			shell->redir_err = 130;
 			return (1);
 		}
