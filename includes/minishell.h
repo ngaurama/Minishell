@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 19:21:43 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 22:12:31 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ int			check_current_dir(t_shell *shell, const char *command, char *cwd);
 char		*build_path(const char *dir, const char *command);
 
 // utils.c
-void		print_error(const char *msg);
+void	print_error(const char *msg, const char *key, const char *value);
 char		*ft_strtok(char *str, const char *delim);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_strncpy(char *dest, const char *src, size_t n);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 20:04:47 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 22:17:22 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,12 @@ static pid_t	pipeline_handle_special(t_shell *shell, t_command **cmd,
 			waitpid(writer_pid, NULL, 0);
 		}
 	}
-	else
-		perror("fork failed");
+    else
+    {
+        close(pipefd[0]);
+        close(pipefd[1]);
+        perror("fork failed");
+    }
 	return (reader_pid);
 }
 
@@ -106,6 +110,8 @@ static pid_t	pipeline_process(t_shell *shell, int buffer[2],
 			perror("pipe");
 			close(buffer[0]);
 			close(buffer[1]);
+			if (*prev_pipe_read != -1)
+                close(*prev_pipe_read);
 			return (-1);
 		}
 		last_pid = pipeline_handle_regular(shell, cmd, buffer, prev_pipe_read);
@@ -141,13 +147,6 @@ static int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t last_pid)
 				ft_putstr_fd("\n", STDERR_FILENO);
 		}
 	}
-	// {
-	// 	waitpid(last_pid, &status, 0);
-	// 	if (WIFEXITED(status))
-	// 		return (WEXITSTATUS(status));
-	// 	else if (WIFSIGNALED(status))
-	// 		return (128 + WTERMSIG(status));
-	// }
 	return (status);
 }
 
@@ -158,6 +157,12 @@ void	pipeline(t_shell *shell)
 	pid_t	last_pid;
 
 	pipeline_init(shell, buffer, &prev_pipe_read);
+	if (shell->exit_status != 0)
+    {
+        close(buffer[0]);
+        close(buffer[1]);
+        return;
+    }
 	last_pid = pipeline_process(shell, buffer, &prev_pipe_read);
 	shell->exit_status = pipeline_cleanup(buffer, prev_pipe_read, last_pid);
 }

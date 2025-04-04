@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 23:14:50 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/04 22:13:01 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static char	*get_cd_target(t_shell *shell, int *free_dir)
 		dir = get_env_value(shell->env, "HOME");
 		if (!dir)
 		{
-			print_error("cd: HOME not set");
+			print_error("cd: HOME not set", NULL, NULL);
 			return (NULL);
 		}
 		*free_dir = 1;
@@ -86,7 +86,7 @@ static char	*get_cd_target(t_shell *shell, int *free_dir)
 		dir = get_env_value(shell->env, "OLDPWD");
 		if (!dir)
 		{
-			print_error("cd: OLDPWD not set");
+			print_error("cd: OLDPWD not set", NULL, NULL);
 			return (NULL);
 		}
 		*free_dir = 1;

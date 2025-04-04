@@ -6,20 +6,33 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:34:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 20:37:11 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:12:11 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	print_error(const char *msg)
+void	print_error(const char *msg, const char *key, const char *value)
 {
 	size_t	len;
 
 	len = 0;
-	while (msg[len])
+	while (msg[len] != ':')
 		len++;
-	write(2, msg, len);
+	len += 2;
+	if (key && value)
+	{
+		write(2, msg, len);
+		write(2, "`", 1);
+		write(2, (char *)key, ft_strlen(key));
+		write(2, "=", 1);
+		write(2, (char *)value, ft_strlen(value));
+		write(2, "': ", 3);
+		while (msg[len])
+			write(2, &msg[len++], 1);
+	}
+	else
+		write(2, msg, len);
 	write(2, "\n", 1);
 }
 

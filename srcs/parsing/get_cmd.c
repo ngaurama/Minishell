@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/03 21:37:37 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 21:32:20 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	add_redirection(t_redir **redir_list, t_arg *token, int type)
 	new->filename = ft_strdup(token->value);
 	new->type = type;
 	new->src_token = token;
+	new->fd = -1;
 	new->next = NULL;
 	if (!*redir_list)
 		*redir_list = new;

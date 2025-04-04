@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 20:35:22 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:02:49 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,12 @@ void	handle_fork_error(int buffer[2])
 
 void	free_and_exit(t_shell *shell, int exit_code)
 {
+	int fd;
 	if (shell)
 		free_shell(shell);
+	fd = 2;
+	while (++fd < 1024)
+		close(fd);
 	exit(exit_code);
 }
 

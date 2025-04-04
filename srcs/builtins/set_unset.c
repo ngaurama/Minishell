@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:14:49 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 22:34:35 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 22:13:30 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	set_env_var(t_shell *shell, const char *key, const char *value)
 		i++;
 	if (i >= shell->env_cap - 1)
 	{
-		print_error("env: environment full");
+		print_error("env: environment full", NULL, NULL);
 		free(new_var);
 		return ;
 	}

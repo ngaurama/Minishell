@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:27 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 22:59:25 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/04 22:14:54 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ static void	print_env_var(char *var)
 	char	*equal_sign;
 
 	equal_sign = ft_strchr(var, '=');
-	if (equal_sign && *(equal_sign + 1))
+	if (equal_sign && *(equal_sign + 1) && *(equal_sign - 1) == '_')
+		return ;
+	else if (equal_sign && *(equal_sign + 1))
 	{
 		*equal_sign = '\0';
 		printf("declare -x %s=\"%s\"\n", var, equal_sign + 1);
@@ -51,11 +53,11 @@ static void	print_sorted_env(t_shell *shell)
 }
 
 static void	try_export(const char *key, const char *value, t_shell *shell,
-	int *status)
+		int *status)
 {
 	if (!is_valid_identifier(key))
 	{
-		print_error("export: not a valid identifier");
+		print_error("export: not a valid identifier", key, value);
 		*status = 1;
 		return ;
 	}
@@ -66,24 +68,48 @@ static void	export_var_from_arg(char *arg, t_shell *shell, int *status)
 {
 	char	*key;
 	char	*value;
-	char	*eq;
+	char	*op;
+	int		append_mode;
+	char	*old_value;
+	char	*new_value;
 
-	eq = ft_strchr(arg, '=');
-	if (eq)
+	append_mode = 0;
+	op = ft_strstr(arg, "+=");
+	if (op)
 	{
-		key = ft_substr(arg, 0, eq - arg);
-		value = ft_strdup(eq + 1);
-		try_export(key, value, shell, status);
-		free(key);
-		free(value);
+		append_mode = 1;
+		key = ft_substr(arg, 0, op - arg);
+		value = ft_strdup(op + 2);
 	}
 	else
 	{
-		if (get_env_value(shell->env, arg))
-			try_export(arg, get_env_value(shell->env, arg), shell, status);
+		op = ft_strchr(arg, '=');
+		if (op)
+		{
+			key = ft_substr(arg, 0, op - arg);
+			value = ft_strdup(op + 1);
+		}
 		else
-			try_export(arg, NULL, shell, status);
+		{
+			key = ft_strdup(arg);
+			value = NULL;
+		}
 	}
+	if (append_mode)
+	{
+		old_value = get_env_value(shell->env, key);
+		if (old_value)
+			new_value = ft_strjoin(old_value, value);
+		else
+			new_value = ft_strdup(value);
+		try_export(key, new_value, shell, status);
+		free(new_value);
+	}
+	else
+		try_export(key, value, shell, status);
+	free(key);
+	if (value)
+		free(value);
 }
 
 void	ft_export(t_shell *shell)

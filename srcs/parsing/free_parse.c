@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:23:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 19:28:07 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 21:26:13 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	free_redirections(t_redir *redirs)
 	{
 		tmp = redirs;
 		redirs = redirs->next;
-		if (tmp->filename)
+		if (tmp && tmp->filename)
 			free(tmp->filename);
+		if (tmp->fd != -1)
+			close (tmp->fd);
 		free(tmp);
 	}
 }
@@ -47,7 +49,8 @@ void	free_commands(t_command *cmds)
 		}
 		free_redirections(tmp->infiles);
 		free_redirections(tmp->outfiles);
-		free_redirections(tmp->heredocs);
+		if (tmp->heredocs)
+			free_redirections(tmp->heredocs);
 		free(tmp);
 		cmds = next;
 	}
