@@ -6,41 +6,13 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 22:24:30 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 15:01:35 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	is_directory(const char *path, const char *command)
-{
-	struct stat	st;
-
-	if (stat(path, &st) == -1)
-		return (0);
-	if (S_ISDIR(st.st_mode))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd((char *)command, STDERR_FILENO);
-		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		return (1);
-	}
-	return (0);
-}
-
-char	*get_current_dir(t_shell *shell)
-{
-	char	*cwd;
-
-	cwd = getcwd(NULL, 0);
-	if (!cwd && shell->current_dir)
-		cwd = ft_strdup(shell->current_dir);
-	if (!cwd)
-		cwd = ft_strdup("/");
-	return (cwd);
-}
-
-static char	*build_path(const char *dir, const char *command)
+char	*build_path(const char *dir, const char *command)
 {
 	char	*full_path;
 	size_t	len;
@@ -54,29 +26,6 @@ static char	*build_path(const char *dir, const char *command)
 	ft_strlcat(full_path, "/", len);
 	ft_strlcat(full_path, command, len);
 	return (full_path);
-}
-
-int	check_current_dir(t_shell *shell, const char *command, char *cwd)
-{
-	char	*full_path;
-
-	full_path = build_path(cwd, command);
-	if (!full_path)
-		return (1);
-	if (access(full_path, F_OK | X_OK) == 0)
-	{
-		if (is_directory(full_path, command))
-		{
-			free(full_path);
-			return (1);
-		}
-		if (shell->full_path)
-			free(shell->full_path);
-		shell->full_path = full_path;
-		return (0);
-	}
-	free(full_path);
-	return (1);
 }
 
 int	search_path(t_shell *shell, const char *command, char *path_var_copy)

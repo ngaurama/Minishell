@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 23:32:02 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 20:07:48 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	interactive_mode(t_shell *shell)
 	while (1)
 	{
 		g_signal_num = 0;
+		setup_signals(shell);
 		shell->input = readline("minishell$ ");
 		if (!shell->input)
 		{
@@ -44,6 +45,7 @@ static void	interactive_mode(t_shell *shell)
 			{
 				write(1, "\n", 1);
 				g_signal_num = 0;
+				setup_signals(shell);
 				continue ;
 			}
 			ft_putstr_fd("exit\n", STDERR_FILENO);

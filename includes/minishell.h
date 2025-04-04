@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 20:35:35 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 19:21:43 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ typedef struct s_redir
 
 typedef struct s_command
 {
-	char				**args;				// Arguments for execve()
-	t_redir				*infiles;			// Files for "<"
-	t_redir				*outfiles;			// Files for ">" or ">>"
+	char				**args;
+	t_redir				*infiles;
+	t_redir				*outfiles;
 	t_redir				*heredocs;
-	int					append;				// 1 if ">>", 0 if ">"
-	int					pipe;				// 1 if there's a pipe "|"
+	int					append;
+	int					pipe;
 	int					pipefd[2];
-	struct s_command	*next;				// Next command in the pipeline
+	struct s_command	*next;
 }	t_command;
 
 typedef struct s_parse_data
@@ -110,6 +110,8 @@ typedef struct s_shell
 	int			freed;
 }	t_shell;
 
+int	rl_hook();
+void		handle_signal_heredoc(int signum);
 // init.c
 void		init_shell(t_shell *shell, char **envp);
 void		free_shell(t_shell *shell);
@@ -181,8 +183,12 @@ void		restore_fds(int saved_stdin, int saved_stdout);
 void		handle_command_not_found(t_shell *shell);
 void		execute_child_process(t_shell *shell);
 
-// full_path.c
+// full_path.c // full_path2.c
 int			find_full_path(t_shell *shell, const char *command);
+char		*get_current_dir(t_shell *shell);
+int			is_directory(const char *path, const char *command);
+int			check_current_dir(t_shell *shell, const char *command, char *cwd);
+char		*build_path(const char *dir, const char *command);
 
 // utils.c
 void		print_error(const char *msg);
@@ -193,7 +199,7 @@ char		*ft_strcpy(char *dest, const char *src);
 
 // utils2.c
 void		child_error_and_exit(t_shell *shell, const char *cmd);
-void	read_and_write_stderr(int fd);
+void		read_and_write_stderr(int fd);
 
 //redirection.c
 // int			redirection(t_shell *shell);
@@ -227,10 +233,10 @@ void		handle_fork_error(int buffer[2]);
 // BUILTINS
 // built_in.c
 int			check_built_in(t_command *cmds);
-void	choose_builtin(t_shell *shell, t_command *cmd);
+void		choose_builtin(t_shell *shell, t_command *cmd);
 
 // void		execute_built_in(t_shell *shell);
-int		execute_built_in(t_shell *shell, t_command *cmd);
+int			execute_built_in(t_shell *shell, t_command *cmd);
 
 // build_in_utils.c
 void		print_cd_error(char *dir, t_shell *shell);
@@ -265,6 +271,6 @@ void		print_token_list(t_arg *tokens);
 void		print_command_list(t_command *cmd);
 void		print_redirections(t_redir *redirs, char *type);
 
-void	execution(t_shell *shell);
+void		execution(t_shell *shell);
 
 #endif

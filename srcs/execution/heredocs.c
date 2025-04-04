@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:16:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/02 12:28:23 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/04 19:28:58 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void	preprocess_heredocs(t_command *cmd, t_shell *shell)
 		if (cmd->heredocs)
 		{
 			new_in = create_heredoc_input_fd(cmd->heredocs, shell);
-			free_redirections(cmd->heredocs);
+			if (cmd->heredocs)
+				free_redirections(cmd->heredocs);
 			cmd->heredocs = NULL;
 			if (cmd->infiles)
 			{

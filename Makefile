@@ -16,6 +16,7 @@ SRC = srcs/main.c \
 		srcs/execution/execute.c \
 		srcs/execution/execute_utils.c \
 		srcs/execution/full_path.c \
+		srcs/execution/full_path2.c \
 		srcs/execution/utils/utils.c \
 		srcs/execution/utils/utils2.c \
 		srcs/execution/init.c \

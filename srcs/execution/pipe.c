@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 21:08:32 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 20:04:47 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ static pid_t	pipeline_process(t_shell *shell, int buffer[2],
 static int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t last_pid)
 {
 	int	status;
+	int	sig;
 
 	status = 0;
 	close(buffer[1]);
@@ -125,12 +126,28 @@ static int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t last_pid)
 		close(prev_pipe_read);
 	if (last_pid > 0)
 	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		waitpid(last_pid, &status, 0);
 		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
+			status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			return (128 + WTERMSIG(status));
+		{
+			sig = WTERMSIG(status);
+			status = 128 + sig;
+			if (sig == SIGQUIT)
+				ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			else if (sig == SIGINT)
+				ft_putstr_fd("\n", STDERR_FILENO);
+		}
 	}
+	// {
+	// 	waitpid(last_pid, &status, 0);
+	// 	if (WIFEXITED(status))
+	// 		return (WEXITSTATUS(status));
+	// 	else if (WIFSIGNALED(status))
+	// 		return (128 + WTERMSIG(status));
+	// }
 	return (status);
 }
 

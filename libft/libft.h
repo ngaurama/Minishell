@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 09:01:07 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 01:00:57 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 13:50:34 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
+int					ft_isspace(int c);
 
 // Linked List functions
 typedef struct s_list

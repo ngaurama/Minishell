@@ -6,16 +6,11 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 00:45:23 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 01:27:18 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 13:52:30 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-int	ft_isspace(int c)
-{
-	return ((c >= 9 && c <= 13) || c == 32);
-}
 
 static char	*get_home_path(char *prefix, t_shell *shell)
 {
@@ -78,11 +73,10 @@ static int	handle_unexpanded_tilde(char *input, t_tokenizer *tok, int start)
 
 int	handle_tilde(char *input, t_tokenizer *tok, t_shell *shell)
 {
-	char *home;
-	int start;
+	char	*home;
+	int		start;
 
 	start = tok->i;
-
 	if (input[start] != '~' || tok->in_quotes)
 		return (0);
 	if (start > 0 && input[start - 1] != '=' && !ft_isspace(input[start - 1]))

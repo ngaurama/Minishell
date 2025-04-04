@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 00:04:39 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 13:51:34 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	is_space_or_meta(char c)
 
 int	skip_whitespace(char *input, t_tokenizer *tok)
 {
-	while (input[tok->i] == ' ' || (input[tok->i] >= 9  && \
+	while (input[tok->i] == ' ' || (input[tok->i] >= 9 && \
 		input[tok->i] <= 13))
 	{
 		tok->i++;

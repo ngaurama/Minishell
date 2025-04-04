@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:33:53 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 00:52:39 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 13:52:54 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,6 @@ void	ft_unset(t_shell *shell)
 	status = 0;
 	while (shell->cmds->args[i])
 	{
-		// if (!is_valid_identifier(shell->cmds->args[i]))
-		// {
-		// 	printf("unset: '%s': invalid parameter name\n",
-		// 		shell->cmds->args[i]);
-		// 	status = 1;
-		// }
-		//else
 		unset_env_var(shell, shell->cmds->args[i]);
 		i++;
 	}
