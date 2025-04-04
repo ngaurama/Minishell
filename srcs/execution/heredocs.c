@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:16:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 22:20:20 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 00:51:07 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	get_heredoc_fd(t_redir *heredocs, t_shell *shell)
 	while (heredocs)
 	{
 		expand = (heredocs->src_token && heredocs->src_token->quoted == 0);
-		fd = handle_heredoc(heredocs->filename, shell, expand);
+		fd = handle_heredoc(heredocs, shell);
 		if (fd == -1)
 			return (-1);
 		heredocs = heredocs->next;

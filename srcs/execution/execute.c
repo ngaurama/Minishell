@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 20:10:48 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 01:14:29 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ static int	setup_execution(t_shell *shell, int *saved_stdin, int *saved_stdout)
 		return (shell->exit_status = 1, 1);
 	if (redirection(shell->cmds, shell) != 0 || shell->redir_err)
 	{
-		shell->exit_status = shell->redir_err;
+		if (shell->redir_err != 0)
+			shell->exit_status = shell->redir_err;
+		else
+			shell->exit_status = 1;
 		restore_fds(*saved_stdin, *saved_stdout);
 		shell->redir_err = 0;
 		return (1);

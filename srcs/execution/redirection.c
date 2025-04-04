@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 22:22:07 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 00:35:08 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
-			int expand)
+void	read_heredoc(t_redir *redir, int out_fd, t_shell *shell)
 {
 	char	*line;
 	int		fd;
@@ -34,9 +33,9 @@ void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
 			free_shell(shell);
 			exit(130);
 		}
-		if (stop_heredoc(line, delimiter, expand, shell))
+		if (stop_heredoc(line, redir->filename, redir->src_token, shell))
 			break ;
-		write_heredoc_line(out_fd, line, shell, expand);
+		write_heredoc_line(out_fd, line, shell, redir->src_token);
 		free(line);
 	}
 	rl_event_hook = NULL;
@@ -44,7 +43,7 @@ void	read_heredoc(const char *delimiter, int out_fd, t_shell *shell,
 }
 
 // leave signal(SIGINT, SIG_IGN); here
-int	handle_heredoc(const char *delimiter, t_shell *shell, int expand)
+int	handle_heredoc(t_redir *redir, t_shell *shell)
 {
 	int		pipefd[2];
 	pid_t	pid;
@@ -65,7 +64,7 @@ int	handle_heredoc(const char *delimiter, t_shell *shell, int expand)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
-		read_heredoc(delimiter, pipefd[1], shell, expand);
+		read_heredoc(redir, pipefd[1], shell);
 		close(pipefd[1]);
 		fd = 2;
 		while (++fd < 1024)
@@ -91,9 +90,6 @@ int	handle_heredoc(const char *delimiter, t_shell *shell, int expand)
 			shell->exit_status = 130;
 			return (-1);
 		}
-		fd = 2;
-		while (++fd < 1024)
-			close(fd);
 		return (pipefd[0]);
 	}
 }

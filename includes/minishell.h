@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 22:19:58 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 01:06:58 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_arg
 	char			*value;
 	int				type;
 	int				quoted;
+	int				should_expand;
 	struct s_arg	*next;
 }	t_arg;
 
@@ -152,7 +153,7 @@ void		add_argument_to_cmd(t_shell *shell, t_command *cmd, char *arg,
 				int *arg_count);
 
 // parse_init.c
-t_arg		*add_token(t_arg *head, char *token, int type, int quoted);
+t_arg		*add_token(t_arg *head, char *token, t_tokenizer tokz);
 t_command	*init_command(void);
 int			init_tokenizer(t_tokenizer *tok);
 int			ensure_token_capacity(t_tokenizer *tok, int extra);
@@ -189,7 +190,7 @@ int			check_current_dir(t_shell *shell, const char *command, char *cwd);
 char		*build_path(const char *dir, const char *command);
 
 // utils.c
-void	print_error(const char *msg, const char *key, const char *value);
+void		print_error(const char *msg, const char *key, const char *value);
 char		*ft_strtok(char *str, const char *delim);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_strncpy(char *dest, const char *src, size_t n);
@@ -201,15 +202,16 @@ void		read_and_write_stderr(int fd);
 
 //redirection.c
 // int			redirection(t_shell *shell);
-int			handle_heredoc(const char *delimiter, t_shell *shell, int expand);
+int			handle_heredoc(t_redir *redir, t_shell *shell);
 int			redirection(t_command *cmd, t_shell *shell);
 
 //redirection_utils.c
 int			handle_redirect_in_file(const char *filename);
 int			handle_heredoc_input(t_redir *redir, t_shell *shell);
-int			stop_heredoc(char *line, const char *delimiter, int expand,
+int			stop_heredoc(char *line, const char *delimiter, t_arg *tok,
 				t_shell *shell);
-void		write_heredoc_line(int fd, char *line, t_shell *shell, int expand);
+void		write_heredoc_line(int fd, char *line, t_shell *shell,
+				t_arg *tok);
 int			handle_inredir_error(t_redir *redir, t_shell *shell);
 
 //heredoc_expand.c

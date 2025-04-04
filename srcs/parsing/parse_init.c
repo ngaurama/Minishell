@@ -6,27 +6,28 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 17:18:28 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 00:05:24 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 01:06:55 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-//Token creation debug
-//printf("Token created: [%s] (type: %d)\n", token, type);
-t_arg	*add_token(t_arg *head, char *token, int type, int quoted)
+// Token creation debug
+// printf("Token created: [%s] (type: %d)\n", token, type);
+t_arg	*add_token(t_arg *head, char *token, t_tokenizer tokz)
 {
 	t_arg	*new;
 	t_arg	*tmp;
 
-	if (!token || (*token == '\0' && !quoted))
+	if (!token || (*token == '\0' && !tokz.quoted))
 		return (head);
 	new = malloc(sizeof(t_arg));
 	if (!new)
 		return (NULL);
 	new->value = ft_strdup(token);
-	new->type = type;
-	new->quoted = quoted;
+	new->type = tokz.type;
+	new->quoted = tokz.quoted;
+	new->should_expand = tokz.should_expand;
 	new->next = NULL;
 	if (!head)
 		return (new);

@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 21:25:27 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 01:06:01 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,42 +24,53 @@ int	handle_redirect_in_file(const char *filename)
 
 int	handle_heredoc_input(t_redir *redir, t_shell *shell)
 {
-	int	expand;
+	// int	expand;
 
-	expand = 1;
-	if (redir->src_token)
-		expand = (redir->src_token->quoted == 0);
-	return (handle_heredoc(redir->filename, shell, expand));
+	// expand = 1;
+	// if (redir->src_token)
+	// 	expand = (redir->src_token->quoted == 0);
+	return (handle_heredoc(redir, shell));
 }
 
-int	stop_heredoc(char *line, const char *delimiter, int expand, t_shell *shell)
+int	stop_heredoc(char *line, const char *delimiter, t_arg *tok, t_shell *shell)
 {
 	char	*expanded;
+	int		expand;
 
+	expand = (tok->should_expand || !tok->quoted);
 	if (!line)
 	{
 		ft_putstr_fd("minishell: warning: ", 2);
 		ft_putstr_fd("here-document delimited by end-of-file\n", 2);
 		return (1);
 	}
+	expanded = NULL;
 	if (expand)
 		expanded = heredoc_expand(line, shell);
-	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0
-		|| ft_strncmp(expanded, delimiter, ft_strlen(delimiter) + 1) == 0)
+	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
+	{
+		free(line);
+		if (expand)
+			free(expanded);
+		return (1);
+	}
+	if (expand && ft_strncmp(expanded, delimiter, ft_strlen(delimiter)
+			+ 1) == 0)
 	{
 		free(line);
 		free(expanded);
 		return (1);
 	}
-	free(expanded);
+	if (expand)
+		free(expanded);
 	return (0);
 }
 
-void	write_heredoc_line(int fd, char *line, t_shell *shell, int expand)
+void	write_heredoc_line(int fd, char *line, t_shell *shell, t_arg *tok)
 {
 	char	*expanded;
 
-	if (expand)
+	if (!tok->quoted)
 	{
 		expanded = heredoc_expand(line, shell);
 		write(fd, expanded, ft_strlen(expanded));

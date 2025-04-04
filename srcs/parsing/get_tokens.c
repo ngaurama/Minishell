@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 13:46:13 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 00:18:29 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,10 @@ t_arg	*tokenize_input(char *input, t_shell *shell)
 		parse_next_token(input, &tok, shell);
 		if (!tok.token[0])
 		{
-			head = add_token(head, "", tok.type, tok.quoted);
+			head = add_token(head, "", tok);
 			continue ;
 		}
-		head = add_token(head, tok.token, tok.type, tok.quoted);
+		head = add_token(head, tok.token, tok);
 	}
 	free_tokenizer(&tok);
 	return (head);
