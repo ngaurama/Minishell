@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:17 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 14:54:02 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 20:32:25 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	setup_builtin_redirections(t_shell *shell, t_command *cmd, int *saved_stdin,
 	}
 	return (0);
 }
+
+// execute builtins
 
 static int	handle_redirection_built_in(t_shell *shell, t_command *cmd,
 		int *saved_stdin, int *saved_stdout)

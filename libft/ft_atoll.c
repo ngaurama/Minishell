@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_atoll.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 22:34:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 01:45:29 by npagnon          ###   ########.fr       */
+/*   Created: 2025/04/04 00:59:36 by npagnon           #+#    #+#             */
+/*   Updated: 2025/04/04 00:59:49 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "libft.h"
 
-void	ft_env(t_shell *shell)
+long long	ft_atoll(const char *str)
 {
-	int		i;
-	char	*equal;
+	long long	result;
+	int			sign;
 
-	i = 0;
-	while (shell->env[i])
+	result = 0;
+	sign = 1;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '-' || *str == '+')
 	{
-		equal = ft_strchr(shell->env[i], '=');
-		if (equal)
-			printf("%s\n", shell->env[i]);
-		i++;
+		if (*str == '-')
+			sign = -1;
+		str++;
 	}
-	shell->exit_status = 0;
+	while (*str >= '0' && *str <= '9')
+	{
+		result = result * 10 + (*str - '0');
+		str++;
+	}
+	return (result * sign);
 }

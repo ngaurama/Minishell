@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:10:05 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/03 16:30:10 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 21:39:01 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ void	init_shell(t_shell *shell, char **envp)
 	if (!env_value)
 		set_env_var(shell, "OLDPWD", NULL);
 	free(env_value);
-	shell->exit_status = 0;
-	shell->redir_err = 0;
 }
 
 void	free_shell(t_shell *shell)

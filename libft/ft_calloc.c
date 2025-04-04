@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 15:58:06 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 18:24:51 by ngaurama         ###   ########.fr       */
+/*   Updated: 2024/11/08 19:10:12 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ void	*ft_calloc(size_t count, size_t size)
 	ptr = malloc(count * size);
 	if (!ptr)
 		return (NULL);
-	ft_memset(ptr, -1, size);
+	ft_bzero(ptr, count * size);
 	return (ptr);
 }

@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:14:49 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/03/31 15:14:48 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/03 22:34:35 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int	is_valid_identifier(const char *key)
 {
 	int	i;
 
-	if (!key || !*key || (!ft_isalpha(key[0]) && key[0] != '_'))
+	if (!key || !*key || (!ft_isalpha(key[0]) && key[0] != '_')
+		|| key[0] == '=')
 		return (0);
 	i = 1;
 	while (key[i])

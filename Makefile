@@ -1,47 +1,53 @@
+OS := $(shell uname)
+  
+ifeq ($(OS), Darwin)  # For me to work on my macOS
+	RLFLAGS = -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline -lncurses
+else
+	RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
+endif
+
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
+CFLAGS = -g -Wall -Wextra -Werror
+#RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
 LIBFT = libft/libft.a
 
-SRC = $(shell find srcs -name "*.c")
-# SRC = srcs/main.c \
-# 		srcs/begin_exec.c \
-# 		srcs/execution/execute.c \
-# 		srcs/execution/execute_utils.c \
-# 		srcs/execution/full_path.c \
-# 		srcs/execution/utils.c \
-# 		srcs/execution/utils2.c \
-# 		srcs/execution/init.c \
-# 		srcs/execution/redirection.c \
-# 		srcs/execution/redirection_utils.c \
-# 		srcs/execution/pipe.c \
-# 		srcs/execution/signals.c \
-# 		srcs/execution/pipe_utils.c \
-# 		srcs/execution/heredocs.c \
-# 		srcs/execution/heredoc_expand.c \
-# 		srcs/execution/pipeline_clean.c \
-# 		srcs/execution/process_pipes.c \
-# 		srcs/parsing/get_tokens.c \
-# 		srcs/parsing/get_cmd.c \
-# 		srcs/parsing/get_cmd_utils.c \
-# 		srcs/parsing/env_var.c \
-# 		srcs/parsing/env_var_utils.c \
-# 		srcs/parsing/handle_dollar.c \
-# 		srcs/parsing/parse_init.c \
-# 		srcs/parsing/free_parse.c \
-# 		srcs/parsing/parse_utils.c \
-# 		srcs/builtins/built_in.c \
-# 		srcs/builtins/check_choose.c \
-# 		srcs/builtins/built_in_utils.c \
-# 		srcs/builtins/cd.c \
-# 		srcs/builtins/set_unset.c \
-# 		srcs/builtins/echo.c \
-# 		srcs/builtins/env.c \
-# 		srcs/builtins/export.c \
-# 		srcs/builtins/ft_exit.c \
-# 		srcs/builtins/pwd.c \
-# 		srcs/builtins/unset.c
+SRC = srcs/main.c \
+		srcs/execution/execute.c \
+		srcs/execution/execute_utils.c \
+		srcs/execution/full_path.c \
+		srcs/execution/utils/utils.c \
+		srcs/execution/utils/utils2.c \
+		srcs/execution/init.c \
+		srcs/execution/redirection.c \
+		srcs/execution/redirection_utils.c \
+		srcs/execution/pipe.c \
+		srcs/execution/signals.c \
+		srcs/execution/pipe_utils.c \
+		srcs/execution/heredocs.c \
+		srcs/execution/heredoc_expand.c \
+		srcs/execution/begin_exec.c \
+		srcs/parsing/get_tokens.c \
+		srcs/parsing/get_cmd.c \
+		srcs/parsing/get_cmd_utils.c \
+		srcs/parsing/env_var.c \
+		srcs/parsing/env_var_utils.c \
+		srcs/parsing/handle_dollar.c \
+		srcs/parsing/parse_init.c \
+		srcs/parsing/free_parse.c \
+		srcs/parsing/parse_utils.c \
+		srcs/parsing/handle_tilde.c \
+		srcs/builtins/built_in.c \
+		srcs/builtins/built_in_utils.c \
+		srcs/builtins/cd.c \
+		srcs/builtins/set_unset.c \
+		srcs/builtins/echo.c \
+		srcs/builtins/env.c \
+		srcs/builtins/export.c \
+		srcs/builtins/ft_exit.c \
+		srcs/builtins/pwd.c \
+		srcs/builtins/check_choose.c \
+		srcs/builtins/unset.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_DIR = obj

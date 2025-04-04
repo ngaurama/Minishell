@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 13:55:57 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 22:58:46 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/04 01:25:55 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	handle_quotes(char *input, t_tokenizer *tok,
-			int in_word, t_shell *shell)
+int	handle_quotes(char *input, t_tokenizer *tok, int in_word, t_shell *shell)
 {
 	char	quote;
 
@@ -46,9 +45,8 @@ int	handle_special(char *input, t_tokenizer *tok)
 	if (!input[tok->i])
 		return (tok->i);
 	append_char_to_token(tok, input[tok->i]);
-	if (input[tok->i + 1] && ((input[tok->i] == '<' && \
-		input[tok->i + 1] == '<') || (input[tok->i] == '>' && \
-			input[tok->i + 1] == '>')))
+	if (input[tok->i + 1] && ((input[tok->i] == '<' && input[tok->i + 1] == '<')
+			|| (input[tok->i] == '>' && input[tok->i + 1] == '>')))
 		append_char_to_token(tok, input[++tok->i]);
 	tok->token[tok->j] = '\0';
 	if (tok->token[0] == '|')
@@ -70,17 +68,18 @@ int	handle_word(char *input, t_tokenizer *tok, t_shell *shell)
 
 	tok->in_quotes = 0;
 	tok->quote_char = 0;
-	while (input[tok->i]
-		&& (tok->in_quotes || !is_space_or_meta(input[tok->i])))
+	while (input[tok->i] && (tok->in_quotes
+			|| !is_space_or_meta(input[tok->i])))
 	{
 		current = input[tok->i];
 		if (handle_quote_state(input, tok, &tok->in_quotes, &tok->quote_char))
 			continue ;
-		if (!tok->in_quotes && tok->j == 0 && current == '~' && \
-			handle_tilde(input, tok, shell))
+		if (!tok->in_quotes && current == '~' && (tok->j == 0 || (tok->j > 0
+					&& input[tok->i - 1] == '=')) && handle_tilde(input, tok,
+				shell))
 			continue ;
-		if (current == '$' && (!tok->in_quotes || tok->quote_char == '"') && \
-			handle_dollar(input, tok, shell))
+		if (current == '$' && (!tok->in_quotes || tok->quote_char == '"')
+			&& handle_dollar(input, tok, shell))
 			continue ;
 		append_char_to_token(tok, current);
 		tok->i++;
@@ -97,16 +96,19 @@ void	parse_next_token(char *input, t_tokenizer *tok, t_shell *shell)
 		return ;
 	if (tok->heredoc_next && tok->quoted == 0)
 		tok->should_expand = 0;
-	if (input[tok->i] == '\'' || input[tok->i] == '"')
+	while (input[tok->i] == '\'' || input[tok->i] == '"')
 	{
 		tok->i = handle_quotes(input, tok, 0, shell);
-		if (input[tok->i] && !is_space_or_meta(input[tok->i]))
+		if (input[tok->i] && !is_space_or_meta(input[tok->i])
+			&& input[tok->i] != '\'' && input[tok->i] != '"')
+		{
 			tok->i = handle_word(input, tok, shell);
+			break ;
+		}
 	}
-	else if (input[tok->i] == '|' || input[tok->i] == '<'
-		|| input[tok->i] == '>')
+	if (input[tok->i] == '|' || input[tok->i] == '<' || input[tok->i] == '>')
 		tok->i = handle_special(input, tok);
-	else
+	else if (!(input[tok->i] == '\'' || input[tok->i] == '"'))
 		tok->i = handle_word(input, tok, shell);
 	tok->token[tok->j] = '\0';
 	if (tok->token[0] == '\0' && !tok->quoted)

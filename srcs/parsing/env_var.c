@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 12:43:10 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/04 01:26:10 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,6 @@ int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 		return (handle_single_dollar(tok, 1));
 	expand_variable(input, tok, shell, 0);
 	return (1);
-}
-
-int	handle_tilde(char *input, t_tokenizer *tok, t_shell *shell)
-{
-	char	*home;
-
-	if (tok->j == 0 && input[tok->i] == '~')
-	{
-		home = get_env_value(shell->env, "HOME");
-		if (home)
-			append_str_to_token(tok, home);
-		free(home);
-		tok->i++;
-		return (1);
-	}
-	return (0);
 }
 
 int	handle_quote_state(char *input, t_tokenizer *tok,

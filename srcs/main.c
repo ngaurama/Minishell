@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:05 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 16:27:33 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 23:32:02 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	interactive_mode(t_shell *shell)
 				g_signal_num = 0;
 				continue ;
 			}
-			printf("exit\n");
+			ft_putstr_fd("exit\n", STDERR_FILENO);
 			break ;
 		}
 		if (*shell->input)
@@ -89,7 +89,6 @@ static int	command_mode(t_shell *shell, char *command)
 	process_input(shell);
 	return (shell->exit_status);
 }
-
 
 int	main(int argc, char **argv, char **envp)
 {

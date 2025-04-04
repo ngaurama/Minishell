@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:17:00 by npbk              #+#    #+#             */
-/*   Updated: 2025/03/31 22:58:08 by npbk             ###   ########.fr       */
+/*   Updated: 2025/04/03 21:37:37 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ t_command	*parse_tokens(t_shell *shell, t_arg *tokens)
 	if (!p_data.cmd || token_loop(shell, &p_data, tokens))
 	{
 		free_commands(p_data.head);
+		shell->exit_status = 2;
 		return (NULL);
 	}
 	default_redir_cmds(shell, p_data.head);

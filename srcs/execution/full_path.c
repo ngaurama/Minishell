@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   full_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 16:42:29 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 22:24:30 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int	is_directory(const char *path, const char *command)
 {
@@ -26,6 +26,18 @@ static int	is_directory(const char *path, const char *command)
 		return (1);
 	}
 	return (0);
+}
+
+char	*get_current_dir(t_shell *shell)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd && shell->current_dir)
+		cwd = ft_strdup(shell->current_dir);
+	if (!cwd)
+		cwd = ft_strdup("/");
+	return (cwd);
 }
 
 static char	*build_path(const char *dir, const char *command)
@@ -44,37 +56,30 @@ static char	*build_path(const char *dir, const char *command)
 	return (full_path);
 }
 
-static int	direct_path(t_shell *shell, const char *command)
+int	check_current_dir(t_shell *shell, const char *command, char *cwd)
 {
-	if (access(command, F_OK) == 0)
+	char	*full_path;
+
+	full_path = build_path(cwd, command);
+	if (!full_path)
+		return (1);
+	if (access(full_path, F_OK | X_OK) == 0)
 	{
-		if (access(command, X_OK) != 0)
+		if (is_directory(full_path, command))
 		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd((char *)command, STDERR_FILENO);
-			ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-			shell->exit_status = 126;
-			shell->err_printed = 1;
+			free(full_path);
 			return (1);
-		}
-		if (is_directory(command, command))
-		{
-			shell->exit_status = 126;
-			shell->err_printed = 1;
-			return (2);
 		}
 		if (shell->full_path)
 			free(shell->full_path);
-		shell->full_path = ft_strdup(command);
-		if (!shell->full_path)
-			return (1);
+		shell->full_path = full_path;
 		return (0);
 	}
-	return (-1);
+	free(full_path);
+	return (1);
 }
 
-static int	search_path(t_shell *shell, const char *command,
-				char *path_var_copy)
+int	search_path(t_shell *shell, const char *command, char *path_var_copy)
 {
 	char	*path;
 
@@ -103,11 +108,62 @@ static int	search_path(t_shell *shell, const char *command,
 	return (1);
 }
 
-int	find_full_path(t_shell *shell, const char *command)
+int	search_path_var(t_shell *shell, const char *command)
 {
 	char	*path_var;
 	char	*path_var_copy;
+	int		result;
+
+	path_var = get_env_value(shell->env, "PATH");
+	if (!path_var || !*path_var)
+	{
+		free(path_var);
+		return (1);
+	}
+	path_var_copy = ft_strdup(path_var);
+	free(path_var);
+	if (!path_var_copy)
+		return (1);
+	if (shell->full_path)
+		free(shell->full_path);
+	shell->full_path = NULL;
+	result = search_path(shell, command, path_var_copy);
+	return (result);
+}
+
+int	direct_path(t_shell *shell, const char *command)
+{
+	if (access(command, F_OK) == 0)
+	{
+		if (access(command, X_OK) != 0)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd((char *)command, STDERR_FILENO);
+			ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+			shell->exit_status = 126;
+			shell->err_printed = 1;
+			return (1);
+		}
+		if (is_directory(command, command))
+		{
+			shell->exit_status = 126;
+			shell->err_printed = 1;
+			return (2);
+		}
+		if (shell->full_path)
+			free(shell->full_path);
+		shell->full_path = ft_strdup(command);
+		if (!shell->full_path)
+			return (1);
+		return (0);
+	}
+	return (-1);
+}
+
+int	find_full_path(t_shell *shell, const char *command)
+{
 	int		direct_result;
+	char	*cwd;
 
 	if (!command)
 		return (1);
@@ -117,15 +173,15 @@ int	find_full_path(t_shell *shell, const char *command)
 		if (direct_result >= 0)
 			return (direct_result);
 	}
-	path_var = get_env_value(shell->env, "PATH");
-	if (!path_var)
+	direct_result = search_path_var(shell, command);
+	if (direct_result == 0)
+		return (0);
+	cwd = get_current_dir(shell);
+	if (!cwd)
 		return (1);
-	path_var_copy = ft_strdup(path_var);
-	free(path_var);
-	if (!path_var_copy)
-		return (1);
-	if (shell->full_path)
-		free(shell->full_path);
-	shell->full_path = NULL;
-	return (search_path(shell, command, path_var_copy));
+	direct_result = check_current_dir(shell, command, cwd);
+	free(cwd);
+	if (direct_result == 0)
+		return (0);
+	return (1);
 }

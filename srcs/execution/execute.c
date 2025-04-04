@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 16:42:21 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 12:45:17 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int	setup_execution(t_shell *shell, int *saved_stdin, int *saved_stdout)
 {
@@ -69,7 +69,7 @@ static void	handle_parent_process(pid_t pid, t_shell *shell)
 	{
 		sig = WTERMSIG(status);
 		if (sig == SIGQUIT)
-			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
 		else if (sig == SIGINT)
 			ft_putstr_fd("\n", STDERR_FILENO);
 	}

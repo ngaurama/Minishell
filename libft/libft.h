@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 09:01:07 by ngaurama          #+#    #+#             */
-/*   Updated: 2024/12/11 20:07:57 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 01:00:57 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void				*ft_memchr(const void *s, int c, size_t n);
 char				*ft_strnstr(const char *haystack, const char *needle,
 						size_t len);
 int					ft_atoi(const char *str);
+long long			ft_atoll(const char *str);
 
 long				ft_strtol(char *str, char **endptr);
 char				*ft_strtok(char *str, const char *delim);

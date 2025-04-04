@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_expand.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npbk <npbk@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 00:39:48 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/03 16:38:41 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/03/31 23:48:19 by npbk             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int	handle_dollar_sequence(const char *line, int i,
 				char **result, t_shell *shell)

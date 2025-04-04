@@ -9,3 +9,4 @@ valgrind.log
 test_parser.c
 minishell_tester/
 tester_stuff/
+42_minishell_tester/

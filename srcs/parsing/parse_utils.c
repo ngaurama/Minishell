@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 02:05:19 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/03 14:07:23 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/04 00:04:39 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,16 @@ void	append_str_to_token(t_tokenizer *tok, char *str)
 
 int	is_space_or_meta(char c)
 {
-	return (
-		c == ' ' || \
-		c == '|' || \
-		c == '<' || \
-		c == '>'
-	);
+	return (c == ' ' || c == '|' || c == '<' || c == '>' || c == '\t');
 }
 
 int	skip_whitespace(char *input, t_tokenizer *tok)
 {
-	while (input[tok->i] == ' ' || input[tok->i] == '\t')
+	while (input[tok->i] == ' ' || (input[tok->i] >= 9  && \
+		input[tok->i] <= 13))
+	{
 		tok->i++;
+	}
 	if (!input[tok->i])
 	{
 		tok->token[0] = '\0';
@@ -63,7 +61,7 @@ void	print_parse_error(const char *token)
 	}
 	else
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected", STDERR_FILENO);
-		ft_putstr_fd("token `newline'\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: syntax error near", STDERR_FILENO);
+		ft_putstr_fd("unexpected token `newline'\n", STDERR_FILENO);
 	}
 }

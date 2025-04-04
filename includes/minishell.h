@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/03 16:30:38 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/03 20:35:35 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,22 +110,6 @@ typedef struct s_shell
 	int			freed;
 }	t_shell;
 
-//ONLY for process_pipelines
-typedef struct s_pipeline
-{
-	t_shell		*shell;
-	int			buffer[2];
-	int			*prev_pipe_read;
-	pid_t		*pids;
-	t_command	*cmd;
-	int			pipefd[2];
-	int			i;
-}				t_pipeline;
-
-
-//main.c
-void	execution(t_shell *shell);
-
 // init.c
 void		init_shell(t_shell *shell, char **envp);
 void		free_shell(t_shell *shell);
@@ -209,6 +193,7 @@ char		*ft_strcpy(char *dest, const char *src);
 
 // utils2.c
 void		child_error_and_exit(t_shell *shell, const char *cmd);
+void	read_and_write_stderr(int fd);
 
 //redirection.c
 // int			redirection(t_shell *shell);
@@ -229,14 +214,7 @@ char		*heredoc_expand(char *line, t_shell *shell);
 void		preprocess_heredocs(t_command *cmd, t_shell *shell);
 
 //pipe.c
-void	pipeline_process(t_shell *shell, int buffer[2], int *prev_pipe_read,
-    pid_t *pids);
-int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t *pids,
-		int cmd_count);
 void		pipeline(t_shell *shell);
-void	pipeline_handle_special(t_shell *shell, t_command **cmd, int pipefd[2]);
-void	pipeline_handle_regular(t_shell *shell, t_command *cmd, int buffer[2],
-	int *prev_pipe_read);
 
 //pipe_utils.c
 void		setup_child_pipes(int prev_pipe_read, int pipefd[2],
@@ -249,8 +227,10 @@ void		handle_fork_error(int buffer[2]);
 // BUILTINS
 // built_in.c
 int			check_built_in(t_command *cmds);
-int			execute_built_in(t_shell *shell, t_command *cmd);
 void	choose_builtin(t_shell *shell, t_command *cmd);
+
+// void		execute_built_in(t_shell *shell);
+int		execute_built_in(t_shell *shell, t_command *cmd);
 
 // build_in_utils.c
 void		print_cd_error(char *dir, t_shell *shell);
@@ -279,5 +259,12 @@ int			is_valid_identifier(const char *key);
 //signals.c
 void		setup_signals(t_shell *shell);
 void		handle_signal(int signum);
+
+// For debugging
+void		print_token_list(t_arg *tokens);
+void		print_command_list(t_command *cmd);
+void		print_redirections(t_redir *redirs, char *type);
+
+void	execution(t_shell *shell);
 
 #endif
