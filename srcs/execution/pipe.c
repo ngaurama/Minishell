@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 11:51:30 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 13:32:56 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ static int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t last_pid)
 		{
 			sig = WTERMSIG(status);
 			status = 128 + sig;
+			if (sig == SIGINT)
+				ft_putstr_fd("\n", STDERR_FILENO);
 			print_signal_msg(sig);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 11:45:20 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 13:52:57 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	pipeline_init(t_shell *shell, int buffer[2], int *prev_pipe_read)
 		perror("pipe");
 		return ;
 	}
+	shell->exit_status = 0;
 	*prev_pipe_read = -1;
 }
 
