@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:55:08 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/04 13:46:30 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 01:55:55 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	handle_quoted_var(char *input, t_tokenizer *tok, t_shell *shell)
 	return (1);
 }
 
-int	handle_quote_state(char *input, t_tokenizer *tok,
-			int *in_quotes, char *quote_char)
+int	handle_quote_state(char *input, t_tokenizer *tok, int *in_quotes,
+		char *quote_char)
 {
 	if (!*in_quotes && (input[tok->i] == '"' || input[tok->i] == '\''))
 	{

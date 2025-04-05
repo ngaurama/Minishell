@@ -6,7 +6,7 @@
 /*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:32:44 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 22:13:01 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 02:30:41 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ static char	*get_cd_target(t_shell *shell, int *free_dir)
 	char	*dir;
 
 	dir = shell->cmds->args[1];
-	if (!dir)
+	if (!dir || ft_strcmp(dir, "--") == 0)
 	{
 		dir = get_env_value(shell->env, "HOME");
-		if (!dir)
+		if (!dir || !*dir)
 		{
 			print_error("cd: HOME not set", NULL, NULL);
 			return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   full_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 15:01:35 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 02:16:47 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,24 +113,31 @@ int	find_full_path(t_shell *shell, const char *command)
 {
 	int		direct_result;
 	char	*cwd;
+	char	*path_var;
 
 	if (!command)
 		return (1);
 	if (command[0] == '/' || (command[0] == '.' && command[1] == '/'))
 	{
 		direct_result = direct_path(shell, command);
-		if (direct_result >= 0)
-			return (direct_result);
+		return (direct_result);
 	}
 	direct_result = search_path_var(shell, command);
 	if (direct_result == 0)
 		return (0);
-	cwd = get_current_dir(shell);
-	if (!cwd)
+	path_var = get_env_value(shell->env, "PATH");
+	if (!path_var || !*path_var)
+	{
+		free(path_var);
+		cwd = get_current_dir(shell);
+		if (!cwd)
+			return (1);
+		direct_result = check_current_dir(shell, command, cwd);
+		free(cwd);
+		if (direct_result == 0)
+			return (0);
 		return (1);
-	direct_result = check_current_dir(shell, command, cwd);
-	free(cwd);
-	if (direct_result == 0)
-		return (0);
+	}
+	free(path_var);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   full_path2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:54:43 by npagnon           #+#    #+#             */
-/*   Updated: 2025/04/04 14:59:17 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 02:11:08 by ngaurama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,16 @@ int	check_current_dir(t_shell *shell, const char *command, char *cwd)
 			free(shell->full_path);
 		shell->full_path = full_path;
 		return (0);
+	}
+	else if (access(full_path, F_OK) == 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd((char *)command, STDERR_FILENO);
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+		shell->exit_status = 126;
+		shell->err_printed = 1;
+		free(full_path);
+		return (1);
 	}
 	free(full_path);
 	return (1);
