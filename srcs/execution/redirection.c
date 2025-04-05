@@ -6,93 +6,11 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:55:24 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 00:35:08 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 11:02:41 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	read_heredoc(t_redir *redir, int out_fd, t_shell *shell)
-{
-	char	*line;
-	int		fd;
-
-	g_signal_num = 0;
-	rl_event_hook = rl_hook;
-	signal(SIGINT, handle_signal_heredoc);
-	while (1)
-	{
-		line = readline("> ");
-		if (g_signal_num == SIGINT)
-		{
-			free(line);
-			close(out_fd);
-			fd = 2;
-			while (++fd < 1024)
-				close(fd);
-			free_shell(shell);
-			exit(130);
-		}
-		if (stop_heredoc(line, redir->filename, redir->src_token, shell))
-			break ;
-		write_heredoc_line(out_fd, line, shell, redir->src_token);
-		free(line);
-	}
-	rl_event_hook = NULL;
-	close (out_fd);
-}
-
-// leave signal(SIGINT, SIG_IGN); here
-int	handle_heredoc(t_redir *redir, t_shell *shell)
-{
-	int		pipefd[2];
-	pid_t	pid;
-	int		status;
-	int 	fd;
-
-	status = 0;
-	signal(SIGINT, SIG_IGN);
-	if (pipe(pipefd) == -1)
-		return (-1);
-	pid = fork();
-	if (pid == -1)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		close(pipefd[0]);
-		read_heredoc(redir, pipefd[1], shell);
-		close(pipefd[1]);
-		fd = 2;
-		while (++fd < 1024)
-			close(fd);
-		free_shell(shell);
-		exit(0);
-	}
-	else
-	{
-		close(pipefd[1]);
-		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		{
-			close(pipefd[0]);
-			g_signal_num = SIGINT;
-			shell->exit_status = 130;
-			return (-1);
-		}
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-		{
-			close(pipefd[0]);
-			g_signal_num = SIGINT;
-			shell->exit_status = 130;
-			return (-1);
-		}
-		return (pipefd[0]);
-	}
-}
 
 int	manage_heredocs(t_redir *redir, t_shell *shell)
 {
@@ -102,7 +20,7 @@ int	manage_heredocs(t_redir *redir, t_shell *shell)
 	while (redir)
 	{
 		if (redir->type == T_HEREDOC)
-			fd = handle_heredoc_input(redir, shell);
+			fd = handle_heredoc(redir, shell);
 		else
 			return (1);
 		if (fd == -1)

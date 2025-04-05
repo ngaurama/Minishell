@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:18:17 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/05 01:06:01 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 10:58:45 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,19 @@ int	handle_redirect_in_file(const char *filename)
 	return (fd);
 }
 
-int	handle_heredoc_input(t_redir *redir, t_shell *shell)
+static int	is_delimiter(char *line, char *expanded,
+		const char *delimiter, int expand)
 {
-	// int	expand;
-
-	// expand = 1;
-	// if (redir->src_token)
-	// 	expand = (redir->src_token->quoted == 0);
-	return (handle_heredoc(redir, shell));
+	if ((!expand && ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
+		|| (expand && ft_strncmp(expanded, delimiter, ft_strlen(delimiter)
+				+ 1) == 0))
+	{
+		free(line);
+		if (expand)
+			free(expanded);
+		return (1);
+	}
+	return (0);
 }
 
 int	stop_heredoc(char *line, const char *delimiter, t_arg *tok, t_shell *shell)
@@ -37,6 +42,7 @@ int	stop_heredoc(char *line, const char *delimiter, t_arg *tok, t_shell *shell)
 	char	*expanded;
 	int		expand;
 
+	expanded = NULL;
 	expand = (tok->should_expand || !tok->quoted);
 	if (!line)
 	{
@@ -44,23 +50,10 @@ int	stop_heredoc(char *line, const char *delimiter, t_arg *tok, t_shell *shell)
 		ft_putstr_fd("here-document delimited by end-of-file\n", 2);
 		return (1);
 	}
-	expanded = NULL;
 	if (expand)
 		expanded = heredoc_expand(line, shell);
-	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
-	{
-		free(line);
-		if (expand)
-			free(expanded);
+	if (is_delimiter(line, expanded, delimiter, expand))
 		return (1);
-	}
-	if (expand && ft_strncmp(expanded, delimiter, ft_strlen(delimiter)
-			+ 1) == 0)
-	{
-		free(line);
-		free(expanded);
-		return (1);
-	}
 	if (expand)
 		free(expanded);
 	return (0);

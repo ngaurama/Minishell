@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:53:58 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 22:02:49 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 11:45:20 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	handle_fork_error(int buffer[2])
 
 void	free_and_exit(t_shell *shell, int exit_code)
 {
-	int fd;
+	int	fd;
+
 	if (shell)
 		free_shell(shell);
 	fd = 2;
@@ -41,45 +42,21 @@ void	pipeline_init(t_shell *shell, int buffer[2], int *prev_pipe_read)
 	*prev_pipe_read = -1;
 }
 
-void	setup_child_pipes(int prev_pipe_read, int pipefd[2], t_command *cmd)
+void	print_signal_msg(int sig)
 {
-	if (prev_pipe_read != -1 && !cmd->infiles && !cmd->heredocs)
-	{
-		if (dup2(prev_pipe_read, STDIN_FILENO) == -1)
-		{
-			perror("dup2 stdin");
-			exit(1);
-		}
-		close(prev_pipe_read);
-	}
-	if (cmd->pipe && !cmd->outfiles)
-	{
-		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2 stdout");
-			exit(1);
-		}
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
+	if (sig == SIGQUIT)
+		ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+	else if (sig == SIGINT)
+		ft_putstr_fd("\n", STDERR_FILENO);
 }
 
-void	execute_child_pipes(t_shell *shell, t_command *cmd)
+void	setup_stderr_pipe(int buffer[2])
 {
-	if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0')
-		free_and_exit(shell, 127);
-	if (redirection(cmd, shell) != 0)
-		free_and_exit(shell, 1);
-	if (check_built_in(cmd))
-		free_and_exit(shell, execute_built_in(shell, cmd));
-	else
+	close(buffer[0]);
+	if (dup2(buffer[1], STDERR_FILENO) == -1)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (find_full_path(shell, cmd->args[0]) != 0)
-			child_error_and_exit(shell, cmd->args[0]);
-		execve(shell->full_path, cmd->args, shell->env);
-		perror("execve failed");
-		free_and_exit(shell, 1);
+		perror("dup2 stderr");
+		exit(1);
 	}
+	close(buffer[1]);
 }

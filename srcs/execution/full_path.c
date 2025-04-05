@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   full_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:50:00 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 02:16:47 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 11:21:08 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-char	*build_path(const char *dir, const char *command)
-{
-	char	*full_path;
-	size_t	len;
-
-	len = ft_strlen(dir) + ft_strlen(command) + 2;
-	full_path = malloc(len);
-	if (!full_path)
-		return (NULL);
-	full_path[0] = '\0';
-	ft_strlcat(full_path, dir, len);
-	ft_strlcat(full_path, "/", len);
-	ft_strlcat(full_path, command, len);
-	return (full_path);
-}
 
 int	search_path(t_shell *shell, const char *command, char *path_var_copy)
 {
@@ -109,10 +93,25 @@ int	direct_path(t_shell *shell, const char *command)
 	return (-1);
 }
 
+static int	handle_empty_path_var(t_shell *shell, const char *command)
+{
+	char	*cwd;
+	int		result;
+
+	cwd = get_current_dir(shell);
+	if (!cwd)
+		return (1);
+	result = check_current_dir(shell, command, cwd);
+	free(cwd);
+	if (result == 0)
+		return (0);
+	else
+		return (1);
+}
+
 int	find_full_path(t_shell *shell, const char *command)
 {
 	int		direct_result;
-	char	*cwd;
 	char	*path_var;
 
 	if (!command)
@@ -129,14 +128,7 @@ int	find_full_path(t_shell *shell, const char *command)
 	if (!path_var || !*path_var)
 	{
 		free(path_var);
-		cwd = get_current_dir(shell);
-		if (!cwd)
-			return (1);
-		direct_result = check_current_dir(shell, command, cwd);
-		free(cwd);
-		if (direct_result == 0)
-			return (0);
-		return (1);
+		return (handle_empty_path_var(shell, command));
 	}
 	free(path_var);
 	return (1);

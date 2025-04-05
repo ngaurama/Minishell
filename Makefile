@@ -21,8 +21,10 @@ SRC = srcs/main.c \
 		srcs/execution/utils/utils2.c \
 		srcs/execution/init.c \
 		srcs/execution/redirection.c \
+		srcs/execution/redirection2.c \
 		srcs/execution/redirection_utils.c \
 		srcs/execution/pipe.c \
+		srcs/execution/pipe2.c \
 		srcs/execution/signals.c \
 		srcs/execution/pipe_utils.c \
 		srcs/execution/heredocs.c \
@@ -45,6 +47,7 @@ SRC = srcs/main.c \
 		srcs/builtins/echo.c \
 		srcs/builtins/env.c \
 		srcs/builtins/export.c \
+		srcs/builtins/export2.c \
 		srcs/builtins/ft_exit.c \
 		srcs/builtins/pwd.c \
 		srcs/builtins/check_choose.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:58:30 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/04 22:20:25 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 11:51:30 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,40 +20,25 @@ static pid_t	pipeline_handle_special(t_shell *shell, t_command **cmd,
 
 	reader_pid = -1;
 	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return (-1);
-	}
+		return (perror("pipe"), -1);
 	writer_pid = fork();
 	if (writer_pid == 0)
-	{
-		setup_child_pipes(-1, pipefd, *cmd);
-		execute_child_pipes(shell, *cmd);
-	}
+		launch_writer_child(shell, *cmd, pipefd);
 	else if (writer_pid > 0)
 	{
 		*cmd = (*cmd)->next;
 		reader_pid = fork();
 		if (reader_pid == 0)
-		{
-			setup_child_pipes(pipefd[0], pipefd, *cmd);
-			close(pipefd[1]);
-			execute_child_pipes(shell, *cmd);
-		}
+			launch_reader_child(shell, *cmd, pipefd);
 		else if (reader_pid > 0)
-		{
-			*cmd = (*cmd)->next;
-			close(pipefd[0]);
-			close(pipefd[1]);
-			waitpid(writer_pid, NULL, 0);
-		}
+			handle_parent_cleanup(cmd, pipefd, writer_pid);
 	}
-    else
-    {
-        close(pipefd[0]);
-        close(pipefd[1]);
-        perror("fork failed");
-    }
+	else
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		perror("fork failed");
+	}
 	return (reader_pid);
 }
 
@@ -65,13 +50,7 @@ static pid_t	pipeline_handle_regular(t_shell *shell, t_command *cmd,
 	pid = fork();
 	if (pid == 0)
 	{
-		close(buffer[0]);
-		if (dup2(buffer[1], STDERR_FILENO) == -1)
-		{
-			perror("dup2 stderr");
-			exit(1);
-		}
-		close(buffer[1]);
+		setup_stderr_pipe(buffer);
 		setup_child_pipes(*prev_pipe_read, cmd->pipefd, cmd);
 		execute_child_pipes(shell, cmd);
 	}
@@ -111,7 +90,7 @@ static pid_t	pipeline_process(t_shell *shell, int buffer[2],
 			close(buffer[0]);
 			close(buffer[1]);
 			if (*prev_pipe_read != -1)
-                close(*prev_pipe_read);
+				close(*prev_pipe_read);
 			return (-1);
 		}
 		last_pid = pipeline_handle_regular(shell, cmd, buffer, prev_pipe_read);
@@ -141,10 +120,7 @@ static int	pipeline_cleanup(int buffer[2], int prev_pipe_read, pid_t last_pid)
 		{
 			sig = WTERMSIG(status);
 			status = 128 + sig;
-			if (sig == SIGQUIT)
-				ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-			else if (sig == SIGINT)
-				ft_putstr_fd("\n", STDERR_FILENO);
+			print_signal_msg(sig);
 		}
 	}
 	return (status);
@@ -158,11 +134,11 @@ void	pipeline(t_shell *shell)
 
 	pipeline_init(shell, buffer, &prev_pipe_read);
 	if (shell->exit_status != 0)
-    {
-        close(buffer[0]);
-        close(buffer[1]);
-        return;
-    }
+	{
+		close(buffer[0]);
+		close(buffer[1]);
+		return ;
+	}
 	last_pid = pipeline_process(shell, buffer, &prev_pipe_read);
 	shell->exit_status = pipeline_cleanup(buffer, prev_pipe_read, last_pid);
 }

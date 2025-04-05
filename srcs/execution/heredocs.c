@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:16:24 by npbk              #+#    #+#             */
-/*   Updated: 2025/04/05 00:51:07 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 10:40:02 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,33 +60,36 @@ static t_redir	*create_heredoc_input_fd(t_redir *heredocs, t_shell *shell)
 	return (create_heredoc_redir(fd));
 }
 
-void	preprocess_heredocs(t_command *cmd, t_shell *shell)
+void	handle_heredoc_for_cmd(t_command *cmd, t_shell *shell)
 {
 	t_redir	*new_in;
 
+	new_in = create_heredoc_input_fd(cmd->heredocs, shell);
+	if (g_signal_num == SIGINT)
+	{
+		cmd->heredocs = NULL;
+		return ;
+	}
+	if (new_in && cmd->heredocs)
+		free_redirections(cmd->heredocs);
+	cmd->heredocs = NULL;
+	if (cmd->infiles)
+	{
+		free_redirections(cmd->infiles);
+		cmd->infiles = NULL;
+	}
+	if (new_in)
+		cmd->infiles = new_in;
+}
+
+void	preprocess_heredocs(t_command *cmd, t_shell *shell)
+{
 	while (cmd)
 	{
 		if (cmd->heredocs)
-		{
-			new_in = create_heredoc_input_fd(cmd->heredocs, shell);
-			if (g_signal_num == SIGINT)
-			{
-				cmd->heredocs = NULL;
-                break;
-			}
-			if (new_in && cmd->heredocs)
-				free_redirections(cmd->heredocs);
-			cmd->heredocs = NULL;
-			if (cmd->infiles)
-			{
-				free_redirections(cmd->infiles);
-				cmd->infiles = NULL;
-			}
-			if (new_in)
-				cmd->infiles = new_in;
-		}
+			handle_heredoc_for_cmd(cmd, shell);
 		if (g_signal_num == SIGINT)
-            break;
+			break ;
 		cmd = cmd->next;
 	}
 }

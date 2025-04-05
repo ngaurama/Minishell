@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:19 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 01:06:58 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 11:53:28 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ typedef struct s_shell
 // init.c
 void		init_shell(t_shell *shell, char **envp);
 void		free_shell(t_shell *shell);
+void		close_extra_fds(int start_fd);
 
 // get_tokens.c / get_tokens_2.c
 t_arg		*tokenize_input(char *input, t_shell *shell);
@@ -207,7 +208,6 @@ int			redirection(t_command *cmd, t_shell *shell);
 
 //redirection_utils.c
 int			handle_redirect_in_file(const char *filename);
-int			handle_heredoc_input(t_redir *redir, t_shell *shell);
 int			stop_heredoc(char *line, const char *delimiter, t_arg *tok,
 				t_shell *shell);
 void		write_heredoc_line(int fd, char *line, t_shell *shell,
@@ -220,8 +220,12 @@ char		*heredoc_expand(char *line, t_shell *shell);
 // heredocs.c
 void		preprocess_heredocs(t_command *cmd, t_shell *shell);
 
-//pipe.c
+//pipe.c/pipe2.c
 void		pipeline(t_shell *shell);
+void		launch_writer_child(t_shell *shell, t_command *cmd, int pipefd[2]);
+void		launch_reader_child(t_shell *shell, t_command *cmd, int pipefd[2]);
+void		handle_parent_cleanup(t_command **cmd, int pipefd[2],
+				pid_t writer_pid);
 
 //pipe_utils.c
 void		setup_child_pipes(int prev_pipe_read, int pipefd[2],
@@ -230,6 +234,8 @@ void		pipeline_init(t_shell *shell, int buffer[2], int *prev_pipe_read);
 void		execute_child_pipes(t_shell *shell, t_command *cmd);
 void		free_and_exit(t_shell *shell, int exit_code);
 void		handle_fork_error(int buffer[2]);
+void		print_signal_msg(int sig);
+void		setup_stderr_pipe(int buffer[2]);
 
 // BUILTINS
 // built_in.c
@@ -252,6 +258,7 @@ void		ft_echo(t_shell *shell, t_command *cmd);
 void		ft_env(t_shell *shell);
 // export.c
 void		ft_export(t_shell *shell);
+void		print_sorted_env(t_shell *shell);
 // pwd.c
 void		ft_pwd(t_shell *shell);
 // unset.c
