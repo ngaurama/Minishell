@@ -6,7 +6,7 @@
 /*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 11:29:11 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 01:14:29 by npagnon          ###   ########.fr       */
+/*   Updated: 2025/04/05 14:08:46 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	handle_parent_process(pid_t pid, t_shell *shell)
 	{
 		sig = WTERMSIG(status);
 		if (sig == SIGQUIT)
-			ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
+			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 		else if (sig == SIGINT)
 			ft_putstr_fd("\n", STDERR_FILENO);
 	}

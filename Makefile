@@ -8,7 +8,7 @@ endif
 
 NAME = minishell
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 #RLFLAGS = -L/usr/lib -I/usr/include -lreadline -lncurses
 LIBFT = libft/libft.a
 

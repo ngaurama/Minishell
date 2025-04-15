@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   begin_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngaurama <ngaurama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npagnon <npagnon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 20:31:09 by ngaurama          #+#    #+#             */
-/*   Updated: 2025/04/05 13:48:31 by ngaurama         ###   ########.fr       */
+/*   Updated: 2025/04/05 14:27:39 by npagnon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,25 +62,13 @@ void	update_env_underscore(t_shell *shell, char *cmd_name)
 
 void	execution(t_shell *shell)
 {
-	int		i;
-	char	*last_arg;
-
 	if (!shell || !shell->cmds)
 	{
 		shell->exit_status = 1;
 		return ;
 	}
-	if (shell->cmds->args)
-	{
-		i = 0;
-		while (shell->cmds->args[i])
-			i++;
-		if (i > 1)
-			last_arg = shell->cmds->args[i - 1];
-		else
-			last_arg = shell->cmds->args[0];
-		update_env_underscore(shell, last_arg);
-	}
+	if (shell->cmds->args && shell->cmds->args[0])
+		update_env_underscore(shell, shell->cmds->args[0]);
 	if (shell->cmds->pipe)
 		pipeline(shell);
 	else if (check_built_in(shell->cmds))
